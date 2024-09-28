@@ -1,5 +1,5 @@
 {
-  "name": "super-backend",
+  "name": "projetointegrador",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
@@ -13,5 +13,9 @@
   "devDependencies": {
     "@types/node": "^22.5.5",
     "typescript": "^5.6.2"
+  },
+  "dependencies": {
+    "@types/express": "^5.0.0",
+    "express": "^4.21.0"
   }
 }
