@@ -9,11 +9,7 @@
  <h2>Sobre o Projeto</h2> 
 blank.
 <h2>Sobre os Integrantes</h2> 
-Jean - Yuki
-Jhenifer - Burnout
-Giatti - Esqueceu o commit
-Layra - Dormiu na apresentação
-Lorenna - Tentou colar na apresentação
+blank.
 
 <h2>Tecnologias Utilizadas:</h2>
 
