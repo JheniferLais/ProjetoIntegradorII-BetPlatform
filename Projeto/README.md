@@ -1,20 +1,20 @@
 ## Como executar o projeto
 
-Ao fazer o clone do repositório, basta rodar o comando:
+Ao fazer o clone do repositório, basta rodar os comandos:
+
 ```
 npm install
+npm i express --save
+npm i -D @types/express
 ```
-O comando acima instalará todas as dependências que constam no arquivo package.json.
+Os comandos acima instalaram todas as dependências necessárias.
 
 ## Iniciando o servidor
 
-Para garantir que seu código esteja funcionando, na raíz do projeto rode o comando: 
+Para garantir que seu código esteja funcionando, na raíz do projeto rode os comandos: 
 
 ```
 npm run build
-```
-Como consequência, será gerado o diretório build constando o arquivo server.js, rode o comando: 
-
-```
 npm start
 ```
+Como consequência, será gerado o diretório build constando os arquivos em javascript: 
