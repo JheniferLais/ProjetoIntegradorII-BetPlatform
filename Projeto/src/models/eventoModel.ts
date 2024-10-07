@@ -5,11 +5,12 @@ export type Evento = {
     titulo: string;
     desc: string;
     valorCota: number;
-    inicioApostas: string;
-    fimApostas: string;
-    dataEvento: string;
-    status: string;
+    inicioApostas: Date;
+    fimApostas: Date;
+    dataEvento: Date;
+    statusEvento: string;
     resultado: string;
+    apostasQtd: number;
 }
 // Banco de dados temporario
 export let BDeventos: Evento[] = [];
