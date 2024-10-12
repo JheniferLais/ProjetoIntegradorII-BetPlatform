@@ -1,34 +1,14 @@
 import { Request, RequestHandler, Response } from 'express';
 import { Conta } from '../models/usuarioModel';
+import { timeUtils } from '../utils/timeUtils';
 import { dataBaseUtils } from '../utils/dataBaseUtils'
 import jwt from 'jsonwebtoken';
 
 export namespace contasHandler {
-
     // Função para validar o formato do email
-    import findUser = dataBaseUtils.findUser;
-
     function validarEmail(email: string): boolean {
         const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return regex.test(email);
-    }
-
-    // Função para validar o formato da data
-    function validarDataReal(data: string): boolean {
-        //Valida o formato basico
-        const regex = /^\d{4}-\d{2}-\d{2}$/;
-        if (!regex.test(data)) {
-            return false;
-        }
-        //Valida o mes e ano
-        const [ano, mes, dia] = data.split('-').map(Number);
-        if (mes < 1 || mes > 12) {
-            return false;
-        }
-        //Valida o dia baseado no mes
-        const diasPorMes = [31, (ano % 4 === 0 && (ano % 100 !== 0 || ano % 400 === 0)) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-        return !(dia < 1 || dia > diasPorMes[mes - 1]); //return false ou true
-
     }
 
     // Função para verificar se o usuario fez aniversario
@@ -77,7 +57,7 @@ export namespace contasHandler {
         }
 
         // Valida o formato da data
-        const data = validarDataReal(nascimento);
+        const data = timeUtils.validarDataReal(nascimento);
         if(!data){
             //res.statusCode = ?
             res.send(`Formato de data invalida!`);
@@ -120,7 +100,7 @@ export namespace contasHandler {
         }
 
         // Verifica se o usuario esta cadastrado
-        const user = await findUser(email, senha);
+        const user = await dataBaseUtils.findUser(email, senha);
         if (!user || user.length === 0) {
             res.statusCode = 401;
             res.send(`Login ou senha inválidos!`);
