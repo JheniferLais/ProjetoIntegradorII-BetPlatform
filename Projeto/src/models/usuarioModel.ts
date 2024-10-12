@@ -1,10 +1,9 @@
 // Tipo UserAccount
 export type Conta = {
-    idUsuario: number;
+    id?: number;
     nome: string;
     email: string;
     senha: string;
     nascimento: string;
+    moderador?: number;
 };
-// Banco de dados temporário
-export let BDcontas: Conta[] = [];
