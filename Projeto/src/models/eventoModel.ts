@@ -1,16 +1,14 @@
 // Tipo evento
 export type Evento = {
-    idEvento: number;
-    idUsuario?: number;
-    titulo: string;
-    desc: string;
-    valorCota: number;
-    inicioApostas: Date;
-    fimApostas: Date;
-    dataEvento: Date;
-    statusEvento: string;
-    resultado: string;
-    apostasQtd: number;
+    ID_EVENTO?: number;
+    ID_USUARIO?: number;
+    TITULO: string;
+    DESCRICAO: string;
+    VALOR_COTA: number;
+    DATA_HORA_INICIO: Date;
+    DATA_HORA_FIM: Date;
+    DATA_EVENTO: Date;
+    QTD_APOSTAS: number;
+    RESULTADO: string;
+    STATUS_EVENTO: string;
 }
-// Banco de dados temporario
-export let BDeventos: Evento[] = [];

@@ -8,4 +8,5 @@ route.get('/getEvent', eventosHandler.getEvent);
 route.put('/deleteEvent/:id', eventosHandler.deleteEvent);
 route.put('/evaluateNewEvent/:id', eventosHandler.evaluateNewEvent);
 
+
 export default route;
