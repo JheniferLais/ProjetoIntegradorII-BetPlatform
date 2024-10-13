@@ -100,7 +100,7 @@ export namespace contasHandler {
         }
 
         // Verifica se o usuario esta cadastrado
-        const user = await dataBaseUtils.findUser(email, senha);
+        const user: Conta[][] = await dataBaseUtils.findUser(email, senha);
         if (!user || user.length === 0) {
             res.statusCode = 401;
             res.send(`Login ou senha inválidos!`);
@@ -108,7 +108,7 @@ export namespace contasHandler {
         }
 
         const JWT_SECRET = 'segredo_super_secreto';
-        const token: string = jwt.sign({ idUsuario: user[0][0], email: user[0][2] }, JWT_SECRET, { expiresIn: '1h' });
+        const token: string = jwt.sign({ idUsuario: user[0][0] }, JWT_SECRET, { expiresIn: '1h' });
 
         const response = {
             status: `login efetuado com sucesso!`,
