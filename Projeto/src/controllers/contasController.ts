@@ -2,9 +2,9 @@ import { Request, RequestHandler, Response } from 'express';
 import { Conta } from '../models/usuarioModel';
 import { timeUtils } from '../utils/timeUtils';
 import { dataBaseUtils } from '../utils/dataBaseUtils'
-import jwt from 'jsonwebtoken';
 
 export namespace contasHandler {
+
     // Função para validar o formato do email
     function validarEmail(email: string): boolean {
         const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -77,7 +77,7 @@ export namespace contasHandler {
             nome: nome,
             email: email,
             senha: senha,
-            nascimento: nascimento
+            nascimento: nascimento,
         };
 
         // Insere no Banco de dados
@@ -107,13 +107,10 @@ export namespace contasHandler {
             return;
         }
 
-        const JWT_SECRET = 'segredo_super_secreto';
-        const token: string = jwt.sign({ idUsuario: user[0][0] }, JWT_SECRET, { expiresIn: '1h' });
-
         const response = {
             status: `login efetuado com sucesso!`,
             message: `Seja bem vindo(a)! ${user[0][1]}`,
-            token: token
+            token: user[0][6]
         };
         res.statusCode = 200;
         res.send(response);

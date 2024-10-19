@@ -28,12 +28,12 @@ export namespace dataBaseUtils {
     //Função para inserir Usuarios no banco de dados
     export async function insertUser(conta: Conta): Promise<void> {
         const connection = await ConnectionDB();
-        await connection.execute("INSERT INTO usuarios (nome, email, senha, data_nascimento) VALUES (:nomeCompleto, :email, :senha, :nascimento)",
+        await connection.execute("INSERT INTO usuarios (nome, email, senha, data_nascimento, token) VALUES (:nomeCompleto, :email, :senha, :nascimento, dbms_random.string('x',32))",
             {
                 nomeCompleto: conta.nome,
                 email: conta.email,
                 senha: conta.senha,
-                nascimento: conta.nascimento
+                nascimento: conta.nascimento,
             }
         );
         await connection.commit();
@@ -63,19 +63,19 @@ export namespace dataBaseUtils {
     }
 
     //Função para retornar todos os eventos baseado no status fornecido
-    export async function getFilteredEvents(STATUS_EVENTO: string): Promise<Evento[][]> {
+    export async function getFilteredEvents(statusEvento: string): Promise<Evento[][]> {
         const connection = await ConnectionDB();
-        const result = await connection.execute("SELECT * FROM eventos WHERE status_evento = :STATUS_EVENTO", [STATUS_EVENTO]);
+        const result = await connection.execute("SELECT * FROM eventos WHERE status_evento = :statusEvento", [statusEvento]);
         await connection.close();
         return result.rows as Evento[][];
     }
 
     //Função para encontrar o evento baseado no id
-    export async function findEvento(ID_EVENTO: number): Promise<Evento | null> {
+    export async function findEvento(idEvento: number): Promise<Evento | null> {
         const connection = await ConnectionDB();
         const result = await connection.execute(
-            "SELECT * FROM eventos WHERE id_evento = :ID_EVENTO",
-            [ID_EVENTO]
+            "SELECT * FROM eventos WHERE id_evento = :idEvento",
+            [idEvento]
         );
 
         // Verifica se há algum resultado
