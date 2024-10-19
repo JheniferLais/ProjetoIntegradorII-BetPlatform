@@ -41,7 +41,7 @@ export namespace dataBaseUtils {
     }
 
     //Função para inserir Eventos no banco de dados
-    export async function insertEvento(evento: Evento) {
+    export async function insertEvento(evento: Evento): Promise<void> {
         const connection = await ConnectionDB();
         await connection.execute(
             "INSERT INTO eventos (id_usuario, titulo, descricao, valor_cota, data_hora_inicio, data_hora_fim, data_evento, qtd_apostas, resultado, status_evento) VALUES (:ID_USUARIO, :TITULO, :DESCRICAO, :VALOR_COTA, :DATA_HORA_INICIO, :DATA_HORA_FIM, :DATA_EVENTO, :QTD_APOSTAS, :RESULTADO, :STATUS_EVENTO)",
@@ -105,7 +105,7 @@ export namespace dataBaseUtils {
     }
 
     //Função para alterar o evento para excluido
-    export async function updateEvento(evento: Evento) {
+    export async function updateEvento(evento: Evento): Promise<void> {
         const connection = await ConnectionDB();
         await connection.execute("UPDATE eventos SET status_evento = :STATUS_EVENTO WHERE id_evento = :ID_EVENTO",
             {
@@ -115,5 +115,13 @@ export namespace dataBaseUtils {
         );
         await connection.commit();
         await connection.close();
+    }
+
+    //Função para encontrar o moderador baseado no id
+    export async function findModerador(idModerador: number): Promise<Conta[][]> {
+        const connection = await ConnectionDB();
+        const result = await connection.execute("SELECT * FROM usuarios WHERE id_usuario = :idModerador and moderador = 1", [idModerador]);
+        await connection.close();
+        return result.rows as Conta[][];
     }
 }
