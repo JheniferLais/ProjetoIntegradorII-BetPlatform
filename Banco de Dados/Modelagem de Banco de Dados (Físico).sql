@@ -5,20 +5,22 @@ CREATE TABLE USUARIOS (
     email VARCHAR2(150) UNIQUE NOT NULL,
     senha VARCHAR2(255) NOT NULL,
     data_nascimento VARCHAR2(11),
+    token varchar2(32) NOT NULL,
     moderador NUMBER(1) DEFAULT 0 -- DEFAULT = 0 para pessoa comum e 1 para moderador
 );
 
 -- Criando sequência para USUARIOS
-CREATE SEQUENCE SEQ_USUARIOS START WITH 1 INCREMENT BY 1;
+CREATE SEQUENCE SEQ_ACCOUNTS START WITH 1 INCREMENT BY 1;
 
 -- Trigger para gerar ID automaticamente em USUARIOS
 CREATE OR REPLACE TRIGGER TRG_USUARIOS_ID
 BEFORE INSERT ON USUARIOS
 FOR EACH ROW
 BEGIN
-  :NEW.id_usuario := SEQ_USUARIOS.NEXTVAL;
+  :NEW.id_usuario := SEQ_ACCOUNTS.NEXTVAL;
 END;
 /
+
 
 ----------------------------------------------------------------------------------------------------------------------------------------
 
