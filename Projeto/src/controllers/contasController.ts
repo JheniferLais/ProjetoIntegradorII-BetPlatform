@@ -110,7 +110,7 @@ export namespace contasHandler {
         const response = {
             status: `login efetuado com sucesso!`,
             message: `Seja bem vindo(a)! ${user[0][1]}`,
-            token: user[0][6]
+            token: user[0][5]
         };
         res.statusCode = 200;
         res.send(response);
