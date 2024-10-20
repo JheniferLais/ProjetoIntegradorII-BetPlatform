@@ -2,7 +2,7 @@ import { Request, RequestHandler, Response } from 'express';
 import { Evento } from "../models/eventoModel";
 import { timeUtils } from "../utils/timeUtils";
 import { dataBaseUtils } from "../utils/dataBaseUtils";
-import {Conta} from "../models/usuarioModel";
+import { Conta } from "../models/usuarioModel";
 
 export namespace eventosHandler {
 
@@ -165,4 +165,26 @@ export namespace eventosHandler {
 
         res.status(200).send(`Evento ${resultado} com sucesso!`);
     };
+
+    // 'Função' para searchEvent
+    export const searchEvent: RequestHandler = async (req: Request, res: Response): Promise<void> => {
+        const palavraChave = req.get('palavraChave');
+
+        // Verifica se a pesquisa foi fornecida
+        if (!palavraChave) {
+            res.statusCode = 400;
+            res.send(`Preencha todos os campos!`);
+            return;
+        }
+
+        const eventos: Evento | null = await dataBaseUtils.searchEvent(palavraChave);
+        if (!eventos) {
+            res.statusCode = 400;
+            res.send('sem eventos com essa palavra chave');
+            return;
+        }
+
+        res.statusCode = 200;
+        res.send(eventos);
+    }
 }

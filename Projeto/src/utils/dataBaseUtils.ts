@@ -124,6 +124,37 @@ export namespace dataBaseUtils {
         await connection.close();
     }
 
+    //Função para encontrar eventos de acordo com o titulo
+    export async function searchEvent(palavraChave: string): Promise<Evento | null> {
+        const connection = await ConnectionDB();
+        const result = await connection.execute("SELECT * FROM eventos WHERE LOWER(titulo) LIKE :palavraChave or LOWER(descricao) LIKE :palavraChave",
+            [`%${palavraChave.toLowerCase()}%`, `%${palavraChave.toLowerCase()}%`]);
+
+        // Verifica se há algum resultado
+        if (result.rows && result.rows.length > 0) {
+            const row = result.rows[0] as any[];
+
+            const evento: Evento = {
+                ID_EVENTO: row[0] as number,
+                ID_USUARIO: row[1] as number,
+                TITULO: row[2] as string,
+                DESCRICAO: row[3] as string,
+                VALOR_COTA: row[4] as number,
+                DATA_HORA_INICIO: row[5] as Date,
+                DATA_HORA_FIM: row[6] as Date,
+                DATA_EVENTO: row[7] as Date,
+                QTD_APOSTAS: row[8] as number,
+                RESULTADO: row[9] as string,
+                STATUS_EVENTO: row[10] as string
+            };
+
+            await connection.close();
+            return evento;
+        }
+        await connection.close();
+        return null;  // Retorna null se não encontrar nenhum evento
+    }
+
     //------------------------------------------------------------------------------------------------------------------
 
     //Função para encontrar o moderador baseado no id
