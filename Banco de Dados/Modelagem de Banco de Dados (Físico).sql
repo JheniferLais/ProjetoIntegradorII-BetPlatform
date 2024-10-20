@@ -5,7 +5,7 @@ CREATE TABLE USUARIOS (
     email VARCHAR2(150) UNIQUE NOT NULL,
     senha VARCHAR2(255) NOT NULL,
     data_nascimento VARCHAR2(11),
-    token varchar2(32) NOT NULL,
+    token VARCHAR2(32) NOT NULL,
     moderador NUMBER(1) DEFAULT 0 -- DEFAULT = 0 para pessoa comum e 1 para moderador
 );
 
@@ -21,15 +21,13 @@ BEGIN
 END;
 /
 
-
 ----------------------------------------------------------------------------------------------------------------------------------------
 
 -- Tabela de CARTEIRA
 CREATE TABLE CARTEIRA (
     id_carteira NUMBER PRIMARY KEY,  -- Será gerado pela sequência
     id_usuario NUMBER NOT NULL, -- FK para a tabela USUARIOS
-    saldo NUMBER(10, 2) DEFAULT 0, -- Valor inicial da carteira = 0
-    historico VARCHAR2(255)
+    saldo NUMBER(10, 2) DEFAULT 0 -- Valor inicial da carteira = 0
 );
 
 -- Criando sequência para CARTEIRA
@@ -46,12 +44,13 @@ END;
 
 ----------------------------------------------------------------------------------------------------------------------------------------
 
--- Tabela de TRANSACOES_FINANCEIRAS
+-- Tabela de TRANSACOES_FINANCEIRAS (agora com FK para CARTEIRA e USUARIOS)
 CREATE TABLE TRANSACOES_FINANCEIRAS (
     id_transacao NUMBER PRIMARY KEY,  -- Será gerado pela sequência
-    id_carteira NUMBER NOT NULL, -- FK para a tabela CARTEIRA
+    id_usuario NUMBER NOT NULL, -- FK para a tabela USUARIOS
     tipo_transacao VARCHAR2(20) NOT NULL CHECK (tipo_transacao IN ('deposito','saque','aposta')),
     valor NUMBER(10, 2) NOT NULL,
+    historico VARCHAR2(255),
     data_transacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP -- Hora atual no momento da inserção
 );
 
@@ -121,12 +120,16 @@ END;
 /
 ----------------------------------------------------------------------------------------------------------------------------------------
 -- Definindo as chaves estrangeiras (FK)
+
+-- FK para vincular CARTEIRA ao USUARIOS
 ALTER TABLE CARTEIRA ADD CONSTRAINT fk_carteira_usuario FOREIGN KEY (id_usuario) REFERENCES USUARIOS(id_usuario);
 
-ALTER TABLE TRANSACOES_FINANCEIRAS ADD CONSTRAINT fk_transacao_carteira FOREIGN KEY (id_carteira) REFERENCES CARTEIRA(id_carteira);
+-- FK para vincular TRANSACOES_FINANCEIRAS ao CARTEIRA e ao USUARIOS
+ALTER TABLE TRANSACOES_FINANCEIRAS ADD CONSTRAINT fk_transacao_usuario FOREIGN KEY (id_usuario) REFERENCES USUARIOS(id_usuario);
 
+-- FK para vincular EVENTOS ao USUARIOS
 ALTER TABLE EVENTOS ADD CONSTRAINT fk_evento_usuario FOREIGN KEY (id_usuario) REFERENCES USUARIOS(id_usuario);
 
+-- FK para vincular APOSTAS ao EVENTOS e ao USUARIOS
 ALTER TABLE APOSTAS ADD CONSTRAINT fk_aposta_evento FOREIGN KEY (id_evento) REFERENCES EVENTOS(id_evento);
 ALTER TABLE APOSTAS ADD CONSTRAINT fk_aposta_usuario FOREIGN KEY (id_usuario) REFERENCES USUARIOS(id_usuario);
-----------------------------------------------------------------------------------------------------------------------------------------
