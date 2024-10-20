@@ -7,6 +7,6 @@ const route: Router = Router();
 route.post('/addNewEvent/:id', tokenUtils.checkToken, eventosHandler.addNewEvent);
 route.get('/getEvent', eventosHandler.getEvent);
 route.put('/deleteEvent/:idEvento/:id', tokenUtils.checkToken, eventosHandler.deleteEvent);
-route.put('/evaluateNewEvent/:idEvento/:id', tokenUtils.checkToken, eventosHandler.evaluateNewEvent);
+route.put('/evaluateNewEvent/:idEvento/:id', tokenUtils.checkToken, eventosHandler.evaluateNewEvent); //somente moderadores
 
 export default route;

@@ -82,7 +82,7 @@ export namespace eventosHandler {
         const filteredEvents = await dataBaseUtils.getFilteredEvents(statusEvento);
 
         if (!filteredEvents || filteredEvents.length === 0) {
-            res.statusCode = 204;
+            //res.statusCode = 400;
             res.send('sem eventos com esse status');
             return;
         }
