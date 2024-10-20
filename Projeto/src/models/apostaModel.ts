@@ -1,10 +1,9 @@
 // Tipo apostas
 export type Aposta = {
     idAposta: number;
-    idUsuario?: number;
     idEvento?: number;
+    idUsuario?: number;
     valorAposta: number;
     aposta: string; //sim ou nao
+    dataAposta: string;
 }
-// Banco de dados temporario
-export let BDapostas: Aposta[] = [];

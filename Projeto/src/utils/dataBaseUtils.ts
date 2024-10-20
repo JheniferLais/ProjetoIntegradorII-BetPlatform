@@ -1,6 +1,8 @@
 import { Conta } from '../models/usuarioModel';
 import { Evento } from "../models/eventoModel";
 import oracledb from "oracledb";
+import {Carteira} from "../models/carteiraModel";
+import {TransacaoFinanceira} from "../models/transacaoFinanceiraModel";
 
 export namespace dataBaseUtils {
 
@@ -8,6 +10,8 @@ export namespace dataBaseUtils {
     export async function ConnectionDB() {
         return oracledb.getConnection({user: "SYSTEM", password: "123456", connectString: "localhost:1521/xe"});
     }
+
+    //------------------------------------------------------------------------------------------------------------------
 
     //Função para encontrar o usuario no banco de dados
     export async function findUser(email: string, password: string): Promise<Conta[][]> {
@@ -28,7 +32,8 @@ export namespace dataBaseUtils {
     //Função para inserir Usuarios no banco de dados
     export async function insertUser(conta: Conta): Promise<void> {
         const connection = await ConnectionDB();
-        await connection.execute("INSERT INTO usuarios (nome, email, senha, data_nascimento, token) VALUES (:nomeCompleto, :email, :senha, :nascimento, dbms_random.string('x',32))",
+        await connection.execute(`INSERT INTO usuarios (id_usuario, nome, email, senha, data_nascimento, token) VALUES 
+            (SEQ_USUARIOS.NEXTVAL, :nomeCompleto, :email, :senha, :nascimento, dbms_random.string('x',32))`,
             {
                 nomeCompleto: conta.nome,
                 email: conta.email,
@@ -36,15 +41,18 @@ export namespace dataBaseUtils {
                 nascimento: conta.nascimento,
             }
         );
+        await connection.execute("INSERT INTO carteira (id_carteira, id_usuario) VALUES (SEQ_CARTEIRA.NEXTVAL, SEQ_USUARIOS.CURRVAL)");
         await connection.commit();
         await connection.close();
     }
+
+    //------------------------------------------------------------------------------------------------------------------
 
     //Função para inserir Eventos no banco de dados
     export async function insertEvento(evento: Evento): Promise<void> {
         const connection = await ConnectionDB();
         await connection.execute(
-            "INSERT INTO eventos (id_usuario, titulo, descricao, valor_cota, data_hora_inicio, data_hora_fim, data_evento, qtd_apostas, resultado, status_evento) VALUES (:ID_USUARIO, :TITULO, :DESCRICAO, :VALOR_COTA, :DATA_HORA_INICIO, :DATA_HORA_FIM, :DATA_EVENTO, :QTD_APOSTAS, :RESULTADO, :STATUS_EVENTO)",
+            "INSERT INTO eventos (id_evento, id_usuario, titulo, descricao, valor_cota, data_hora_inicio, data_hora_fim, data_evento, qtd_apostas, resultado, status_evento) VALUES (SEQ_EVENTOS.NEXTVAL, :ID_USUARIO, :TITULO, :DESCRICAO, :VALOR_COTA, :DATA_HORA_INICIO, :DATA_HORA_FIM, :DATA_EVENTO, :QTD_APOSTAS, :RESULTADO, :STATUS_EVENTO)",
             {
                 ID_USUARIO: evento.ID_USUARIO,
                 TITULO: evento.TITULO,
@@ -80,11 +88,10 @@ export namespace dataBaseUtils {
 
         // Verifica se há algum resultado
         if (result.rows && result.rows.length > 0) {
-            const row = result.rows[0] as any[]; // Aqui estamos forçando o TypeScript a entender que 'row' é um array de valores (array de qualquer tipo)
+            const row = result.rows[0] as any[];
 
-            // Mapeia a linha para um objeto Evento
             const evento: Evento = {
-                ID_EVENTO: row[0] as number,  // Asserção de tipo para garantir que seja do tipo correto
+                ID_EVENTO: row[0] as number,
                 ID_USUARIO: row[1] as number,
                 TITULO: row[2] as string,
                 DESCRICAO: row[3] as string,
@@ -104,7 +111,7 @@ export namespace dataBaseUtils {
         return null;  // Retorna null se não encontrar nenhum evento
     }
 
-    //Função para alterar o evento para excluido
+    //Função para alterar o status do evento
     export async function updateEvento(evento: Evento): Promise<void> {
         const connection = await ConnectionDB();
         await connection.execute("UPDATE eventos SET status_evento = :STATUS_EVENTO WHERE id_evento = :ID_EVENTO",
@@ -117,6 +124,8 @@ export namespace dataBaseUtils {
         await connection.close();
     }
 
+    //------------------------------------------------------------------------------------------------------------------
+
     //Função para encontrar o moderador baseado no id
     export async function findModerador(idModerador: number): Promise<Conta[][]> {
         const connection = await ConnectionDB();
@@ -124,4 +133,68 @@ export namespace dataBaseUtils {
         await connection.close();
         return result.rows as Conta[][];
     }
+
+    //------------------------------------------------------------------------------------------------------------------
+
+    //Função para encontrar a carteira do usuario
+    export async function findCarteira(idUsuario: number): Promise<Carteira | null> {
+        const connection = await ConnectionDB();
+        const result = await connection.execute("SELECT * FROM carteira WHERE id_usuario = :idUsuario", [idUsuario]);
+
+        // Verifica se há algum resultado
+        if (result.rows && result.rows.length > 0) {
+            const row = result.rows[0] as any[];
+
+            const carteira: Carteira = {
+                idCarteira: row[0] as number,
+                idUsuario: row[1] as number,
+                saldo: row[2] as number,
+            };
+            await connection.close();
+            return carteira;
+        }
+        await connection.close();
+        return null;
+    }
+
+    //Função para adicionar fundos na carteira
+    export async function addFunds(carteira: Carteira): Promise<void> {
+        const connection = await ConnectionDB();
+        await connection.execute("UPDATE carteira SET saldo = saldo + :saldo WHERE id_usuario = :idUsuario",
+            {
+                idUsuario: carteira.idUsuario,
+                saldo: carteira.saldo,
+            }
+        );
+        await connection.commit();
+        await connection.close();
+    }
+
+    //Função para sacar fundos na carteira
+    export async function withdrawFunds(carteira: Carteira): Promise<void> {
+        const connection = await ConnectionDB();
+        await connection.execute("UPDATE carteira SET saldo = saldo - :saldo WHERE id_usuario = :idUsuario",
+            {
+                idUsuario: carteira.idUsuario,
+                saldo: carteira.saldo,
+            }
+        );
+        await connection.commit();
+        await connection.close();
+    }
+
+    //Função para sacar fundos na carteira
+    export async function insertTransacao(transacao: TransacaoFinanceira): Promise<void> {
+        const connection = await ConnectionDB();
+        await connection.execute("INSERT INTO transacoes_financeiras (id_transacao, id_usuario, tipo_transacao, valor) VALUES (SEQ_TRANSACOES_FINANCEIRAS.NEXTVAL, :idUsuario, :tipoTransacao, :valorTransacao)",
+            {
+                idUsuario: transacao.idUsuario,
+                tipoTransacao: transacao.tipoTransacao,
+                valorTransacao: transacao.valorTransacao,
+            }
+        );
+        await connection.commit();
+        await connection.close();
+    }
 }
+
