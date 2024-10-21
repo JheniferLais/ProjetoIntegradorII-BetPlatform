@@ -61,6 +61,14 @@ export namespace carteiraHandler {
 
         await dataBaseUtils.addFunds(carteira);
 
+        //Cria uma transacao para ser usada de historico de transacoes
+        const transacao: TransacaoFinanceira = {
+            idUsuario: idUsuario,
+            tipoTransacao: 'deposito',
+            valorTransacao: valor,
+        }
+        await dataBaseUtils.insertTransacao(transacao);
+
         res.status(200).send('Saldo adicionado com sucesso.');
     }
 
