@@ -1,8 +1,8 @@
-import { Conta } from '../models/usuarioModel';
-import { Evento } from "../models/eventoModel";
+import { Conta } from '../models/UsuarioModel';
+import { Evento } from "../models/EventoModel";
 import oracledb from "oracledb";
-import {Carteira} from "../models/carteiraModel";
-import {TransacaoFinanceira} from "../models/transacaoFinanceiraModel";
+import {Carteira} from "../models/CarteiraModel";
+import {TransacaoFinanceira} from "../models/TransacaoFinanceiraModel";
 
 export namespace dataBaseUtils {
 

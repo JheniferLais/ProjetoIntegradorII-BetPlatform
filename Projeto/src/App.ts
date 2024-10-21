@@ -1,7 +1,7 @@
 import express from 'express';
-import contasRoutes from './routes/contasRoutes';
-import eventosRoutes from "./routes/eventosRoutes";
-import carteiraRoutes from "./routes/carteiraRoutes";
+import contasRoutes from './routes/ContasRoute';
+import eventosRoutes from "./routes/EventosRoute";
+import carteiraRoutes from "./routes/CarteiraRoute";
 
 const app = express();
 app.use(express.json());

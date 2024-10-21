@@ -1,8 +1,8 @@
 import { Request, RequestHandler, Response } from 'express';
-import { Evento } from "../models/eventoModel";
-import { timeUtils } from "../utils/timeUtils";
-import { dataBaseUtils } from "../utils/dataBaseUtils";
-import { Conta } from "../models/usuarioModel";
+import { Evento } from "../models/EventoModel";
+import { timeUtils } from "../utils/TimeUtils";
+import { dataBaseUtils } from "../utils/DataBaseUtils";
+import { Conta } from "../models/UsuarioModel";
 
 export namespace eventosHandler {
 

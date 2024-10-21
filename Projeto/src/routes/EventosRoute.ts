@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { eventosHandler } from "../controllers/eventosController";
-import { tokenUtils } from "../utils/tokenUtils";
+import { eventosHandler } from "../controllers/EventosController";
+import { tokenUtils } from "../utils/TokenUtils";
 
 const route: Router = Router();
 

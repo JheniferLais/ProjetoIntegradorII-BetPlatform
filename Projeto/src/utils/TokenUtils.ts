@@ -1,6 +1,6 @@
 import {NextFunction, Request, Response} from 'express';
-import { Conta } from '../models/usuarioModel';
-import {dataBaseUtils} from './dataBaseUtils';
+import { Conta } from '../models/UsuarioModel';
+import {dataBaseUtils} from './DataBaseUtils';
 
 export namespace tokenUtils {
 

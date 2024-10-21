@@ -1,7 +1,7 @@
 import { Request, RequestHandler, Response } from 'express';
-import { Conta } from '../models/usuarioModel';
-import { timeUtils } from '../utils/timeUtils';
-import { dataBaseUtils } from '../utils/dataBaseUtils'
+import { Conta } from '../models/UsuarioModel';
+import { timeUtils } from '../utils/TimeUtils';
+import { dataBaseUtils } from '../utils/DataBaseUtils'
 
 export namespace contasHandler {
 
