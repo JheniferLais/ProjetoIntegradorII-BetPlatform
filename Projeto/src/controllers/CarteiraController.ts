@@ -77,11 +77,16 @@ export namespace carteiraHandler {
         const idUsuario = parseInt(req.params.id); //ID do usuario passado como parâmetro na URL
 
         const valor = parseFloat(req.get('valor') || '');
-        const contaCorrente = req.get('conta');
+        const contaCorrente = req.get('contaCorrente');
 
         // Verifica se os dados estão completos
         if (!valor && valor > 0 || !contaCorrente) {
-           res.status(400).json({ erro: 'Dados incompletos!' });
+           res.status(400).json('Dados incompletos!');
+           return;
+        }
+
+        if(contaCorrente.length > 12 || contaCorrente.length < 6) {
+            res.status(400).json('Conta invalida!');
             return;
         }
 
@@ -100,13 +105,13 @@ export namespace carteiraHandler {
         carteira.saldo = calcularTaxaDeSaque(valor);
 
         //Retira da conta o saldo do saque
-        await dataBaseUtils.withdrawFunds(carteira);
+        await dataBaseUtils.retirarFundos(carteira);
 
         //Cria uma transacao para ser usada de historico de transacoes
         const transacao: TransacaoFinanceira = {
             idUsuario: idUsuario,
             tipoTransacao: 'saque',
-            valorTransacao: valor,
+            valorTransacao: carteira.saldo,
         }
         await dataBaseUtils.insertTransacao(transacao);
 

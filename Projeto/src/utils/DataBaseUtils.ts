@@ -3,6 +3,7 @@ import { Evento } from "../models/EventoModel";
 import oracledb from "oracledb";
 import {Carteira} from "../models/CarteiraModel";
 import {TransacaoFinanceira} from "../models/TransacaoFinanceiraModel";
+import {Aposta} from "../models/ApostaModel";
 
 export namespace dataBaseUtils {
 
@@ -29,7 +30,7 @@ export namespace dataBaseUtils {
         return result.rows;
     }
 
-    //Função para inserir Usuarios no banco de dados
+    //Função para inserir Usuarios no banco de dados e automaticamente criar sua carteira
     export async function insertUser(conta: Conta): Promise<void> {
         const connection = await ConnectionDB();
         await connection.execute(`INSERT INTO usuarios (id_usuario, nome, email, senha, data_nascimento, token) VALUES 
@@ -202,7 +203,7 @@ export namespace dataBaseUtils {
     }
 
     //Função para sacar fundos na carteira
-    export async function withdrawFunds(carteira: Carteira): Promise<void> {
+    export async function retirarFundos(carteira: Carteira): Promise<void> {
         const connection = await ConnectionDB();
         await connection.execute("UPDATE carteira SET saldo = saldo - :saldo WHERE id_usuario = :idUsuario",
             {
@@ -214,7 +215,7 @@ export namespace dataBaseUtils {
         await connection.close();
     }
 
-    //Função para sacar fundos na carteira
+    //Função para inserir transacoes realizadas
     export async function insertTransacao(transacao: TransacaoFinanceira): Promise<void> {
         const connection = await ConnectionDB();
         await connection.execute("INSERT INTO transacoes_financeiras (id_transacao, id_usuario, tipo_transacao, valor) VALUES (SEQ_TRANSACOES_FINANCEIRAS.NEXTVAL, :idUsuario, :tipoTransacao, :valorTransacao)",
@@ -227,5 +228,46 @@ export namespace dataBaseUtils {
         await connection.commit();
         await connection.close();
     }
-}
 
+    //------------------------------------------------------------------------------------------------------------------
+
+    //Função para inserir a aposta no banco de dados
+    export async function betOnEvent(aposta: Aposta): Promise<void> {
+        const connection = await ConnectionDB();
+        await connection.execute(`INSERT INTO apostas (id_aposta, id_evento, id_usuario, valor_aposta, aposta) VALUES 
+            (SEQ_APOSTAS.NEXTVAL, :idEvento, :idUsuario, :valorAposta, :aposta)`,
+            {
+                idEvento: aposta.idEvento,
+                idUsuario: aposta.idUsuario,
+                valorAposta: aposta.valorAposta,
+                aposta: aposta.aposta,
+            }
+        );
+        await connection.commit();
+        await connection.close();
+    }
+
+    //Função para dar um update na quantidade de apostas do evento
+    export async function updateEventoAposta(evento: Evento): Promise<void> {
+        const connection = await ConnectionDB();
+        await connection.execute("UPDATE eventos SET qtd_apostas = qtd_apostas + :QTD_APOSTAS WHERE id_evento = :ID_EVENTO",
+            {
+                QTD_APOSTAS: evento.QTD_APOSTAS,
+                ID_EVENTO: evento.ID_EVENTO,
+            }
+        );
+        await connection.commit();
+        await connection.close();
+    }
+
+    //
+    export async function validaUserAposta(email: string, id: number): Promise<true | null> {
+        const connection = await ConnectionDB();
+        const result = await connection.execute("SELECT * FROM usuarios WHERE email = :email AND id_usuario = :id", [email, id]);
+        await connection.close();
+
+        // Verifica se há algum resultado
+        if (result.rows && result.rows.length > 0) return true;
+        return null;  // Retorna null se não encontrar nenhum evento
+    }
+}
