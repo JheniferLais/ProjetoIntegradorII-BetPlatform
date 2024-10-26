@@ -125,6 +125,20 @@ export namespace dataBaseUtils {
         await connection.close();
     }
 
+    //Função para alterar o status do evento
+    export async function updateEventoReprovado(evento: Evento): Promise<void> {
+        const connection = await ConnectionDB();
+        await connection.execute("UPDATE eventos SET status_evento = :STATUS_EVENTO, resultado = :RESULTADO WHERE id_evento = :ID_EVENTO",
+            {
+                ID_EVENTO: evento.ID_EVENTO,
+                RESULTADO: evento.RESULTADO,
+                STATUS_EVENTO: evento.STATUS_EVENTO,
+            }
+        );
+        await connection.commit();
+        await connection.close();
+    }
+
     //Função para encontrar eventos de acordo com o titulo
     export async function searchEvent(palavraChave: string): Promise<Evento | null> {
         const connection = await ConnectionDB();
@@ -235,11 +249,11 @@ export namespace dataBaseUtils {
     export async function betOnEvent(aposta: Aposta): Promise<void> {
         const connection = await ConnectionDB();
         await connection.execute(`INSERT INTO apostas (id_aposta, id_evento, id_usuario, valor_aposta, aposta) VALUES 
-            (SEQ_APOSTAS.NEXTVAL, :idEvento, :idUsuario, :valorAposta, :aposta)`,
+            (SEQ_APOSTAS.NEXTVAL, :idEvento, :idUsuario, :qtd_cotas, :aposta)`,
             {
                 idEvento: aposta.idEvento,
                 idUsuario: aposta.idUsuario,
-                valorAposta: aposta.valorAposta,
+                qtd_cotas: aposta.qtd_cotas,
                 aposta: aposta.aposta,
             }
         );

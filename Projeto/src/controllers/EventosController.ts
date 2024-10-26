@@ -158,11 +158,15 @@ export namespace eventosHandler {
             res.send(`Não é possivel avaliar esse evento!`);
             return;
         }
+        if(resultado == 'reprovado'){
+            evento.STATUS_EVENTO = resultado;
+            evento.RESULTADO = 'reprovado';
+            await dataBaseUtils.updateEventoReprovado(evento); //Executa a atualização no banco de dados
+            res.status(200).send(`Evento ${resultado} com sucesso!`);
+        }
 
         evento.STATUS_EVENTO = resultado; // Atualiza o status do evento
-
         await dataBaseUtils.updateEvento(evento); //Executa a atualização no banco de dados
-
         res.status(200).send(`Evento ${resultado} com sucesso!`);
     };
 
