@@ -42,7 +42,6 @@ export namespace dataBaseUtils {
                 nascimento: conta.nascimento,
             }
         );
-        await connection.execute("INSERT INTO carteira (id_carteira, id_usuario) VALUES (SEQ_CARTEIRA.NEXTVAL, SEQ_USUARIOS.CURRVAL)");
         await connection.commit();
         await connection.close();
     }
@@ -185,16 +184,15 @@ export namespace dataBaseUtils {
     //Função para encontrar a carteira do usuario
     export async function findCarteira(idUsuario: number): Promise<Carteira | null> {
         const connection = await ConnectionDB();
-        const result = await connection.execute("SELECT * FROM carteira WHERE id_usuario = :idUsuario", [idUsuario]);
+        const result = await connection.execute("SELECT * FROM usuarios WHERE id_usuario = :idUsuario", [idUsuario]);
 
         // Verifica se há algum resultado
         if (result.rows && result.rows.length > 0) {
             const row = result.rows[0] as any[];
 
             const carteira: Carteira = {
-                idCarteira: row[0] as number,
-                idUsuario: row[1] as number,
-                saldo: row[2] as number,
+                idUsuario: row[0] as number,
+                saldo: row[7] as number,
             };
             await connection.close();
             return carteira;
@@ -206,7 +204,7 @@ export namespace dataBaseUtils {
     //Função para adicionar fundos na carteira
     export async function addFunds(carteira: Carteira): Promise<void> {
         const connection = await ConnectionDB();
-        await connection.execute("UPDATE carteira SET saldo = saldo + :saldo WHERE id_usuario = :idUsuario",
+        await connection.execute("UPDATE usuarios SET saldo = saldo + :saldo WHERE id_usuario = :idUsuario",
             {
                 idUsuario: carteira.idUsuario,
                 saldo: carteira.saldo,
@@ -219,7 +217,7 @@ export namespace dataBaseUtils {
     //Função para sacar fundos na carteira
     export async function retirarFundos(carteira: Carteira): Promise<void> {
         const connection = await ConnectionDB();
-        await connection.execute("UPDATE carteira SET saldo = saldo - :saldo WHERE id_usuario = :idUsuario",
+        await connection.execute("UPDATE usuarios SET saldo = saldo - :saldo WHERE id_usuario = :idUsuario",
             {
                 idUsuario: carteira.idUsuario,
                 saldo: carteira.saldo,
@@ -248,7 +246,7 @@ export namespace dataBaseUtils {
     //Função para inserir a aposta no banco de dados
     export async function betOnEvent(aposta: Aposta): Promise<void> {
         const connection = await ConnectionDB();
-        await connection.execute(`INSERT INTO apostas (id_aposta, id_evento, id_usuario, valor_aposta, aposta) VALUES 
+        await connection.execute(`INSERT INTO apostas (id_aposta, id_evento, id_usuario, qtd_cotas, aposta) VALUES 
             (SEQ_APOSTAS.NEXTVAL, :idEvento, :idUsuario, :qtd_cotas, :aposta)`,
             {
                 idEvento: aposta.idEvento,
@@ -283,5 +281,37 @@ export namespace dataBaseUtils {
         // Verifica se há algum resultado
         if (result.rows && result.rows.length > 0) return true;
         return null;  // Retorna null se não encontrar nenhum evento
+    }
+
+
+    export async function finishEvento(idEvento: number, veredito: string): Promise<void> {
+        const connection = await ConnectionDB();
+        await connection.execute("UPDATE eventos SET resultado = :veredito, status_evento = 'finalizado' WHERE id_evento = :idEvento", [veredito, idEvento]);
+        await connection.commit();
+        await connection.close();
+    }
+
+    //
+    export async function getApostasFiltered(idEvento: number, veredito: string): Promise<Aposta[][] | null> {
+        const connection = await ConnectionDB();
+        const result: any = await connection.execute("SELECT * FROM APOSTAS WHERE id_evento = :id_evento AND aposta = :veredito", [idEvento, veredito]);
+        await connection.close();
+        return result.rows as Aposta[][];
+    }
+
+    //
+    export async function getApostas(idEvento: number): Promise<Aposta[][] | null> {
+        const connection = await ConnectionDB();
+        const result: any = await connection.execute("SELECT * FROM APOSTAS WHERE id_evento = :id_evento", [idEvento]);
+        await connection.close();
+        return result.rows as Aposta[][];
+    }
+
+    //Função para retornar todos as apostas com o veredito fornecido(SIM/NAO)
+    export async function somaApostasVeredito( idEvento: number, veredito: string): Promise<number[][] | null> {
+        const connection = await ConnectionDB();
+        const soma: any = await connection.execute("SELECT SUM(qtd_cotas) FROM APOSTAS WHERE id_evento = :idEvento AND aposta = :veredito", [idEvento, veredito]);
+        await connection.close();
+        return soma.rows as number[][];
     }
 }

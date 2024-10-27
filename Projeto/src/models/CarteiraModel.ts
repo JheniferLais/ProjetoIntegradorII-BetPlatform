@@ -1,6 +1,5 @@
 // Tipo apostas
 export type Carteira = {
-    idCarteira: number;
-    idUsuario?: number;
+    idUsuario: number;
     saldo: number;
 }

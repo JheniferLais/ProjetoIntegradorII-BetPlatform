@@ -3,7 +3,7 @@ export type Aposta = {
     idAposta?: number;
     idEvento: number;
     idUsuario: number;
-    valorAposta: number;
+    qtd_cotas: number;
     aposta: string; //sim ou nao
     dataAposta?: string;
 }
