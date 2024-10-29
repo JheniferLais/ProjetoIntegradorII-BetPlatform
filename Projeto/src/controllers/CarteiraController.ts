@@ -118,21 +118,31 @@ export namespace carteiraHandler {
 
         //-------------------------------------------------------------------------
 
-        // Altera o valor do saldo de acordo com o juros a pagar
-        carteira.saldo = calcularTaxaDeSaque(valor);
+        // Cria o valor que o usuario vai receber na 'Conta Corrente' após o desconto
+        const valorDescontado: number = calcularTaxaDeSaque(valor);
 
-        // Retira da conta o saldo do saque
+        // Altera o valor do saldo do usuario
+        carteira.saldo = valor;
+
+        // Retira da conta o valor do saque
         await dataBaseUtils.retirarFundos(carteira);
 
         // Cria uma transacao para ser usada de historico de transacoes
         const transacao: TransacaoFinanceira = {
             idUsuario: idUsuario,
             tipoTransacao: 'saque',
-            valorTransacao: carteira.saldo,
+            valorTransacao: valorDescontado,
         }
         await dataBaseUtils.insertTransacao(transacao);
 
+        // Response
+        const response = {
+            status: 'Saldo sacado com sucesso!',
+            saque: `Valor retirado da conta: ${valor}`,
+            deposito: `Valor depositado após a taxa: ${valorDescontado}`
+        };
+
         // Response e statusCode de sucesso
-        res.status(200).json('Saldo sacado com sucesso!');
+        res.status(200).send(response);
     }
 }
