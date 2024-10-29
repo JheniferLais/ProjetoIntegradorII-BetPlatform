@@ -38,27 +38,32 @@ export namespace carteiraHandler {
         const validade = req.get('validade');
         const cvv = req.get('cvv');
 
-        // Verifica se os dados estão completos
-        if (!valor || !numeroCartao || !validade || !cvv || !idUsuario) {
-            res.status(400).json({ erro: 'Dados incompletos'})
+        // Valida se os dados estão completos
+        if (!idUsuario || !valor || !numeroCartao || !validade || !cvv) {
+            res.status(400).send('Campos obrigatórios estão faltando!');
             return;
         }
 
         // Valida o cartão de crédito
         const cartaoValido = validarCartao(numeroCartao, validade, cvv);
         if (!cartaoValido) {
-           res.status(400).json({ erro: 'Cartão inválido!' });
-            return;
+           res.status(400).json('Informações do cartão incompletas. Verifique os campos e tente novamente!');
+           return;
         }
 
+        // Valida se a carteira do usuario existe
         const carteira: Carteira | null = await dataBaseUtils.findCarteira(idUsuario);
         if(!carteira) {
             res.status(404).send('Carteira não encontrada!');
             return;
         }
 
+        //-------------------------------------------------------------------------
+
+        // Altera o saldo
         carteira.saldo = valor;
 
+        // Executa a adição do saldo na carteira
         await dataBaseUtils.addFunds(carteira);
 
         //Cria uma transacao para ser usada de historico de transacoes
@@ -69,7 +74,8 @@ export namespace carteiraHandler {
         }
         await dataBaseUtils.insertTransacao(transacao);
 
-        res.status(200).send('Saldo adicionado com sucesso.');
+        // Response e statusCode de sucesso
+        res.status(200).send('Saldo adicionado com sucesso!');
     }
 
     // 'Função' para sacar fundos da carteira
@@ -79,35 +85,46 @@ export namespace carteiraHandler {
         const valor = parseFloat(req.get('valor') || '');
         const contaCorrente = req.get('contaCorrente');
 
-        // Verifica se os dados estão completos
-        if (!valor && valor > 0 || !contaCorrente) {
-           res.status(400).json('Dados incompletos!');
-           return;
-        }
-
-        if(contaCorrente.length > 12 || contaCorrente.length < 6) {
-            res.status(400).json('Conta invalida!');
+        // Valida se todos os campos foram preenchidos
+        if(!idUsuario || !valor || !contaCorrente){
+            res.status(400).send('Campos obrigatórios estão faltando!');
             return;
         }
 
+        // Valida se o valor do saque é maior que 0
+        if (valor > 0) {
+           res.status(400).json('A quantia para saque deve ser maior que zero!');
+           return;
+        }
+
+        // Valida o formato da conta
+        if(contaCorrente.length > 12 || contaCorrente.length < 6) {
+            res.status(400).json('Conta inválida!');
+            return;
+        }
+
+        // Valida se a carteira do usuario existe
         const carteira: Carteira | null = await dataBaseUtils.findCarteira(idUsuario);
         if(!carteira) {
             res.status(404).send('Carteira não encontrada!');
             return;
         }
 
-        // Verifica se o usuário tem saldo suficiente
+        // Valida se o usuário tem saldo suficiente
         if (valor > carteira.saldo) {
-            res.status(400).json({ erro: 'Saldo insuficiente!' });
+            res.status(400).json('Saldo insuficiente para realizar o saque!');
             return;
         }
 
+        //-------------------------------------------------------------------------
+
+        // Altera o valor do saldo de acordo com o juros a pagar
         carteira.saldo = calcularTaxaDeSaque(valor);
 
-        //Retira da conta o saldo do saque
+        // Retira da conta o saldo do saque
         await dataBaseUtils.retirarFundos(carteira);
 
-        //Cria uma transacao para ser usada de historico de transacoes
+        // Cria uma transacao para ser usada de historico de transacoes
         const transacao: TransacaoFinanceira = {
             idUsuario: idUsuario,
             tipoTransacao: 'saque',
@@ -115,6 +132,7 @@ export namespace carteiraHandler {
         }
         await dataBaseUtils.insertTransacao(transacao);
 
+        // Response e statusCode de sucesso
         res.status(200).json('Saldo sacado com sucesso!');
     }
 }
