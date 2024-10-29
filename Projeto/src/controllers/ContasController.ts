@@ -81,7 +81,7 @@ export namespace contasHandler {
         await dataBaseUtils.insertUser(novaConta);
 
         // Response e statusCode de sucesso
-        res.status(201).send('usuario inserido!')
+        res.status(201).send('usuario inserido com sucesso!')
     };
 
     // 'Função' para login
