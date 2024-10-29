@@ -177,6 +177,8 @@ export namespace eventosHandler {
             return;
         }
 
+        //-------------------------------------------------------------------------
+
         // Executa a alteração do status_evento e resultado caso o evento seja reprovado
         if(resultado == 'reprovado'){
 
@@ -210,6 +212,8 @@ export namespace eventosHandler {
             res.status(400).send('Campos obrigatórios estão faltando!');
             return;
         }
+
+        //-------------------------------------------------------------------------
 
         // Valida se existe algum evento com a palavra fornecida
         const eventos: Evento | null = await dataBaseUtils.searchEvent(palavraChave);
