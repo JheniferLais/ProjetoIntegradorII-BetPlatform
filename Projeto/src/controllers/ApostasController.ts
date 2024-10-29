@@ -66,6 +66,18 @@ export namespace apostasHandler {
             return;
         }
 
+        //Verifica pelo dia e hora se o evento já pode receber apostas
+        if(new Date() < evento.DATA_HORA_INICIO){
+            res.status(400).send('O evento ainda não pode receber apostas!');
+            return;
+        }
+
+        //Verifica pelo dia e hora se o evento ainda pode receber apostas
+        if(new Date() > evento.DATA_HORA_FIM){
+            res.status(400).send('O evento não pode mais receber apostas!');
+            return;
+        }
+
         //Retira da conta o saldo da aposta
         carteira.saldo = valorAposta;
         await dataBaseUtils.retirarFundos(carteira);
