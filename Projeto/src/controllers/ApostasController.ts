@@ -19,74 +19,77 @@ export namespace apostasHandler {
         const qtd_cotas = parseInt(req.get('qtd_cotas') || '');
         const aposta = req.get('aposta');
 
+        // Valida se todos os campos foram preenchidos
         if (!idEvento || !idUsuario || !email || !qtd_cotas || !aposta) {
-            res.status(400).send('Preencha todos os campos!');
+            res.status(400).send('Campos obrigatórios estão faltando!');
             return;
         }
 
-        //Verifica se o email digitado e o id do usuario sao do mesmo usuario
+        // Valida se o email digitado e o id do usuario sao do mesmo usuario
         const user: true | null = await dataBaseUtils.validaUserAposta(email, idUsuario);
         if (!user) {
-            res.status(404).send('O email fornecido não pertence a sua conta!');
+            res.status(403).send('O email fornecido não pertence a sua conta!');
             return;
         }
 
-        //Verifica se o usuario digitou valores aceitos
+        // Valida se o usuario digitou valores aceitos
         if (aposta !== 'sim' && aposta !== 'nao') {
-            res.status(400).send('Apenas valores "(sim/nao)" sao aceitos como entrada em aposta');
+            res.status(400).send('Valor inválido para aposta! Deve ser "sim" ou "nao"!');
             return;
         }
 
-        //Encontra a carteira do usuario
+        // Valida se a carteira do usuario existe
         const carteira: Carteira | null = await dataBaseUtils.findCarteira(idUsuario);
         if (!carteira) {
             res.status(404).send('Carteira não encontrada!');
             return;
         }
 
-        //Verifica se o evento existe
+        // Valida se o evento existe
         const evento: Evento | null = await dataBaseUtils.findEvento(idEvento);
         if (!evento) {
             res.status(404).send('Evento não encontrado!');
             return;
         }
 
-        //Calcula o total a ser descontado do usuario
+        // Calcula o total a ser descontado do usuario
         const valorAposta: number = evento.VALOR_COTA * qtd_cotas
 
-        //Verifica se saldo na carteira do usuario é menor que o valor da aposta
+        // Valida se o usuário tem saldo suficiente
         if (carteira.saldo < valorAposta) {
-            res.status(400).send('Saldo insuficiente para realizar a aposta.');
+            res.status(400).json('Saldo insuficiente para realizar a aposta!');
             return;
         }
 
-        //Verifica se o evento pode receber apostas
+        // Valida se o evento pode receber apostas
         if (evento.STATUS_EVENTO !== 'aprovado' || evento.RESULTADO !== 'pendente') {
             res.status(400).send('Não é possivel apostar nesse evento!');
             return;
         }
 
-        //Verifica pelo dia e hora se o evento já pode receber apostas
+        // Valida se o evento já pode receber apostas
         if(new Date() < evento.DATA_HORA_INICIO){
             res.status(400).send('O evento ainda não pode receber apostas!');
             return;
         }
 
-        //Verifica pelo dia e hora se o evento ainda pode receber apostas
+        // Valida se o evento ainda pode receber apostas
         if(new Date() > evento.DATA_HORA_FIM){
             res.status(400).send('O evento não pode mais receber apostas!');
             return;
         }
 
-        //Retira da conta o saldo da aposta
+        //-------------------------------------------------------------------------
+
+        // Retira da conta o saldo da aposta
         carteira.saldo = valorAposta;
         await dataBaseUtils.retirarFundos(carteira);
 
-        //Aumenta a quantidade de aposta no evento
+        // Aumenta a quantidade de aposta no evento
         evento.QTD_APOSTAS = 1;
         await dataBaseUtils.updateEventoAposta(evento);
 
-        //Insere no banco a aposta
+        // Insere no Banco de dados
         const apostaDoUsuario: Aposta = {
             idEvento: idEvento,
             idUsuario: idUsuario,
@@ -95,7 +98,7 @@ export namespace apostasHandler {
         }
         await dataBaseUtils.betOnEvent(apostaDoUsuario);
 
-        //Insere no banco essa transação
+        // Insere no banco essa transação
         const transacao: TransacaoFinanceira = {
             idUsuario: idUsuario,
             tipoTransacao: 'aposta',
@@ -103,6 +106,7 @@ export namespace apostasHandler {
         }
         await dataBaseUtils.insertTransacao(transacao);
 
+        // Response e statusCode de sucesso
         res.status(200).send('Aposta realizada com sucesso!');
     }
 
@@ -113,63 +117,62 @@ export namespace apostasHandler {
 
         const veredito = req.get('veredito');
 
-        //Verifica se todos os campos foram preenchidos
+        // Valida se todos os campos foram preenchidos
         if (!idModerador || !idEvento || !veredito) {
-            res.status(401).send('Preencha todos os campos');
+            res.status(400).send('Campos obrigatórios estão faltando!');
             return;
         }
 
-        //Verifica a entrada correta de dados
+        // Valida se o usuario digitou valores aceitos
         if (veredito !== 'sim' && veredito !== 'nao') {
-            res.status(401).send('Preencha todos os campos corretamente');
+            res.status(400).send('Valor inválido para aposta! Deve ser "sim" ou "nao"!');
             return;
         }
 
-        //Verifica se o usuario é moderador
+        // Valida se o usuario é moderador
         const moderador: Conta[][] = await dataBaseUtils.findModerador(idModerador);
         if (!moderador || moderador.length === 0) {
-            res.status(401).send('Não autorizado para essa rota!');
+            res.status(403).send('Não autorizado para essa rota!');
             return;
         }
 
-        //Verifica se o evento existe
+        // Valida se o evento existe
         const evento: Evento | null = await dataBaseUtils.findEvento(idEvento);
         if (!evento) {
             res.status(404).send('Evento não encontrado!');
             return;
         }
 
-        //Verifica se o Evento já ocorreu
+        // Valida se o Evento já ocorreu
         const eventoOcorreu: boolean = timeUtils.dataPassou(evento.DATA_EVENTO);
         if (!eventoOcorreu) {
-            res.status(401).send('O evento ainda não ocorreu!');
+            res.status(400).send('O evento não pode ser finalizado porque não ocorreu!');
             return;
         }
 
-        // Verifica se o evento pode ser finalizado
+        // Valida se o evento pode ser finalizado
         if (evento.STATUS_EVENTO !== 'aprovado' && evento.RESULTADO !== 'pendente') {
-            //res.statusCode = 400;
-            res.send(`Não é possivel avaliar esse evento!`);
+            res.status(400).send('O evento não pode ser finalizado no estado atual!');
             return;
         }
 
-        //--------------------------------------------------------------------------------------------
+        //-------------------------------------------------------------------------
 
-        //Finaliza o evento alterando status e o veredito
+        // Finaliza o evento alterando status e o veredito
         await dataBaseUtils.finishEvento(idEvento, veredito)
 
-        //Cria uma variavel para ser a aposta perdedora
+        // Cria uma variavel para ser a aposta perdedora
         let vereditoPerdedora: string = veredito === 'sim' ? 'nao' : 'sim';
 
-        //Busca todas as apostas vencedoras do evento
+        // Busca todas as apostas vencedoras do evento
         const apostasVencedoras: Aposta[][] | null = await dataBaseUtils.getApostasFiltered(idEvento, veredito);
         const apostasPerdedoras: Aposta[][] | null = await dataBaseUtils.getApostasFiltered(idEvento, vereditoPerdedora);
 
-        //Busca a soma do veredito(vencedoras) e das apostas perdedoras
+        // Busca a soma do veredito(vencedoras) e das apostas perdedoras
         const somaVencedora: number[][] | null = await dataBaseUtils.somaApostasVeredito(idEvento, veredito);
         const somaPerdedora: number[][] | null = await dataBaseUtils.somaApostasVeredito(idEvento, vereditoPerdedora);
 
-        //Devolve o dinheiro dos usuarios caso não haja bet ou vencedores ou caso não haja apostas no evento
+        // Reembolsa usuários se não houver BET(usuários perdedores) ou vencedores.
         if (((!apostasVencedoras || !apostasVencedoras.length) || (!apostasPerdedoras || !apostasPerdedoras.length)) || (somaPerdedora === null || somaVencedora === null)) {
             //Busca todas as apostas  do evento
             const apostas: Aposta[][] | null = await dataBaseUtils.getApostas(idEvento);
@@ -207,7 +210,7 @@ export namespace apostasHandler {
             return;
         }
 
-        //Realiza a distribuição proporcional dos ganhos entre os vencedores
+        // Realiza a distribuição proporcional dos ganhos entre os vencedores
         for (const aposta of apostasVencedoras) {
             if (typeof aposta[2] === 'number' && typeof aposta[3] === 'number') {
 
@@ -232,6 +235,8 @@ export namespace apostasHandler {
                 await dataBaseUtils.insertTransacao(transacao);
             }
         }
+
+        // Response e statusCode de sucesso
         res.status(200).send('Evento finalizado e ganhos distribuídos com sucesso!');
     }
 }
