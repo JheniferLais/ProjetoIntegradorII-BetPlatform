@@ -1,6 +1,6 @@
-import {NextFunction, Request, Response} from 'express';
+import { NextFunction, Request, Response } from 'express';
 import { Conta } from '../models/UsuarioModel';
-import {dataBaseUtils} from './DataBaseUtils';
+import { dataBaseUtils } from './DataBaseUtils';
 
 export namespace tokenUtils {
 
@@ -16,10 +16,18 @@ export namespace tokenUtils {
     export const checkToken = async (req: Request, res: Response, next: NextFunction): Promise<any>=> {
         const idUsuario = parseInt(req.params.id); // ID do usuario passado como parâmetro na URL
 
-        if(!idUsuario) return res.status(400).json(`Forneça o id!`);
+        // Valida se todos os campos foram preenchidos
+        if(!idUsuario) {
+            res.status(400).send('Campos obrigatórios estão faltando!');
+            return;
+        }
 
+        // Valida o token do usuario
         const token: Conta[][] = await findToken(idUsuario);
-        if (!token || token.length === 0) return res.status(401).json("Acesso negado. O Token é inválido!");
+        if (!token || token.length === 0) {
+            res.status(403).send('Acesso negado. Token inválido.');
+            return;
+        }
 
         next();
     }

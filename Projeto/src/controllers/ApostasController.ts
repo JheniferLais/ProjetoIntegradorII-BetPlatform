@@ -4,7 +4,6 @@ import { dataBaseUtils } from '../utils/DataBaseUtils'
 import { Carteira } from "../models/CarteiraModel";
 import { Evento } from "../models/EventoModel";
 import { Aposta } from "../models/ApostaModel";
-import {Conta} from "../models/UsuarioModel";
 import { timeUtils } from "../utils/TimeUtils";
 
 
@@ -126,13 +125,6 @@ export namespace apostasHandler {
         // Valida se o usuario digitou valores aceitos
         if (veredito !== 'sim' && veredito !== 'nao') {
             res.status(400).send('Valor inválido para aposta! Deve ser "sim" ou "nao"!');
-            return;
-        }
-
-        // Valida se o usuario é moderador
-        const moderador: Conta[][] = await dataBaseUtils.findModerador(idModerador);
-        if (!moderador || moderador.length === 0) {
-            res.status(403).send('Não autorizado para essa rota!');
             return;
         }
 

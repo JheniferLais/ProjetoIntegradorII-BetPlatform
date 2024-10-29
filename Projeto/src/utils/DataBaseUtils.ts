@@ -1,9 +1,9 @@
 import { Conta } from '../models/UsuarioModel';
 import { Evento } from "../models/EventoModel";
 import oracledb from "oracledb";
-import {Carteira} from "../models/CarteiraModel";
-import {TransacaoFinanceira} from "../models/TransacaoFinanceiraModel";
-import {Aposta} from "../models/ApostaModel";
+import { Carteira } from "../models/CarteiraModel";
+import { TransacaoFinanceira } from "../models/TransacaoFinanceiraModel";
+import { Aposta } from "../models/ApostaModel";
 
 export namespace dataBaseUtils {
 
@@ -167,16 +167,6 @@ export namespace dataBaseUtils {
         }
         await connection.close();
         return null;  // Retorna null se não encontrar nenhum evento
-    }
-
-    //------------------------------------------------------------------------------------------------------------------
-
-    //Função para encontrar o moderador baseado no id
-    export async function findModerador(idModerador: number): Promise<Conta[][]> {
-        const connection = await ConnectionDB();
-        const result = await connection.execute("SELECT * FROM usuarios WHERE id_usuario = :idModerador and moderador = 1", [idModerador]);
-        await connection.close();
-        return result.rows as Conta[][];
     }
 
     //------------------------------------------------------------------------------------------------------------------

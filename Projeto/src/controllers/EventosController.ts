@@ -2,7 +2,6 @@ import { Request, RequestHandler, Response } from 'express';
 import { Evento } from "../models/EventoModel";
 import { timeUtils } from "../utils/TimeUtils";
 import { dataBaseUtils } from "../utils/DataBaseUtils";
-import { Conta } from "../models/UsuarioModel";
 
 export namespace eventosHandler {
 
@@ -154,13 +153,6 @@ export namespace eventosHandler {
         // Valida se o resultado foi fornecido corretamente
         if (resultado !== 'aprovado' && resultado !== 'reprovado') {
             res.status(400).send('Valor inválido para resultado! Deve ser "aprovado" ou "reprovado".');
-            return;
-        }
-
-        // Valida se o usuario é moderador
-        const moderador: Conta[][] = await dataBaseUtils.findModerador(idModerador);
-        if (!moderador || moderador.length === 0) {
-            res.status(403).send('Não autorizado para essa rota!');
             return;
         }
 
