@@ -11,12 +11,15 @@ export namespace eventosHandler {
         const titulo = req.get('titulo');
         const desc = req.get('desc');
         const valorCota = parseFloat(req.get('valorCota') || ''); // Converte para número
-        const inicioApostas = req.get('inicioApostas');
-        const fimApostas = req.get('fimApostas');
-        const dataEvento = req.get('dataEvento');
+
+        const inicioApostas = req.get('inicioApostas'); //YYYY-MM-DD
+        const inicioApostasHora = req.get('inicioApostasHora'); //HH:mm:ss
+        const fimApostas = req.get('fimApostas'); //YYYY-MM-DD
+        const fimApostasHora = req.get('fimApostasHora'); //HH:mm:ss
+        const dataEvento = req.get('dataEvento'); //YYYY-MM-DD
 
         // Valida se todos os campos foram preenchidos
-        if (!idUsuario || !titulo || !desc || !valorCota || !inicioApostas || !fimApostas || !dataEvento) {
+        if (!idUsuario || !titulo || !desc || !valorCota || !inicioApostas || !inicioApostasHora|| !fimApostas || !fimApostasHora|| !dataEvento) {
             res.status(400).send('Campos obrigatórios estão faltando!');
             return;
         }
@@ -33,11 +36,15 @@ export namespace eventosHandler {
             return;
         }
 
+        // Concatena a data e a hora
+        const dataHoraInicio = `${inicioApostas}T${inicioApostasHora}`;
+        const dataHoraFim = `${fimApostas}T${fimApostasHora}`;
+
         // Valida o formato das datas
-        const dataInicio: boolean = timeUtils.validarDataReal(inicioApostas);
-        const dataFim: boolean = timeUtils.validarDataReal(fimApostas);
-        const Eventodata: boolean  = timeUtils.validarDataReal(dataEvento);
-        if(!dataInicio || !dataFim || !Eventodata) {
+        const dataInicio: boolean = timeUtils.validarDataHora(dataHoraInicio);
+        const dataFim: boolean = timeUtils.validarDataHora(dataHoraFim);
+        const eventoData: boolean  = timeUtils.validarDataReal(dataEvento);
+        if(!dataInicio || !dataFim || !eventoData) {
             res.status(400).send('Formato de data inválido!');
             return;
         }
@@ -56,8 +63,8 @@ export namespace eventosHandler {
             TITULO: titulo,
             DESCRICAO: desc,
             VALOR_COTA: valorCota,
-            DATA_HORA_INICIO: new Date(inicioApostas),
-            DATA_HORA_FIM: new Date(fimApostas),
+            DATA_HORA_INICIO: new Date(dataHoraInicio),
+            DATA_HORA_FIM: new Date(dataHoraFim),
             DATA_EVENTO: new Date(dataEvento),
             QTD_APOSTAS: 0,
             RESULTADO: 'pendente',
