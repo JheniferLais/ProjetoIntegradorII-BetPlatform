@@ -50,8 +50,14 @@ export namespace eventosHandler {
         }
 
         // Valida se a data de início é anterior à data de fim
-        if (new Date(inicioApostas) >= new Date(fimApostas)) {
+        if (new Date(inicioApostas) > new Date(fimApostas)) {
             res.status(400).send('A data de início deve ser anterior à data de fim!');
+            return;
+        }
+
+        // Valida se a data do evento é após o periodo de apostas
+        if(new Date(dataEvento) < new Date(dataHoraFim)){
+            res.status(400).send('A data do evento deve ser após o periodo de apostas!');
             return;
         }
 
@@ -63,9 +69,9 @@ export namespace eventosHandler {
             TITULO: titulo,
             DESCRICAO: desc,
             VALOR_COTA: valorCota,
-            DATA_HORA_INICIO: new Date(dataHoraInicio),
-            DATA_HORA_FIM: new Date(dataHoraFim),
-            DATA_EVENTO: new Date(dataEvento),
+            DATA_HORA_INICIO: dataHoraInicio,
+            DATA_HORA_FIM: dataHoraFim,
+            DATA_EVENTO: dataEvento,
             QTD_APOSTAS: 0,
             RESULTADO: 'pendente',
             STATUS_EVENTO: 'pendente',

@@ -5,9 +5,9 @@ export type Evento = {
     TITULO: string;
     DESCRICAO: string;
     VALOR_COTA: number;
-    DATA_HORA_INICIO: Date;
-    DATA_HORA_FIM: Date;
-    DATA_EVENTO: Date;
+    DATA_HORA_INICIO: string;
+    DATA_HORA_FIM: string;
+    DATA_EVENTO: string;
     QTD_APOSTAS: number;
     RESULTADO: string;
     STATUS_EVENTO: string;

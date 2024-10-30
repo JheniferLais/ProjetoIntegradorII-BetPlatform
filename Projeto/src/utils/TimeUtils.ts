@@ -42,8 +42,8 @@ export namespace timeUtils {
     }
 
     //Função para verificar se uma data ja passou
-    export function dataPassou(data: Date): boolean {
+    export function dataPassou(data: string): boolean {
         const hoje = new Date();
-        return data < hoje;
+        return new Date(data) < hoje;
     }
 }
