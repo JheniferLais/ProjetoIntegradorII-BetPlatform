@@ -202,6 +202,7 @@ export namespace eventosHandler {
 
             // Response e statusCode de sucesso
             res.status(200).send(`Texto confuso, texto inapropriado, não respeita a política de privacidade e/ou termos de uso da plataforma!`);
+            return;
         }
 
         // Atualiza o status_evento

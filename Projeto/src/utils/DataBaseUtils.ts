@@ -146,7 +146,7 @@ export namespace dataBaseUtils {
 
         // Verifica se há algum resultado
         if (result.rows && result.rows.length > 0) {
-            const row = result.rows[0] as any[];
+            const row = result.rows as any[];
 
             const evento: Evento = {
                 ID_EVENTO: row[0] as number,
