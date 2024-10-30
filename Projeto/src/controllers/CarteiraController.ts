@@ -10,6 +10,23 @@ export namespace carteiraHandler {
         return numeroCartao.length === 16 && validade.length === 5 && cvv.length === 3;
     }
 
+    // Função para a validação da chave pix
+    function validarChavePix(chave: string): boolean {
+        const regexCPF = /^\d{3}\.\d{3}\.\d{3}-\d{2}$|^\d{11}$/;
+        const regexCNPJ = /^\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}$|^\d{14}$/;
+        const regexEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+        const regexTelefone = /^\+55\d{11}$|^\d{11}$/;
+        const regexAleatoria = /^[a-zA-Z0-9]{32,36}$/;
+
+        return (
+            regexCPF.test(chave) ||
+            regexCNPJ.test(chave) ||
+            regexEmail.test(chave) ||
+            regexTelefone.test(chave) ||
+            regexAleatoria.test(chave)
+        );
+    }
+
     //Função para calcular o valor do saque apos o imposto
     export function calcularTaxaDeSaque(valor: number): number {
         let taxa: number;
@@ -45,9 +62,9 @@ export namespace carteiraHandler {
         }
 
         // Valida o cartão de crédito
-        const cartaoValido = validarCartao(numeroCartao, validade, cvv);
+        const cartaoValido: boolean = validarCartao(numeroCartao, validade, cvv);
         if (!cartaoValido) {
-           res.status(400).json('Informações do cartão incompletas. Verifique os campos e tente novamente!');
+           res.status(400).send('Informações do cartão inválidas. Verifique os campos e tente novamente!');
            return;
         }
 
@@ -83,23 +100,23 @@ export namespace carteiraHandler {
         const idUsuario = parseInt(req.params.id); //ID do usuario passado como parâmetro na URL
 
         const valor = parseFloat(req.get('valor') || '');
-        const contaCorrente = req.get('contaCorrente');
+        const pix = req.get('pix');
 
         // Valida se todos os campos foram preenchidos
-        if(!idUsuario || !valor || !contaCorrente){
+        if(!idUsuario || !valor || !pix){
             res.status(400).send('Campos obrigatórios estão faltando!');
             return;
         }
 
         // Valida se o valor do saque é maior que 0
-        if (valor > 0) {
-           res.status(400).json('A quantia para saque deve ser maior que zero!');
+        if (valor <= 0) {
+           res.status(400).send('A quantia para saque deve ser maior que zero!');
            return;
         }
 
-        // Valida o formato da conta
-        if(contaCorrente.length > 12 || contaCorrente.length < 6) {
-            res.status(400).json('Conta inválida!');
+        const chaveValida: boolean = validarChavePix(pix);
+        if(!chaveValida) {
+            res.status(400).send('Informação da Chave pix inválidas. Verifique os campos e tente novamente!');
             return;
         }
 
@@ -112,7 +129,7 @@ export namespace carteiraHandler {
 
         // Valida se o usuário tem saldo suficiente
         if (valor > carteira.saldo) {
-            res.status(400).json('Saldo insuficiente para realizar o saque!');
+            res.status(400).send('Saldo insuficiente para realizar o saque!');
             return;
         }
 
