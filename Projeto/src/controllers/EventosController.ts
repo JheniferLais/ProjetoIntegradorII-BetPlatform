@@ -88,6 +88,12 @@ export namespace eventosHandler {
             return;
         }
 
+        const statusValidos = ['aprovado', 'reprovado', 'excluido', 'pendente', 'finalizado'];
+
+        if (!statusValidos.includes(statusEvento)) {
+            res.status(400).send('Valor inválido para a busca! Deve ser "aprovado", "reprovado", "excluido", "pendente", "finalizado".');
+            return;
+        }
         //-------------------------------------------------------------------------
 
         // Obtém eventos filtrados
@@ -189,7 +195,7 @@ export namespace eventosHandler {
             await dataBaseUtils.updateEventoReprovado(evento);
 
             // Response e statusCode de sucesso
-            res.status(200).send(`Evento ${resultado} com sucesso!`);
+            res.status(200).send(`Texto confuso, texto inapropriado, não respeita a política de privacidade e/ou termos de uso da plataforma!`);
         }
 
         // Atualiza o status_evento
