@@ -33,11 +33,11 @@ export namespace carteiraHandler {
 
         if (valor <= 100) {
             taxa = 0.04;  // 4%
-        } else if (valor >= 101 && valor <= 1000) {
+        } else if (valor <= 1000) {
             taxa = 0.03;  // 3%
-        } else if (valor >= 1001 && valor <= 5000) {
+        } else if (valor <= 5000) {
             taxa = 0.02;  // 2%
-        } else if (valor >= 5001 && valor <= 101000) {
+        } else if (valor <= 101000) {
             taxa = 0.01;  // 1%
         } else {
             taxa = 0;  // Isento de taxa
