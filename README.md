@@ -7,13 +7,9 @@
 
 
  <h2>Sobre o Projeto</h2> 
-projeto de site de apostas em eventos
+blank.
 <h2>Sobre os Integrantes</h2> 
-jhenifer - a maior |
-jean - verde |
-giatti - enche o projeto de frufru |
-layra - ta aí |
-lorenna - trancou 🔒
+blank.
 
 <h2>Tecnologias Utilizadas:</h2>
 

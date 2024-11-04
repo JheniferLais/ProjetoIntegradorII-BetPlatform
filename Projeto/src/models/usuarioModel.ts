@@ -5,6 +5,5 @@ export type Conta = {
     email: string;
     senha: string;
     nascimento: string;
-    token?: string;
     moderador?: number;
 };

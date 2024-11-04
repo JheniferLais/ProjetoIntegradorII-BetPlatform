@@ -1,8 +1,9 @@
 // Tipo transacao
 export type TransacaoFinanceira= {
-    idTransacao?: number;
+    idTransacao: number;
     idUsuario?: number;
     tipoTransacao: string;
     valorTransacao: number;
-    dataTransacao?: string;
 }
+// Banco de Dados temporario
+export let BDtransacoesFinanceiras: TransacaoFinanceira[] = [];

@@ -1,17 +1,17 @@
 import { Request, RequestHandler, Response } from 'express';
-import { Conta } from '../models/UserModel';
-import { timeUtils } from '../utils/TimeUtils';
-import { dataBaseUtils } from '../utils/DatabaseUtils'
+import { Conta } from '../models/usuarioModel';
+import { timeUtils } from '../utils/timeUtils';
+import { dataBaseUtils } from '../utils/dataBaseUtils'
+import jwt from 'jsonwebtoken';
 
 export namespace contasHandler {
-
     // Função para validar o formato do email
     function validarEmail(email: string): boolean {
         const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return regex.test(email);
     }
 
-    // Função para validar se o usuario fez aniversario
+    // Função para verificar se o usuario fez aniversario
     function verificaIdade(nascimento: string): number {
         const nascimentoData = new Date(nascimento);
         const hojeData = new Date();
@@ -33,55 +33,58 @@ export namespace contasHandler {
         const senha = req.get('senha');
         const nascimento = req.get('nascimento');
 
-        // Valida se todos os campos foram preenchidos
+        // Verifica se todos os campos foram preenchidos
         if (!nome || !email || !senha || !nascimento) {
-            res.status(400).send('Campos obrigatórios estão faltando!');
+            res.statusCode = 400;
+            res.send(`Preencha todos os campos!`);
             return;
         }
 
         // Valida  o formato do email
         const validEmail = validarEmail(email);
         if (!validEmail) {
-            res.status(400).send('Formato de email inválido!');
+            res.statusCode = 400;
+            res.send(`Formato de email invalido!`);
             return;
         }
 
-        // Valida se o email já foi cadastrado
+        // Verifica se o email já foi cadastrado
         const infoEmail = await dataBaseUtils.findEmail(email);
         if (infoEmail && infoEmail.length > 0) {
-            res.status(409).send('O e-mail informado já está cadastrado! Tente usar outro e-mail.');
+            res.statusCode = 400;
+            res.send(`Usuário já cadastrado!`);
             return;
         }
 
         // Valida o formato da data
         const data = timeUtils.validarDataReal(nascimento);
         if(!data){
-            res.status(400).send('Formato de data inválido!');
+            //res.statusCode = ?
+            res.send(`Formato de data invalida!`);
             return;
         }
 
-        // Valida a maioridade do usuario
+        // Verifica a maioridade do usuario
         const idade: number = verificaIdade(nascimento);
         if (idade < 18) {
-            res.status(403).send('Cadastro restrito para maiores de 18 anos!');
+            //res.statusCode = ?;
+            res.send(`O usuario deve ser maior de idade!`);
             return;
         }
-
-        //-------------------------------------------------------------------------
 
         // Cria uma 'novaConta' do tipo 'Conta' com as informações recebidas
         const novaConta: Conta = {
             nome: nome,
             email: email,
             senha: senha,
-            nascimento: nascimento,
+            nascimento: nascimento
         };
 
         // Insere no Banco de dados
         await dataBaseUtils.insertUser(novaConta);
 
-        // Response e statusCode de sucesso
-        res.status(201).send('usuario inserido com sucesso!')
+        res.statusCode = 200;
+        res.send('usuario inserido!')
     };
 
     // 'Função' para login
@@ -89,29 +92,30 @@ export namespace contasHandler {
         const email = req.get('email');
         const senha = req.get('senha');
 
-        // Valida se todos os campos foram preenchidos
+        // Verifica se todos os campos foram preenchidos
         if (!email || !senha) {
-            res.status(400).send('Campos obrigatórios estão faltando!');
+            res.statusCode = 400;
+            res.send(`Preencha todos os campos!`);
             return;
         }
 
-        // Valida se o usuario esta cadastrado
-        const user: Conta[][] = await dataBaseUtils.findUser(email, senha);
+        // Verifica se o usuario esta cadastrado
+        const user = await dataBaseUtils.findUser(email, senha);
         if (!user || user.length === 0) {
-            res.status(401).send('Login ou senha inválidos!');
+            res.statusCode = 401;
+            res.send(`Login ou senha inválidos!`);
             return;
         }
 
-        //-------------------------------------------------------------------------
+        const JWT_SECRET = 'segredo_super_secreto';
+        const token: string = jwt.sign({ idUsuario: user[0][0], email: user[0][2] }, JWT_SECRET, { expiresIn: '1h' });
 
-        // Response
         const response = {
-            status: 'login efetuado com sucesso!',
+            status: `login efetuado com sucesso!`,
             message: `Seja bem vindo(a)! ${user[0][1]}`,
-            token: user[0][5]
+            token: token
         };
-
-        // Response e statusCode de sucesso
-        res.status(200).send(response);
+        res.statusCode = 200;
+        res.send(response);
     };
 }
