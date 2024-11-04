@@ -6,7 +6,8 @@ CREATE TABLE USUARIOS (
     senha VARCHAR2(255) NOT NULL,
     data_nascimento VARCHAR2(11) NOT NULL,
     token VARCHAR2(32) NOT NULL,
-    moderador NUMBER(1) DEFAULT 0 -- DEFAULT = 0 para pessoa comum e 1 para moderador
+    moderador NUMBER(1) DEFAULT 0, -- DEFAULT = 0 para pessoa comum e 1 para moderador
+    saldo NUMBER(20, 2) DEFAULT 0 -- Valor inicial da carteira = 0
 );
 
 -- Criando sequência para USUARIOS
@@ -14,23 +15,11 @@ CREATE SEQUENCE SEQ_USUARIOS START WITH 1 INCREMENT BY 1;
 
 ----------------------------------------------------------------------------------------------------------------------------------------
 
--- Tabela de CARTEIRA
-CREATE TABLE CARTEIRA (
-    id_carteira INT PRIMARY KEY,
-    id_usuario INT NOT NULL, -- FK para a tabela USUARIOS
-    saldo NUMBER(20, 2) DEFAULT 0 -- Valor inicial da carteira = 0
-);
-
--- Criando sequência para CARTEIRA
-CREATE SEQUENCE SEQ_CARTEIRA START WITH 1 INCREMENT BY 1;
-
-----------------------------------------------------------------------------------------------------------------------------------------
-
 -- Tabela de TRANSACOES_FINANCEIRAS
 CREATE TABLE TRANSACOES_FINANCEIRAS (
     id_transacao INT PRIMARY KEY,
     id_usuario INT NOT NULL, -- FK para a tabela USUARIOS
-    tipo_transacao VARCHAR2(20) NOT NULL CHECK (tipo_transacao IN ('deposito','saque','aposta')),
+    tipo_transacao VARCHAR2(20) NOT NULL CHECK (tipo_transacao IN ('deposito','saque','aposta', 'ganho_aposta')),
     valor NUMBER(10, 2) NOT NULL,
     data_transacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP -- Hora atual no momento da inserção
 );
@@ -51,7 +40,7 @@ CREATE TABLE EVENTOS (
     data_hora_fim TIMESTAMP NOT NULL,
     data_evento DATE NOT NULL,
     qtd_apostas INT NOT NULL,
-    resultado VARCHAR2(20) NOT NULL CHECK (resultado IN ('sim','nao','pendente')),
+    resultado VARCHAR2(20) NOT NULL CHECK (resultado IN ('sim','nao','pendente', 'reprovado')),
     status_evento VARCHAR2(20) NOT NULL CHECK (status_evento IN ('aprovado','reprovado','excluido','pendente','finalizado'))
 );
 
@@ -65,7 +54,7 @@ CREATE TABLE APOSTAS (
     id_aposta INT PRIMARY KEY,
     id_evento INT NOT NULL, -- FK para a tabela EVENTOS
     id_usuario INT NOT NULL, -- FK para a tabela USUARIOS
-    valor_aposta NUMBER(10, 2) NOT NULL,
+    qtd_cotas INT NOT NULL,
     aposta VARCHAR2(3) NOT NULL CHECK (aposta IN ('sim', 'nao')), 
     data_aposta TIMESTAMP DEFAULT CURRENT_TIMESTAMP -- Hora atual no momento da inserção
 );
@@ -74,10 +63,8 @@ CREATE TABLE APOSTAS (
 CREATE SEQUENCE SEQ_APOSTAS START WITH 1 INCREMENT BY 1;
 
 ----------------------------------------------------------------------------------------------------------------------------------------
--- Definindo as chaves estrangeiras (FK)
 
--- FK para vincular CARTEIRA ao USUARIOS
-ALTER TABLE CARTEIRA ADD CONSTRAINT fk_carteira_usuario FOREIGN KEY (id_usuario) REFERENCES USUARIOS(id_usuario);
+-- Definindo as chaves estrangeiras (FK)
 
 -- FK para vincular TRANSACOES_FINANCEIRAS ao USUARIOS
 ALTER TABLE TRANSACOES_FINANCEIRAS ADD CONSTRAINT fk_transacao_usuario FOREIGN KEY (id_usuario) REFERENCES USUARIOS(id_usuario);
@@ -88,3 +75,5 @@ ALTER TABLE EVENTOS ADD CONSTRAINT fk_evento_usuario FOREIGN KEY (id_usuario) RE
 -- FK para vincular APOSTAS ao EVENTOS e ao USUARIOS
 ALTER TABLE APOSTAS ADD CONSTRAINT fk_aposta_evento FOREIGN KEY (id_evento) REFERENCES EVENTOS(id_evento);
 ALTER TABLE APOSTAS ADD CONSTRAINT fk_aposta_usuario FOREIGN KEY (id_usuario) REFERENCES USUARIOS(id_usuario);
+
+----------------------------------------------------------------------------------------------------------------------------------------
