@@ -1,7 +1,7 @@
 import { Request, RequestHandler, Response } from 'express';
-import { Evento } from "../models/EventoModel";
+import { Evento } from "../models/EventModel";
 import { timeUtils } from "../utils/TimeUtils";
-import { dataBaseUtils } from "../utils/DataBaseUtils";
+import { dataBaseUtils } from "../utils/DatabaseUtils";
 
 export namespace eventosHandler {
 

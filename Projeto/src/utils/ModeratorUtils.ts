@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
-import { Conta } from '../models/UsuarioModel';
-import { dataBaseUtils } from './DataBaseUtils';
+import { Conta } from '../models/UserModel';
+import { dataBaseUtils } from './DatabaseUtils';
 
 export namespace moderadorUtils {
 

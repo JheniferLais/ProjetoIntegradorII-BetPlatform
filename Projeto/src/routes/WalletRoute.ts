@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { carteiraHandler } from '../controllers/CarteiraController';
+import { carteiraHandler } from '../controllers/WalletController';
 import { tokenUtils } from "../utils/TokenUtils";
 
 const route: Router = Router();

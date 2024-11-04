@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import { apostasHandler } from '../controllers/ApostasController';
+import { apostasHandler } from '../controllers/BetsController';
 import { tokenUtils } from "../utils/TokenUtils";
-import { moderadorUtils } from "../utils/ModeradorUtils";
+import { moderadorUtils } from "../utils/ModeratorUtils";
 
 const route: Router = Router();
 

@@ -1,9 +1,9 @@
 import { Request, RequestHandler, Response } from 'express';
-import { TransacaoFinanceira } from '../models/TransacaoFinanceiraModel';
-import { dataBaseUtils } from '../utils/DataBaseUtils'
-import { Carteira } from "../models/CarteiraModel";
-import { Evento } from "../models/EventoModel";
-import { Aposta } from "../models/ApostaModel";
+import { TransacaoFinanceira } from '../models/FinancialTransactionModel';
+import { dataBaseUtils } from '../utils/DatabaseUtils'
+import { Carteira } from "../models/WalletModel";
+import { Evento } from "../models/EventModel";
+import { Aposta } from "../models/BetModel";
 import { timeUtils } from "../utils/TimeUtils";
 
 

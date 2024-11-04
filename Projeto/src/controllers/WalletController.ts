@@ -1,7 +1,7 @@
 import {Request, RequestHandler, Response} from 'express';
-import {Carteira} from "../models/CarteiraModel";
-import {dataBaseUtils} from "../utils/DataBaseUtils";
-import {TransacaoFinanceira} from "../models/TransacaoFinanceiraModel";
+import {Carteira} from "../models/WalletModel";
+import {dataBaseUtils} from "../utils/DatabaseUtils";
+import {TransacaoFinanceira} from "../models/FinancialTransactionModel";
 
 export namespace carteiraHandler {
 

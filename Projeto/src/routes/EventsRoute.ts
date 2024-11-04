@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import { eventosHandler } from "../controllers/EventosController";
+import { eventosHandler } from "../controllers/EventsController";
 import { tokenUtils } from "../utils/TokenUtils";
-import { moderadorUtils } from "../utils/ModeradorUtils";
+import { moderadorUtils } from "../utils/ModeratorUtils";
 
 const route: Router = Router();
 

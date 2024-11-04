@@ -1,9 +1,9 @@
-import { Conta } from '../models/UsuarioModel';
-import { Evento } from "../models/EventoModel";
+import { Conta } from '../models/UserModel';
+import { Evento } from "../models/EventModel";
 import oracledb from "oracledb";
-import { Carteira } from "../models/CarteiraModel";
-import { TransacaoFinanceira } from "../models/TransacaoFinanceiraModel";
-import { Aposta } from "../models/ApostaModel";
+import { Carteira } from "../models/WalletModel";
+import { TransacaoFinanceira } from "../models/FinancialTransactionModel";
+import { Aposta } from "../models/BetModel";
 
 export namespace dataBaseUtils {
 
