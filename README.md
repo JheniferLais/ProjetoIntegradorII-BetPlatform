@@ -9,7 +9,11 @@
  <h2>Sobre o Projeto</h2> 
 blank.
 <h2>Sobre os Integrantes</h2> 
-blank.
+jhenifer - a maior
+jean - verde
+giatti - enche o projeto de frufru
+layra - ta aí
+lorenna - trancou 🔒
 
 <h2>Tecnologias Utilizadas:</h2>
 
