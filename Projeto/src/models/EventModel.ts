@@ -1,14 +1,15 @@
 // Tipo evento
 export type Evento = {
-    ID_EVENTO?: number;
-    ID_USUARIO?: number;
-    TITULO: string;
-    DESCRICAO: string;
-    VALOR_COTA: number;
-    DATA_HORA_INICIO: string;
-    DATA_HORA_FIM: string;
-    DATA_EVENTO: string;
-    QTD_APOSTAS: number;
-    RESULTADO: string;
-    STATUS_EVENTO: string;
+    id_evento?: number;
+    id_usuario?: number;
+    titulo: string;
+    descricao: string;
+    valor_cota: number;
+    data_hora_inicio: string;
+    data_hora_fim: string;
+    data_evento: string;
+    qtd_apostas: number;
+    resultado: string;
+    status_evento: string;
+    categoria?: string;
 }

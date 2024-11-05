@@ -17,10 +17,18 @@ export namespace eventosHandler {
         const fimApostas = req.get('fimApostas'); //YYYY-MM-DD
         const fimApostasHora = req.get('fimApostasHora'); //HH:mm:ss
         const dataEvento = req.get('dataEvento'); //YYYY-MM-DD
+        const categoria = req.get('categoria'); // esportes, catastrofes, eleicoes, bolsa de valores, e-sports
 
         // Valida se todos os campos foram preenchidos
-        if (!idUsuario || !titulo || !desc || !valorCota || !inicioApostas || !inicioApostasHora|| !fimApostas || !fimApostasHora|| !dataEvento) {
+        if (!idUsuario || !titulo || !desc || !valorCota || !inicioApostas || !inicioApostasHora|| !fimApostas || !fimApostasHora|| !dataEvento || !categoria) {
             res.status(400).send('Campos obrigatórios estão faltando!');
+            return;
+        }
+
+        // Valida se a entrada da categoria está correta
+        const validCategoria = ['esportes', 'catastrofes', 'eleicoes', 'bolsa de valores', 'e-sports'];
+        if (!validCategoria.includes(categoria)){
+            res.status(400).send('Valor inválido para a categoria! Deve ser "esportes", "catastrofes", "eleicoes", "bolsa de valores", "e-sports".');
             return;
         }
 
@@ -65,16 +73,17 @@ export namespace eventosHandler {
 
         // Cria um 'novoEvento' do tipo 'evento' com as informações recebidas
         const novoEvento: Evento = {
-            ID_USUARIO: idUsuario,
-            TITULO: titulo,
-            DESCRICAO: desc,
-            VALOR_COTA: valorCota,
-            DATA_HORA_INICIO: dataHoraInicio,
-            DATA_HORA_FIM: dataHoraFim,
-            DATA_EVENTO: dataEvento,
-            QTD_APOSTAS: 0,
-            RESULTADO: 'pendente',
-            STATUS_EVENTO: 'pendente',
+            id_usuario: idUsuario,
+            titulo: titulo,
+            descricao: desc,
+            valor_cota: valorCota,
+            data_hora_inicio: dataHoraInicio,
+            data_hora_fim: dataHoraFim,
+            data_evento: dataEvento,
+            qtd_apostas: 0,
+            resultado: 'pendente',
+            status_evento: 'pendente',
+            categoria: categoria,
         }
 
         // Insere no Banco de dados
@@ -134,13 +143,13 @@ export namespace eventosHandler {
         }
 
         // Valida se o usuário é o proprietário do evento
-        if (evento.ID_USUARIO !== idUsuario) {
+        if (evento.id_usuario !== idUsuario) {
             res.status(403).send('Você não tem permissão para excluir este evento!');
             return;
         }
 
         // Valida se o evento pode ser excluído (não deve estar aprovado e não deve ter apostas)
-        if (evento.STATUS_EVENTO === 'aprovado' || evento.STATUS_EVENTO === 'excluido' || (evento.QTD_APOSTAS && evento.QTD_APOSTAS > 0)) {
+        if (evento.status_evento === 'aprovado' || evento.status_evento === 'excluido' || (evento.qtd_apostas && evento.qtd_apostas > 0)) {
             res.status(409).send('Este evento não pode ser excluído pois ele já foi excluído, aprovado ou possui apostas!');
             return;
         }
@@ -148,7 +157,7 @@ export namespace eventosHandler {
         //-------------------------------------------------------------------------
 
         // Altera o status_evento para excluido
-        evento.STATUS_EVENTO = 'excluido';  // Atualiza o status do evento
+        evento.status_evento = 'excluido';  // Atualiza o status do evento
 
         // Executa a atualização no banco de dados
         await dataBaseUtils.updateEvento(evento);
@@ -183,7 +192,7 @@ export namespace eventosHandler {
         }
 
         // Valida se o evento pode ser avaliado
-        if (evento.STATUS_EVENTO !== 'pendente') {
+        if (evento.status_evento !== 'pendente') {
             res.status(409).send('Este evento já foi avaliado e não pode ser avaliado novamente!');
             return;
         }
@@ -194,8 +203,8 @@ export namespace eventosHandler {
         if(resultado == 'reprovado'){
 
             // Atualiza o status_evento e resultado
-            evento.STATUS_EVENTO = resultado;
-            evento.RESULTADO = 'reprovado';
+            evento.status_evento = resultado;
+            evento.resultado = 'reprovado';
 
             // Executa a atualização no Banco de dados
             await dataBaseUtils.updateEventoReprovado(evento);
@@ -206,7 +215,7 @@ export namespace eventosHandler {
         }
 
         // Atualiza o status_evento
-        evento.STATUS_EVENTO = resultado;
+        evento.status_evento = resultado;
 
         // Executa a atualização no banco de dados
         await dataBaseUtils.updateEvento(evento);

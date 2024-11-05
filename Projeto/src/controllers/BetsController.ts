@@ -52,7 +52,7 @@ export namespace apostasHandler {
         }
 
         // Calcula o total a ser descontado do usuario
-        const valorAposta: number = evento.VALOR_COTA * qtd_cotas
+        const valorAposta: number = evento.valor_cota * qtd_cotas
 
         // Valida se o usuário tem saldo suficiente
         if (carteira.saldo < valorAposta) {
@@ -61,19 +61,19 @@ export namespace apostasHandler {
         }
 
         // Valida se o evento pode receber apostas
-        if (evento.STATUS_EVENTO !== 'aprovado' || evento.RESULTADO !== 'pendente') {
+        if (evento.status_evento !== 'aprovado' || evento.resultado !== 'pendente') {
             res.status(400).send('Não é possivel apostar nesse evento!');
             return;
         }
 
         // Valida se o evento já pode receber apostas
-        if(new Date() < new Date(evento.DATA_HORA_INICIO)){
+        if(new Date() < new Date(evento.data_hora_inicio)){
             res.status(400).send('O evento ainda não pode receber apostas!');
             return;
         }
 
         // Valida se o evento ainda pode receber apostas
-        if(new Date() > new Date(evento.DATA_HORA_FIM)){
+        if(new Date() > new Date(evento.data_hora_fim)){
             res.status(400).send('O evento não pode mais receber apostas!');
             return;
         }
@@ -85,7 +85,7 @@ export namespace apostasHandler {
         await dataBaseUtils.retirarFundos(carteira);
 
         // Aumenta a quantidade de aposta no evento
-        evento.QTD_APOSTAS = 1;
+        evento.qtd_apostas = 1;
         await dataBaseUtils.updateEventoAposta(evento);
 
         // Insere no Banco de dados
@@ -136,14 +136,14 @@ export namespace apostasHandler {
         }
 
         // Valida se o Evento já ocorreu
-        const eventoOcorreu: boolean = timeUtils.dataPassou(evento.DATA_EVENTO);
+        const eventoOcorreu: boolean = timeUtils.dataPassou(evento.data_evento);
         if (!eventoOcorreu) {
             res.status(400).send('O evento não pode ser finalizado porque não ocorreu!');
             return;
         }
 
         // Valida se o evento pode ser finalizado
-        if (evento.STATUS_EVENTO !== 'aprovado' && evento.RESULTADO !== 'pendente') {
+        if (evento.status_evento !== 'aprovado' && evento.resultado !== 'pendente') {
             res.status(400).send('O evento não pode ser finalizado no estado atual!');
             return;
         }
@@ -178,7 +178,7 @@ export namespace apostasHandler {
                 if (typeof aposta[3] === 'number' && typeof aposta[2] === 'number') {
 
                     //Calcula o quanto foi apostado pelo usuario
-                    const valorApostado: number = aposta[3] * evento.VALOR_COTA
+                    const valorApostado: number = aposta[3] * evento.valor_cota
 
                     //Adiciona os ganhos na carteira do usuário
                     const carteira: Carteira | null = await dataBaseUtils.findCarteira(aposta[2]);
@@ -207,7 +207,7 @@ export namespace apostasHandler {
             if (typeof aposta[2] === 'number' && typeof aposta[3] === 'number') {
 
                 //Calcula o valor ganho pelo usuario
-                const valorGanho: number = (aposta[3] / somaVencedora[0][0]) * ((somaVencedora[0][0] + somaPerdedora[0][0]) * evento.VALOR_COTA);
+                const valorGanho: number = (aposta[3] / somaVencedora[0][0]) * ((somaVencedora[0][0] + somaPerdedora[0][0]) * evento.valor_cota);
 
                 //Adiciona os ganhos na carteira do usuário
                 const carteira: Carteira | null = await dataBaseUtils.findCarteira(aposta[2]);

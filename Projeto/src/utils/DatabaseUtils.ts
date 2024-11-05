@@ -51,19 +51,20 @@ export namespace dataBaseUtils {
     //Função para inserir Eventos no banco de dados
     export async function insertEvento(evento: Evento): Promise<void> {
         const connection = await ConnectionDB();
-        await connection.execute(
-            "INSERT INTO eventos (id_evento, id_usuario, titulo, descricao, valor_cota, data_hora_inicio, data_hora_fim, data_evento, qtd_apostas, resultado, status_evento) VALUES (SEQ_EVENTOS.NEXTVAL, :ID_USUARIO, :TITULO, :DESCRICAO, :VALOR_COTA, :DATA_HORA_INICIO, :DATA_HORA_FIM, :DATA_EVENTO, :QTD_APOSTAS, :RESULTADO, :STATUS_EVENTO)",
+        await connection.execute(`INSERT INTO eventos (id_evento, id_usuario, titulo, descricao, valor_cota, data_hora_inicio, data_hora_fim, data_evento, qtd_apostas, resultado, status_evento, categoria) 
+                                VALUES (SEQ_EVENTOS.NEXTVAL, :ID_USUARIO, :TITULO, :DESCRICAO, :VALOR_COTA, :DATA_HORA_INICIO, :DATA_HORA_FIM, :DATA_EVENTO, :QTD_APOSTAS, :RESULTADO, :STATUS_EVENTO, :CATEGORIA)`,
             {
-                ID_USUARIO: evento.ID_USUARIO,
-                TITULO: evento.TITULO,
-                DESCRICAO: evento.DESCRICAO,
-                VALOR_COTA: evento.VALOR_COTA,
-                DATA_HORA_INICIO: evento.DATA_HORA_INICIO,
-                DATA_HORA_FIM: evento.DATA_HORA_FIM,
-                DATA_EVENTO: evento.DATA_EVENTO,
-                QTD_APOSTAS: evento.QTD_APOSTAS,
-                RESULTADO: evento.RESULTADO,
-                STATUS_EVENTO: evento.STATUS_EVENTO,
+                ID_USUARIO: evento.id_usuario,
+                TITULO: evento.titulo,
+                DESCRICAO: evento.descricao,
+                VALOR_COTA: evento.valor_cota,
+                DATA_HORA_INICIO: evento.data_hora_inicio,
+                DATA_HORA_FIM: evento.data_hora_fim,
+                DATA_EVENTO: evento.data_evento,
+                QTD_APOSTAS: evento.qtd_apostas,
+                RESULTADO: evento.resultado,
+                STATUS_EVENTO: evento.status_evento,
+                CATEGORIA: evento.categoria,
             }
         );
         await connection.commit();
@@ -91,17 +92,18 @@ export namespace dataBaseUtils {
             const row = result.rows[0] as any[];
 
             const evento: Evento = {
-                ID_EVENTO: row[0] as number,
-                ID_USUARIO: row[1] as number,
-                TITULO: row[2] as string,
-                DESCRICAO: row[3] as string,
-                VALOR_COTA: row[4] as number,
-                DATA_HORA_INICIO: row[5] as string,
-                DATA_HORA_FIM: row[6] as string,
-                DATA_EVENTO: row[7] as string,
-                QTD_APOSTAS: row[8] as number,
-                RESULTADO: row[9] as string,
-                STATUS_EVENTO: row[10] as string
+                id_evento: row[0] as number,
+                id_usuario: row[1] as number,
+                titulo: row[2] as string,
+                descricao: row[3] as string,
+                valor_cota: row[4] as number,
+                data_hora_inicio: row[5] as string,
+                data_hora_fim: row[6] as string,
+                data_evento: row[7] as string,
+                qtd_apostas: row[8] as number,
+                resultado: row[9] as string,
+                status_evento: row[10] as string,
+                categoria: row[11] as string,
             };
 
             await connection.close();
@@ -116,8 +118,8 @@ export namespace dataBaseUtils {
         const connection = await ConnectionDB();
         await connection.execute("UPDATE eventos SET status_evento = :STATUS_EVENTO WHERE id_evento = :ID_EVENTO",
             {
-                ID_EVENTO: evento.ID_EVENTO,
-                STATUS_EVENTO: evento.STATUS_EVENTO,
+                ID_EVENTO: evento.id_evento,
+                STATUS_EVENTO: evento.status_evento,
             }
         );
         await connection.commit();
@@ -129,9 +131,9 @@ export namespace dataBaseUtils {
         const connection = await ConnectionDB();
         await connection.execute("UPDATE eventos SET status_evento = :STATUS_EVENTO, resultado = :RESULTADO WHERE id_evento = :ID_EVENTO",
             {
-                ID_EVENTO: evento.ID_EVENTO,
-                RESULTADO: evento.RESULTADO,
-                STATUS_EVENTO: evento.STATUS_EVENTO,
+                ID_EVENTO: evento.id_evento,
+                RESULTADO: evento.resultado,
+                STATUS_EVENTO: evento.status_evento,
             }
         );
         await connection.commit();
@@ -149,17 +151,18 @@ export namespace dataBaseUtils {
             const row = result.rows as any[];
 
             const evento: Evento = {
-                ID_EVENTO: row[0] as number,
-                ID_USUARIO: row[1] as number,
-                TITULO: row[2] as string,
-                DESCRICAO: row[3] as string,
-                VALOR_COTA: row[4] as number,
-                DATA_HORA_INICIO: row[5] as string,
-                DATA_HORA_FIM: row[6] as string,
-                DATA_EVENTO: row[7] as string,
-                QTD_APOSTAS: row[8] as number,
-                RESULTADO: row[9] as string,
-                STATUS_EVENTO: row[10] as string
+                id_evento: row[0] as number,
+                id_usuario: row[1] as number,
+                titulo: row[2] as string,
+                descricao: row[3] as string,
+                valor_cota: row[4] as number,
+                data_hora_inicio: row[5] as string,
+                data_hora_fim: row[6] as string,
+                data_evento: row[7] as string,
+                qtd_apostas: row[8] as number,
+                resultado: row[9] as string,
+                status_evento: row[10] as string,
+                categoria: row[11] as string,
             };
 
             await connection.close();
@@ -254,15 +257,15 @@ export namespace dataBaseUtils {
         const connection = await ConnectionDB();
         await connection.execute("UPDATE eventos SET qtd_apostas = qtd_apostas + :QTD_APOSTAS WHERE id_evento = :ID_EVENTO",
             {
-                QTD_APOSTAS: evento.QTD_APOSTAS,
-                ID_EVENTO: evento.ID_EVENTO,
+                QTD_APOSTAS: evento.qtd_apostas,
+                ID_EVENTO: evento.id_evento,
             }
         );
         await connection.commit();
         await connection.close();
     }
 
-    //
+    //Função para validar se o email é o mesmo do id
     export async function validaUserAposta(email: string, id: number): Promise<true | null> {
         const connection = await ConnectionDB();
         const result = await connection.execute("SELECT * FROM usuarios WHERE email = :email AND id_usuario = :id", [email, id]);
@@ -273,7 +276,7 @@ export namespace dataBaseUtils {
         return null;  // Retorna null se não encontrar nenhum evento
     }
 
-
+    //Função para finalizar evento
     export async function finishEvento(idEvento: number, veredito: string): Promise<void> {
         const connection = await ConnectionDB();
         await connection.execute("UPDATE eventos SET resultado = :veredito, status_evento = 'finalizado' WHERE id_evento = :idEvento", [veredito, idEvento]);
@@ -281,7 +284,7 @@ export namespace dataBaseUtils {
         await connection.close();
     }
 
-    //
+    //Função para retornar os eventos com base no id
     export async function getApostasFiltered(idEvento: number, veredito: string): Promise<Aposta[][] | null> {
         const connection = await ConnectionDB();
         const result: any = await connection.execute("SELECT * FROM APOSTAS WHERE id_evento = :id_evento AND aposta = :veredito", [idEvento, veredito]);
@@ -289,7 +292,7 @@ export namespace dataBaseUtils {
         return result.rows as Aposta[][];
     }
 
-    //
+    //Função para retornar as apostas com base no id do evento
     export async function getApostas(idEvento: number): Promise<Aposta[][] | null> {
         const connection = await ConnectionDB();
         const result: any = await connection.execute("SELECT * FROM APOSTAS WHERE id_evento = :id_evento", [idEvento]);
