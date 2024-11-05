@@ -1,0 +1,88 @@
+@import url("https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+html, body {
+    display: grid;
+    height: 100%;
+    width: 100%;
+    place-items: center;
+    background: #000D1C;
+    color: #fff;
+}
+
+/* Estilos do cabeçalho */
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 10px 20px;
+    background-color: #000D1C;
+    border-bottom: 1px solid #1a273a;
+}
+
+.menu-icon {
+    display: flex;
+    flex-direction: row;
+    font-size: 24px;
+    cursor: pointer;
+    color: #fff;
+
+}
+.logo{
+    display: flex;
+    margin-left: 20px;
+}
+.logo img {
+    margin-right: 8px;
+}
+
+.logo-text {
+    font-size: 18px;
+    font-weight: 600;
+    color: #ffffff;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.balance {
+    display: flex;
+    align-items: center;
+    padding: 8px 15px;
+    border: 1px solid #ffffff;
+    border-radius: 5px;
+    font-weight: 500;
+}
+
+.wallet-icon {
+    margin-right: 5px;
+}
+
+.logout-btn {
+    padding: 8px 20px;
+    background-color: #00BFFF;
+    border: none;
+    border-radius: 5px;
+    color: #ffffff;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.logout-btn:hover {
+    background-color: #009ACD;
+}

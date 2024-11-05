@@ -5,6 +5,29 @@
   box-sizing: border-box;
   font-family: "Poppins", sans-serif;
 }
+/* Page fade animation */
+  .fade-in {
+    opacity: 0;
+    animation: fadeInAnimation 0.5s forwards;
+  }
+
+  .fade-out {
+    opacity: 1;
+    animation: fadeOutAnimation 0.3s forwards;
+  }
+
+  @keyframes fadeInAnimation {
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes fadeOutAnimation {
+    to {
+      opacity: 0;
+    }
+  }
+
 html,
 body {
     display: grid;
@@ -183,6 +206,7 @@ form .btn .btn-layer {
 }
 form .btn:hover .btn-layer {
   left: 0;
+  background: #67deed;
 }
 form .btn input[type="submit"] {
   height: 100%;
