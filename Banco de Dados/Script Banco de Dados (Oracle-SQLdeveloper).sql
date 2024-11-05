@@ -41,7 +41,8 @@ CREATE TABLE EVENTOS (
     data_evento DATE NOT NULL,
     qtd_apostas INT NOT NULL,
     resultado VARCHAR2(20) NOT NULL CHECK (resultado IN ('sim','nao','pendente', 'reprovado')),
-    status_evento VARCHAR2(20) NOT NULL CHECK (status_evento IN ('aprovado','reprovado','excluido','pendente','finalizado'))
+    status_evento VARCHAR2(20) NOT NULL CHECK (status_evento IN ('aprovado','reprovado','excluido','pendente','finalizado')),
+    categoria VARCHAR2(20) NOT NULL CHECK (categoria IN ('esportes', 'catastrofes', 'eleicoes', 'bolsa de valores', 'e-sports'))
 );
 
 -- Criando sequência para EVENTOS
@@ -55,7 +56,7 @@ CREATE TABLE APOSTAS (
     id_evento INT NOT NULL, -- FK para a tabela EVENTOS
     id_usuario INT NOT NULL, -- FK para a tabela USUARIOS
     qtd_cotas INT NOT NULL,
-    aposta VARCHAR2(3) NOT NULL CHECK (aposta IN ('sim', 'nao')), 
+    aposta VARCHAR2(3) NOT NULL CHECK (aposta IN ('sim', 'nao')),
     data_aposta TIMESTAMP DEFAULT CURRENT_TIMESTAMP -- Hora atual no momento da inserção
 );
 
@@ -63,7 +64,6 @@ CREATE TABLE APOSTAS (
 CREATE SEQUENCE SEQ_APOSTAS START WITH 1 INCREMENT BY 1;
 
 ----------------------------------------------------------------------------------------------------------------------------------------
-
 -- Definindo as chaves estrangeiras (FK)
 
 -- FK para vincular TRANSACOES_FINANCEIRAS ao USUARIOS
