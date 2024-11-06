@@ -11,9 +11,9 @@ html, body {
     display: grid;
     height: 100%;
     width: 100%;
-    place-items: center;
-    background: #000D1C;
+    background: #000D1C !important;
     color: #fff;
+    overflow-x: hidden;
 }
 
 /* Estilos do cabeçalho */
@@ -29,6 +29,7 @@ html, body {
     padding: 10px 20px;
     background-color: #000D1C;
     border-bottom: 1px solid #1a273a;
+    z-index: 10;
 }
 
 .menu-icon {
@@ -66,12 +67,15 @@ html, body {
     border: 1px solid #ffffff;
     border-radius: 5px;
     font-weight: 500;
+    color: #fff;
 }
-
+.balance:hover{
+    background-color: #ffffff2a;
+    cursor: pointer;
+}
 .wallet-icon {
     margin-right: 5px;
 }
-
 .logout-btn {
     padding: 8px 20px;
     background-color: #00BFFF;
@@ -85,4 +89,154 @@ html, body {
 
 .logout-btn:hover {
     background-color: #009ACD;
+}
+.sidebar{
+    position: fixed;
+    width: 300px;
+    height: 100vh;
+    background-color: #000D1C;
+    border-right: solid 1px #1a273a;
+    padding-top: 90px;
+    color: #fff;
+    align-items: center;
+}
+.sidebar-list{
+    display: flex;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    flex-direction: column;
+}
+.sidebar-items{
+    width: 220px;
+    padding: 8px 0px;
+    margin-bottom: 20px;
+    color: #fff;
+    font-weight: 700;
+    background-color: #27536246;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 5px;
+    border: 1px solid #27536246;
+    background-image: linear-gradient(91deg, #27536246 24.89%, #0088ffaa 41.03%, #2acaff 55.67%, #0088ffaa 76.24%, #2590edaa 85.67%, #2acaff 102.51%);
+    background-repeat: no-repeat;
+    background-size: 400%;
+    background-position-x: 0;
+    transition: background-position 800ms ease-out .001s;
+}
+.sidebar-items:hover{
+    background-position-x: 100%;
+    transition: background-position;
+    box-shadow: 0px 0px 14px -7px #00BFFF;
+}
+.sidebar-items:active{
+    transform: scale(0.95);
+}
+.main {
+    width: 100vw;
+    height: auto;
+    display: flex;
+    padding-left: 350px;
+    padding-top: 90px;
+    padding-right: 50px;
+    padding-bottom: 30px;
+    background-color: #000D1C;
+    height: calc(100vh - 90px); /* Ajusta a altura do .main para ocupar a tela toda, menos o header */
+}
+.main .main-content {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* Define 3 colunas de tamanhos iguais */
+    gap: 20px;
+    width: 100%;
+    height: auto;
+}
+.grid-item {
+    background-color: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(0, 0, 0, 0.8);
+    padding: 20px;
+    font-size: 30px;
+    text-align: center;
+    height: 200px; /* Define uma altura fixa para os itens */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.blur{
+    position: absolute;
+    z-index: 11;
+    width: 100vw;
+    height: 100vh;
+    background-color: #000d1c91;
+    backdrop-filter: blur(8px);
+    display: none;
+}
+.popup-cadastro-evento{
+    position: absolute;
+    left: 0%;
+    right: 0%;
+    top: 0%;
+    bottom: 0%;
+    margin: auto;
+    width: 900px;
+    height: 550px;
+    background-color: #031933;
+    z-index: 12;
+    border-radius: 10px;
+    display: none;
+    color: #fff;
+}
+.popup-cadastro-evento .left{
+    display: flex;
+    width: 500px;
+    height: 100%;
+    flex-direction: column;
+    border-right: solid 2px #1a273a;
+    padding: 32px;
+    float: left;
+}
+.popup-cadastro-evento .right{
+    display: flex;
+    flex-direction: column;
+    padding: 32px;
+    height: 100%;
+    width: 400px;
+    float: right;
+}
+.form-group-item{
+    margin-top: 25px;
+}
+.form-group-item .submit-btn{
+    margin-top: 15px;
+}
+.submit-btn {
+    background: linear-gradient(to right, #1c92d2, #16b7ed); /* Cores de gradiente */
+    border: none;
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 10px 20px;
+    border-radius: 8px;
+    width: 100%;
+    cursor: pointer;
+    text-align: center;
+    transition: background 0.3s ease;
+}
+
+.submit-btn:hover {
+    background: linear-gradient(to right, #2296d5, #1fbaed); /* Efeito hover */
+}
+.close-popup{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 35px;
+    width: 35px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    border-radius: 10px;
+    cursor: pointer;
+}
+.close-popup:hover{
+    background-color: #1c92d2;
 }
