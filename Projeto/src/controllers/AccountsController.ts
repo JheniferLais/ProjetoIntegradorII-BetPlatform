@@ -1,7 +1,7 @@
 import { Request, RequestHandler, Response } from 'express';
-import { Conta } from '../models/UsuarioModel';
+import { Conta } from '../models/UserModel';
 import { timeUtils } from '../utils/TimeUtils';
-import { dataBaseUtils } from '../utils/DataBaseUtils'
+import { dataBaseUtils } from '../utils/DatabaseUtils'
 
 export namespace contasHandler {
 
@@ -11,7 +11,7 @@ export namespace contasHandler {
         return regex.test(email);
     }
 
-    // Função para verificar se o usuario fez aniversario
+    // Função para validar se o usuario fez aniversario
     function verificaIdade(nascimento: string): number {
         const nascimentoData = new Date(nascimento);
         const hojeData = new Date();
@@ -33,44 +33,41 @@ export namespace contasHandler {
         const senha = req.get('senha');
         const nascimento = req.get('nascimento');
 
-        // Verifica se todos os campos foram preenchidos
+        // Valida se todos os campos foram preenchidos
         if (!nome || !email || !senha || !nascimento) {
-            res.statusCode = 400;
-            res.send(`Preencha todos os campos!`);
+            res.status(400).send('Campos obrigatórios estão faltando!');
             return;
         }
 
         // Valida  o formato do email
         const validEmail = validarEmail(email);
         if (!validEmail) {
-            res.statusCode = 400;
-            res.send(`Formato de email invalido!`);
+            res.status(400).send('Formato de email inválido!');
             return;
         }
 
-        // Verifica se o email já foi cadastrado
+        // Valida se o email já foi cadastrado
         const infoEmail = await dataBaseUtils.findEmail(email);
         if (infoEmail && infoEmail.length > 0) {
-            res.statusCode = 400;
-            res.send(`Usuário já cadastrado!`);
+            res.status(409).send('O e-mail informado já está cadastrado! Tente usar outro e-mail.');
             return;
         }
 
         // Valida o formato da data
         const data = timeUtils.validarDataReal(nascimento);
         if(!data){
-            //res.statusCode = ?
-            res.send(`Formato de data invalida!`);
+            res.status(400).send('Formato de data inválido!');
             return;
         }
 
-        // Verifica a maioridade do usuario
+        // Valida a maioridade do usuario
         const idade: number = verificaIdade(nascimento);
         if (idade < 18) {
-            //res.statusCode = ?;
-            res.send(`O usuario deve ser maior de idade!`);
+            res.status(403).send('Cadastro restrito para maiores de 18 anos!');
             return;
         }
+
+        //-------------------------------------------------------------------------
 
         // Cria uma 'novaConta' do tipo 'Conta' com as informações recebidas
         const novaConta: Conta = {
@@ -83,8 +80,8 @@ export namespace contasHandler {
         // Insere no Banco de dados
         await dataBaseUtils.insertUser(novaConta);
 
-        res.statusCode = 200;
-        res.send('usuario inserido!')
+        // Response e statusCode de sucesso
+        res.status(201).send('usuario inserido com sucesso!')
     };
 
     // 'Função' para login
@@ -92,27 +89,29 @@ export namespace contasHandler {
         const email = req.get('email');
         const senha = req.get('senha');
 
-        // Verifica se todos os campos foram preenchidos
+        // Valida se todos os campos foram preenchidos
         if (!email || !senha) {
-            res.statusCode = 400;
-            res.send(`Preencha todos os campos!`);
+            res.status(400).send('Campos obrigatórios estão faltando!');
             return;
         }
 
-        // Verifica se o usuario esta cadastrado
+        // Valida se o usuario esta cadastrado
         const user: Conta[][] = await dataBaseUtils.findUser(email, senha);
         if (!user || user.length === 0) {
-            res.statusCode = 401;
-            res.send(`Login ou senha inválidos!`);
+            res.status(401).send('Login ou senha inválidos!');
             return;
         }
 
+        //-------------------------------------------------------------------------
+
+        // Response
         const response = {
-            status: `login efetuado com sucesso!`,
+            status: 'login efetuado com sucesso!',
             message: `Seja bem vindo(a)! ${user[0][1]}`,
             token: user[0][5]
         };
-        res.statusCode = 200;
-        res.send(response);
+
+        // Response e statusCode de sucesso
+        res.status(200).send(response);
     };
 }

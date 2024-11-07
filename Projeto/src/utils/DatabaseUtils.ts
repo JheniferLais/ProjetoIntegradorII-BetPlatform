@@ -1,9 +1,9 @@
-import { Conta } from '../models/UsuarioModel';
-import { Evento } from "../models/EventoModel";
+import { Conta } from '../models/UserModel';
+import { Evento } from "../models/EventModel";
 import oracledb from "oracledb";
-import {Carteira} from "../models/CarteiraModel";
-import {TransacaoFinanceira} from "../models/TransacaoFinanceiraModel";
-import {Aposta} from "../models/ApostaModel";
+import { Carteira } from "../models/WalletModel";
+import { TransacaoFinanceira } from "../models/FinancialTransactionModel";
+import { Aposta } from "../models/BetModel";
 
 export namespace dataBaseUtils {
 
@@ -42,7 +42,6 @@ export namespace dataBaseUtils {
                 nascimento: conta.nascimento,
             }
         );
-        await connection.execute("INSERT INTO carteira (id_carteira, id_usuario) VALUES (SEQ_CARTEIRA.NEXTVAL, SEQ_USUARIOS.CURRVAL)");
         await connection.commit();
         await connection.close();
     }
@@ -52,19 +51,20 @@ export namespace dataBaseUtils {
     //Função para inserir Eventos no banco de dados
     export async function insertEvento(evento: Evento): Promise<void> {
         const connection = await ConnectionDB();
-        await connection.execute(
-            "INSERT INTO eventos (id_evento, id_usuario, titulo, descricao, valor_cota, data_hora_inicio, data_hora_fim, data_evento, qtd_apostas, resultado, status_evento) VALUES (SEQ_EVENTOS.NEXTVAL, :ID_USUARIO, :TITULO, :DESCRICAO, :VALOR_COTA, :DATA_HORA_INICIO, :DATA_HORA_FIM, :DATA_EVENTO, :QTD_APOSTAS, :RESULTADO, :STATUS_EVENTO)",
+        await connection.execute(`INSERT INTO eventos (id_evento, id_usuario, titulo, descricao, valor_cota, data_hora_inicio, data_hora_fim, data_evento, qtd_apostas, resultado, status_evento, categoria) 
+                                VALUES (SEQ_EVENTOS.NEXTVAL, :ID_USUARIO, :TITULO, :DESCRICAO, :VALOR_COTA, :DATA_HORA_INICIO, :DATA_HORA_FIM, :DATA_EVENTO, :QTD_APOSTAS, :RESULTADO, :STATUS_EVENTO, :CATEGORIA)`,
             {
-                ID_USUARIO: evento.ID_USUARIO,
-                TITULO: evento.TITULO,
-                DESCRICAO: evento.DESCRICAO,
-                VALOR_COTA: evento.VALOR_COTA,
-                DATA_HORA_INICIO: evento.DATA_HORA_INICIO,
-                DATA_HORA_FIM: evento.DATA_HORA_FIM,
-                DATA_EVENTO: evento.DATA_EVENTO,
-                QTD_APOSTAS: evento.QTD_APOSTAS,
-                RESULTADO: evento.RESULTADO,
-                STATUS_EVENTO: evento.STATUS_EVENTO,
+                ID_USUARIO: evento.id_usuario,
+                TITULO: evento.titulo,
+                DESCRICAO: evento.descricao,
+                VALOR_COTA: evento.valor_cota,
+                DATA_HORA_INICIO: evento.data_hora_inicio,
+                DATA_HORA_FIM: evento.data_hora_fim,
+                DATA_EVENTO: evento.data_evento,
+                QTD_APOSTAS: evento.qtd_apostas,
+                RESULTADO: evento.resultado,
+                STATUS_EVENTO: evento.status_evento,
+                CATEGORIA: evento.categoria,
             }
         );
         await connection.commit();
@@ -92,17 +92,18 @@ export namespace dataBaseUtils {
             const row = result.rows[0] as any[];
 
             const evento: Evento = {
-                ID_EVENTO: row[0] as number,
-                ID_USUARIO: row[1] as number,
-                TITULO: row[2] as string,
-                DESCRICAO: row[3] as string,
-                VALOR_COTA: row[4] as number,
-                DATA_HORA_INICIO: row[5] as Date,
-                DATA_HORA_FIM: row[6] as Date,
-                DATA_EVENTO: row[7] as Date,
-                QTD_APOSTAS: row[8] as number,
-                RESULTADO: row[9] as string,
-                STATUS_EVENTO: row[10] as string
+                id_evento: row[0] as number,
+                id_usuario: row[1] as number,
+                titulo: row[2] as string,
+                descricao: row[3] as string,
+                valor_cota: row[4] as number,
+                data_hora_inicio: row[5] as string,
+                data_hora_fim: row[6] as string,
+                data_evento: row[7] as string,
+                qtd_apostas: row[8] as number,
+                resultado: row[9] as string,
+                status_evento: row[10] as string,
+                categoria: row[11] as string,
             };
 
             await connection.close();
@@ -117,8 +118,22 @@ export namespace dataBaseUtils {
         const connection = await ConnectionDB();
         await connection.execute("UPDATE eventos SET status_evento = :STATUS_EVENTO WHERE id_evento = :ID_EVENTO",
             {
-                ID_EVENTO: evento.ID_EVENTO,
-                STATUS_EVENTO: evento.STATUS_EVENTO,
+                ID_EVENTO: evento.id_evento,
+                STATUS_EVENTO: evento.status_evento,
+            }
+        );
+        await connection.commit();
+        await connection.close();
+    }
+
+    //Função para alterar o status do evento
+    export async function updateEventoReprovado(evento: Evento): Promise<void> {
+        const connection = await ConnectionDB();
+        await connection.execute("UPDATE eventos SET status_evento = :STATUS_EVENTO, resultado = :RESULTADO WHERE id_evento = :ID_EVENTO",
+            {
+                ID_EVENTO: evento.id_evento,
+                RESULTADO: evento.resultado,
+                STATUS_EVENTO: evento.status_evento,
             }
         );
         await connection.commit();
@@ -133,20 +148,21 @@ export namespace dataBaseUtils {
 
         // Verifica se há algum resultado
         if (result.rows && result.rows.length > 0) {
-            const row = result.rows[0] as any[];
+            const row = result.rows as any[];
 
             const evento: Evento = {
-                ID_EVENTO: row[0] as number,
-                ID_USUARIO: row[1] as number,
-                TITULO: row[2] as string,
-                DESCRICAO: row[3] as string,
-                VALOR_COTA: row[4] as number,
-                DATA_HORA_INICIO: row[5] as Date,
-                DATA_HORA_FIM: row[6] as Date,
-                DATA_EVENTO: row[7] as Date,
-                QTD_APOSTAS: row[8] as number,
-                RESULTADO: row[9] as string,
-                STATUS_EVENTO: row[10] as string
+                id_evento: row[0] as number,
+                id_usuario: row[1] as number,
+                titulo: row[2] as string,
+                descricao: row[3] as string,
+                valor_cota: row[4] as number,
+                data_hora_inicio: row[5] as string,
+                data_hora_fim: row[6] as string,
+                data_evento: row[7] as string,
+                qtd_apostas: row[8] as number,
+                resultado: row[9] as string,
+                status_evento: row[10] as string,
+                categoria: row[11] as string,
             };
 
             await connection.close();
@@ -158,29 +174,18 @@ export namespace dataBaseUtils {
 
     //------------------------------------------------------------------------------------------------------------------
 
-    //Função para encontrar o moderador baseado no id
-    export async function findModerador(idModerador: number): Promise<Conta[][]> {
-        const connection = await ConnectionDB();
-        const result = await connection.execute("SELECT * FROM usuarios WHERE id_usuario = :idModerador and moderador = 1", [idModerador]);
-        await connection.close();
-        return result.rows as Conta[][];
-    }
-
-    //------------------------------------------------------------------------------------------------------------------
-
     //Função para encontrar a carteira do usuario
     export async function findCarteira(idUsuario: number): Promise<Carteira | null> {
         const connection = await ConnectionDB();
-        const result = await connection.execute("SELECT * FROM carteira WHERE id_usuario = :idUsuario", [idUsuario]);
+        const result = await connection.execute("SELECT * FROM usuarios WHERE id_usuario = :idUsuario", [idUsuario]);
 
         // Verifica se há algum resultado
         if (result.rows && result.rows.length > 0) {
             const row = result.rows[0] as any[];
 
             const carteira: Carteira = {
-                idCarteira: row[0] as number,
-                idUsuario: row[1] as number,
-                saldo: row[2] as number,
+                idUsuario: row[0] as number,
+                saldo: row[7] as number,
             };
             await connection.close();
             return carteira;
@@ -192,7 +197,7 @@ export namespace dataBaseUtils {
     //Função para adicionar fundos na carteira
     export async function addFunds(carteira: Carteira): Promise<void> {
         const connection = await ConnectionDB();
-        await connection.execute("UPDATE carteira SET saldo = saldo + :saldo WHERE id_usuario = :idUsuario",
+        await connection.execute("UPDATE usuarios SET saldo = saldo + :saldo WHERE id_usuario = :idUsuario",
             {
                 idUsuario: carteira.idUsuario,
                 saldo: carteira.saldo,
@@ -205,7 +210,7 @@ export namespace dataBaseUtils {
     //Função para sacar fundos na carteira
     export async function retirarFundos(carteira: Carteira): Promise<void> {
         const connection = await ConnectionDB();
-        await connection.execute("UPDATE carteira SET saldo = saldo - :saldo WHERE id_usuario = :idUsuario",
+        await connection.execute("UPDATE usuarios SET saldo = saldo - :saldo WHERE id_usuario = :idUsuario",
             {
                 idUsuario: carteira.idUsuario,
                 saldo: carteira.saldo,
@@ -234,12 +239,12 @@ export namespace dataBaseUtils {
     //Função para inserir a aposta no banco de dados
     export async function betOnEvent(aposta: Aposta): Promise<void> {
         const connection = await ConnectionDB();
-        await connection.execute(`INSERT INTO apostas (id_aposta, id_evento, id_usuario, valor_aposta, aposta) VALUES 
-            (SEQ_APOSTAS.NEXTVAL, :idEvento, :idUsuario, :valorAposta, :aposta)`,
+        await connection.execute(`INSERT INTO apostas (id_aposta, id_evento, id_usuario, qtd_cotas, aposta) VALUES 
+            (SEQ_APOSTAS.NEXTVAL, :idEvento, :idUsuario, :qtd_cotas, :aposta)`,
             {
                 idEvento: aposta.idEvento,
                 idUsuario: aposta.idUsuario,
-                valorAposta: aposta.valorAposta,
+                qtd_cotas: aposta.qtd_cotas,
                 aposta: aposta.aposta,
             }
         );
@@ -252,15 +257,15 @@ export namespace dataBaseUtils {
         const connection = await ConnectionDB();
         await connection.execute("UPDATE eventos SET qtd_apostas = qtd_apostas + :QTD_APOSTAS WHERE id_evento = :ID_EVENTO",
             {
-                QTD_APOSTAS: evento.QTD_APOSTAS,
-                ID_EVENTO: evento.ID_EVENTO,
+                QTD_APOSTAS: evento.qtd_apostas,
+                ID_EVENTO: evento.id_evento,
             }
         );
         await connection.commit();
         await connection.close();
     }
 
-    //
+    //Função para validar se o email é o mesmo do id
     export async function validaUserAposta(email: string, id: number): Promise<true | null> {
         const connection = await ConnectionDB();
         const result = await connection.execute("SELECT * FROM usuarios WHERE email = :email AND id_usuario = :id", [email, id]);
@@ -269,5 +274,37 @@ export namespace dataBaseUtils {
         // Verifica se há algum resultado
         if (result.rows && result.rows.length > 0) return true;
         return null;  // Retorna null se não encontrar nenhum evento
+    }
+
+    //Função para finalizar evento
+    export async function finishEvento(idEvento: number, veredito: string): Promise<void> {
+        const connection = await ConnectionDB();
+        await connection.execute("UPDATE eventos SET resultado = :veredito, status_evento = 'finalizado' WHERE id_evento = :idEvento", [veredito, idEvento]);
+        await connection.commit();
+        await connection.close();
+    }
+
+    //Função para retornar os eventos com base no id
+    export async function getApostasFiltered(idEvento: number, veredito: string): Promise<Aposta[][] | null> {
+        const connection = await ConnectionDB();
+        const result: any = await connection.execute("SELECT * FROM APOSTAS WHERE id_evento = :id_evento AND aposta = :veredito", [idEvento, veredito]);
+        await connection.close();
+        return result.rows as Aposta[][];
+    }
+
+    //Função para retornar as apostas com base no id do evento
+    export async function getApostas(idEvento: number): Promise<Aposta[][] | null> {
+        const connection = await ConnectionDB();
+        const result: any = await connection.execute("SELECT * FROM APOSTAS WHERE id_evento = :id_evento", [idEvento]);
+        await connection.close();
+        return result.rows as Aposta[][];
+    }
+
+    //Função para retornar todos as apostas com o veredito fornecido(SIM/NAO)
+    export async function somaApostasVeredito( idEvento: number, veredito: string): Promise<number[][] | null> {
+        const connection = await ConnectionDB();
+        const soma: any = await connection.execute("SELECT SUM(qtd_cotas) FROM APOSTAS WHERE id_evento = :idEvento AND aposta = :veredito", [idEvento, veredito]);
+        await connection.close();
+        return soma.rows as number[][];
     }
 }
