@@ -148,7 +148,7 @@ export namespace carteiraHandler {
         const transacao: TransacaoFinanceira = {
             idUsuario: idUsuario,
             tipoTransacao: 'saque',
-            valorTransacao: valorDescontado,
+            valorTransacao: valor,
         }
         await dataBaseUtils.insertTransacao(transacao);
 
