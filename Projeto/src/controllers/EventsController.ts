@@ -217,7 +217,7 @@ export namespace eventosHandler {
             return;
         }
 
-        // Executa a alteração do status_evento e resultado caso o evento seja reprovado
+        // Caso seja reprovado é executada a atualização no banco de dados e um email é mandado para o usuario
         if(resultado == 'reprovado'){
 
             // Atualiza o status_evento e resultado
@@ -237,14 +237,16 @@ export namespace eventosHandler {
                     pass: 'nwnw qhip grys auma', // Use variáveis de ambiente
                 },
             });
+
             const mailOptions = {
                 from: 'sistemawager@gmail.com',
                 to: emailUser.email,
-                subject: `Notificação de Evento Reprovado – ${evento.titulo}`,
+                subject: `Notificação de Evento Reprovado – "${evento.titulo}"`,
                 text: `
                 Olá ${emailUser.nome},
 
-                Agradecemos por enviar o evento ${evento.titulo} para a nossa plataforma! Realizamos uma análise cuidadosa do conteúdo e,
+                Agradecemos por enviar o evento "${evento.titulo}" para a nossa plataforma! 
+                Realizamos uma análise cuidadosa do conteúdo e,
                 no momento, não conseguimos aprovar o evento para publicação.
 
                 Motivo da Reprovação: Após revisão, observamos que o evento apresenta um ou mais dos seguintes problemas:
@@ -260,14 +262,14 @@ export namespace eventosHandler {
                 Equipe Wager
                 sistemawager@gmail.com`,
             };
+
             try {
                 await transporter.sendMail(mailOptions);
                 res.status(200).send(`Evento ${resultado} com sucesso! E-mail enviado com sucesso.`);
                 return;
             } catch (error) {
-                console.error('Erro ao enviar e-mail:', error);
                 res.status(500).send(`Evento ${resultado} com sucesso! Falha ao enviar e-mail.`);
-                return
+                return;
             }
         }
 

@@ -5,7 +5,6 @@ import { walletModelData } from "../models/WalletModel";
 import { Aposta } from "../models/BetModel";
 import { Evento } from "../models/EventModel";
 import { Carteira } from "../models/WalletModel";
-import { TransacaoFinanceira } from "../models/WalletModel";
 import { timeUtils } from "../utils/TimeUtils";
 
 
@@ -54,11 +53,8 @@ export namespace apostasHandler {
             return;
         }
 
-        // Calcula o total a ser descontado do usuario
-        const valorAposta: number = evento.valor_cota * qtd_cotas
-
         // Valida se o usuário tem saldo suficiente
-        if (carteira.saldo < valorAposta) {
+        if (carteira.saldo < evento.valor_cota * qtd_cotas) {
             res.status(400).json('Saldo insuficiente para realizar a aposta!');
             return;
         }
@@ -83,30 +79,19 @@ export namespace apostasHandler {
 
         //-------------------------------------------------------------------------
 
-        // Retira da conta o saldo da aposta
-        carteira.saldo = valorAposta;
-        await walletModelData.retirarFundos(carteira);
-
-        // Aumenta a quantidade de aposta no evento
-        evento.qtd_apostas = 1;
-        await betModelData.updateEventoAposta(evento);
-
-        // Insere no Banco de dados
-        const apostaDoUsuario: Aposta = {
+        const Insertaposta: Aposta = {
             idEvento: idEvento,
             idUsuario: idUsuario,
             qtd_cotas: qtd_cotas,
             aposta: aposta,
         }
-        await betModelData.betOnEvent(apostaDoUsuario);
 
-        // Insere no banco essa transação
-        const transacao: TransacaoFinanceira = {
-            idUsuario: idUsuario,
-            tipoTransacao: 'aposta',
-            valorTransacao: valorAposta,
-        }
-        await walletModelData.insertTransacao(transacao);
+        // Executa a função 'REALIZAR_APOSTA' do Banco de Dados que:
+        // 1. Debita o saldo do usuário pelo valor da aposta
+        // 2. Aumenta a quantidade de apostas no evento
+        // 3. Registra a aposta na tabela APOSTAS
+        // 4. Insere a transação financeira para registrar a aposta
+        await betModelData.betOnEvent(Insertaposta);
 
         // Response e statusCode de sucesso
         res.status(200).send('Aposta realizada com sucesso!');
@@ -153,85 +138,14 @@ export namespace apostasHandler {
 
         //-------------------------------------------------------------------------
 
-        // Finaliza o evento alterando status e o veredito
-        await betModelData.finishEvento(idEvento, veredito)
-
-        // Cria uma variavel para ser a aposta perdedora
-        let vereditoPerdedora: string = veredito === 'sim' ? 'nao' : 'sim';
-
-        // Busca todas as apostas vencedoras do evento
-        const apostasVencedoras: Aposta[][] | null = await betModelData.getApostasFiltered(idEvento, veredito);
-        const apostasPerdedoras: Aposta[][] | null = await betModelData.getApostasFiltered(idEvento, vereditoPerdedora);
-
-        // Busca a soma do veredito(vencedoras) e das apostas perdedoras
-        const somaVencedora: number[][] | null = await betModelData.somaApostasVeredito(idEvento, veredito);
-        const somaPerdedora: number[][] | null = await betModelData.somaApostasVeredito(idEvento, vereditoPerdedora);
-
-        // Reembolsa usuários se não houver BET(usuários perdedores) ou vencedores.
-        if (((!apostasVencedoras || !apostasVencedoras.length) || (!apostasPerdedoras || !apostasPerdedoras.length)) || (somaPerdedora === null || somaVencedora === null)) {
-            //Busca todas as apostas  do evento
-            const apostas: Aposta[][] | null = await betModelData.getApostas(idEvento);
-            if (!apostas) {
-                res.status(400).send('Sem apostas no evento!');
-                return;
-            }
-
-            //Devolve o dinheiro apostado por todos os jogadores
-            for (const aposta of apostas) {
-                if (typeof aposta[3] === 'number' && typeof aposta[2] === 'number') {
-
-                    //Calcula o quanto foi apostado pelo usuario
-                    const valorApostado: number = aposta[3] * evento.valor_cota
-
-                    //Adiciona os ganhos na carteira do usuário
-                    const carteira: Carteira | null = await walletModelData.findCarteira(aposta[2]);
-                    if (!carteira) {
-                        res.status(404).send('Carteira não encontrada!');
-                        return;
-                    }
-                    carteira.saldo = valorApostado;
-                    await walletModelData.addFunds(carteira);
-
-                    //Cria uma transação para o histórico de transações
-                    const transacao: TransacaoFinanceira = {
-                        idUsuario: aposta[2],
-                        tipoTransacao: 'ganho_aposta',
-                        valorTransacao: valorApostado,
-                    }
-                    await walletModelData.insertTransacao(transacao);
-                }
-            }
-            res.status(400).send('Evento sem bet ou sem vencedores, evento cancelado!');
-            return;
-        }
-
-        // Realiza a distribuição proporcional dos ganhos entre os vencedores
-        for (const aposta of apostasVencedoras) {
-            if (typeof aposta[2] === 'number' && typeof aposta[3] === 'number') {
-
-                //Calcula o valor ganho pelo usuario
-                const valorGanho: number = (aposta[3] / somaVencedora[0][0]) * ((somaVencedora[0][0] + somaPerdedora[0][0]) * evento.valor_cota);
-
-                //Adiciona os ganhos na carteira do usuário
-                const carteira: Carteira | null = await walletModelData.findCarteira(aposta[2]);
-                if (!carteira) {
-                    res.status(404).send('Carteira não encontrada!');
-                    return;
-                }
-                carteira.saldo = valorGanho;
-                await walletModelData.addFunds(carteira);
-
-                //Cria uma transação para o histórico de transações
-                const transacao: TransacaoFinanceira = {
-                    idUsuario: aposta[2],
-                    tipoTransacao: 'ganho_aposta',
-                    valorTransacao: valorGanho,
-                }
-                await walletModelData.insertTransacao(transacao);
-            }
-        }
+        // Executa a função 'FINALIZAR_EVENTO' do Banco de Dados que:
+        // 1. Atualiza o status e o resultado do evento
+        // 2. Reembolsa todos os apostadores se não houver vencedores ou perdedores
+        // OU
+        // 2. Distribui os ganhos proporcionalmente entre os vencedores
+        await betModelData.finishEvento(idEvento, veredito);
 
         // Response e statusCode de sucesso
-        res.status(200).send('Evento finalizado e ganhos distribuídos com sucesso!');
+        res.status(200).send('Evento finalizado e ganhos/reembolso distribuídos com sucesso!');
     }
 }
