@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="style/signup.css" media="screen" />
+    <title>Cadastrar</title>
+</head>
+<body class="fade-in">
+    <!-- partial:index.partial.html -->
+    <div class="container">
+        <div class="wrapper">
+            <div class="title-text">
+            <div class="title login">Cadastrar Conta</div>
+            </div>
+            <div class="form-container">
+            <div class="slide-controls">
+                <input type="radio" name="slide" id="login">
+                <input type="radio" name="slide" id="signup" checked>
+                <label for="login" class="slide login" onclick="openSigninPage()">Entrar</label>
+                <label for="signup" class="slide signup">Cadastrar</label>
+                <div class="slider-tab"></div>
+            </div>
+            <div class="form-inner">
+                <form onsubmit="handleSignup(event)" class="login">
+                    <div class="field">
+                        <input type="text" placeholder="Nome Completo" required>
+                    </div>
+                    <div class="field">
+                        <input type="date" placeholder="Data de Nascimento" id="birthdate" oninput="formatDate(this)" required>
+                    </div>
+                    <div class="field">
+                        <input type="text" placeholder="Email" required>
+                    </div>
+                    <div class="field">
+                        <input type="password" placeholder="Senha" required>
+                    </div>
+                    <div class="field btn">
+                        <div class="btn-layer"></div>
+                        <input type="submit" value="Cadastrar">
+                    </div>
+                    <p class="feedbackCadastrado">Cadastrado com sucesso!✅</p>
+                    <p class="feedbackNaoCadastrado">Ocorreu um erro! tente novamente.❌</p>
+                </form>
+            </div>
+            </div>
+        </div>
+        <div class="wrapper2">
+        <img class="logo" src="assets/whitetextlogo.png" height="30px">
+            <b>Acumule Pontos apostando na Wager!</b>
+        <img class="chips" src="assets/chips.png" height="370px">
+        </div>
+    </div>
+    <!-- partial -->
+    <script>
+        function openSigninPage(){
+            document.body.classList.add("fade-out");
+            setTimeout(() => {
+                window.location.href = "signin.html";
+            }, 500);
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            document.body.classList.add("fade-in");
+        });
+
+        function handleSignup(event) {
+        event.preventDefault(); // Previne o comportamento padrão do formulário
+
+        // Exibe o feedback de sucesso
+        const feedbackCadastrado = document.querySelector('.feedbackCadastrado');
+        feedbackCadastrado.style.display = 'block';
+
+        // Aguarda 2 segundos e redireciona para home.html
+        setTimeout(() => {
+            window.location.href = "signin.html";
+        }, 2000);
+    }
+    </script>
+  </body>
+</html>

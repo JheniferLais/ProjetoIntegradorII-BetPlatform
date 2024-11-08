@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="style/signin.css" media="screen" />
+    <title>Login</title>
+</head>
+<body class="fade-in">
+    <!-- partial:index.partial.html -->
+    <div class="container">
+        <div class="wrapper">
+            <div class="title-text">
+            <div class="title login">Entrar na Conta</div>
+            </div>
+            <div class="form-container">
+            <div class="slide-controls">
+                <input type="radio" name="slide" id="login" checked>
+                <input type="radio" name="slide" id="signup">
+                <label for="login" class="slide login">Entrar</label>
+                <label for="signup" class="slide signup" onclick="openSignupPage()">Cadastrar</label>
+                <div class="slider-tab"></div>
+            </div>
+            <div class="form-inner">
+                <form action="home.html" class="login">
+                <div class="field">
+                    <input type="text" placeholder="Email" required>
+                </div>
+                <div class="field">
+                    <input type="password" placeholder="Senha" required>
+                </div>
+                <div class="pass-link"><a href="#">Esqueceu a senha?</a></div>
+                <div class="field btn">
+                    <div class="btn-layer"></div>
+                    <input type="submit" value="Login">
+                </div>
+                <div class="signup-link">Não é membro? <a href="#">Assinar agora</a></div>
+                </form>
+            </div>
+            </div>
+        </div>
+        <div class="wrapper2">
+        <img class="logo" src="assets/blacktextlogo.png" height="30px">
+            <b>Convide amigos e ganhe bônus para apostar mais!</b>
+        <img class="dice" src="assets/dice.png" height="400px">
+        </div>
+    </div>
+    <!-- partial -->
+    <script>
+        function openSignupPage(){
+            document.body.classList.add("fade-out");
+            setTimeout(() => {
+                window.location.href = "signup.html";
+            }, 500);
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            document.body.classList.add("fade-in");
+        });
+
+    </script>
+  </body>
+</html>
