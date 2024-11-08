@@ -1,7 +1,9 @@
-import {Request, RequestHandler, Response} from 'express';
-import {Carteira} from "../models/WalletModel";
-import {dataBaseUtils} from "../utils/DatabaseUtils";
-import {TransacaoFinanceira} from "../models/FinancialTransactionModel";
+import { Request, RequestHandler, Response } from 'express';
+import { walletModelData } from "../models/WalletModel";
+import { Carteira } from "../models/WalletModel";
+import { TransacaoFinanceira } from "../models/WalletModel";
+
+
 
 export namespace carteiraHandler {
 
@@ -14,7 +16,7 @@ export namespace carteiraHandler {
     function validarChavePix(chave: string): boolean {
         const regexCPF = /^\d{3}\.\d{3}\.\d{3}-\d{2}$|^\d{11}$/;
         const regexCNPJ = /^\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}$|^\d{14}$/;
-        const regexEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+        const regexEmail = /^[\w-]+@([\w-]+\.)+[\w-]{2,4}$/;
         const regexTelefone = /^\+55\d{11}$|^\d{11}$/;
         const regexAleatoria = /^[a-zA-Z0-9]{32,36}$/;
 
@@ -69,7 +71,7 @@ export namespace carteiraHandler {
         }
 
         // Valida se a carteira do usuario existe
-        const carteira: Carteira | null = await dataBaseUtils.findCarteira(idUsuario);
+        const carteira: Carteira | null = await walletModelData.findCarteira(idUsuario);
         if(!carteira) {
             res.status(404).send('Carteira não encontrada!');
             return;
@@ -81,7 +83,7 @@ export namespace carteiraHandler {
         carteira.saldo = valor;
 
         // Executa a adição do saldo na carteira
-        await dataBaseUtils.addFunds(carteira);
+        await walletModelData.addFunds(carteira);
 
         //Cria uma transacao para ser usada de historico de transacoes
         const transacao: TransacaoFinanceira = {
@@ -89,7 +91,7 @@ export namespace carteiraHandler {
             tipoTransacao: 'deposito',
             valorTransacao: valor,
         }
-        await dataBaseUtils.insertTransacao(transacao);
+        await walletModelData.insertTransacao(transacao);
 
         // Response e statusCode de sucesso
         res.status(200).send('Saldo adicionado com sucesso!');
@@ -121,7 +123,7 @@ export namespace carteiraHandler {
         }
 
         // Valida se a carteira do usuario existe
-        const carteira: Carteira | null = await dataBaseUtils.findCarteira(idUsuario);
+        const carteira: Carteira | null = await walletModelData.findCarteira(idUsuario);
         if(!carteira) {
             res.status(404).send('Carteira não encontrada!');
             return;
@@ -142,7 +144,7 @@ export namespace carteiraHandler {
         carteira.saldo = valor;
 
         // Retira da conta o valor do saque
-        await dataBaseUtils.retirarFundos(carteira);
+        await walletModelData.retirarFundos(carteira);
 
         // Cria uma transacao para ser usada de historico de transacoes
         const transacao: TransacaoFinanceira = {
@@ -150,7 +152,7 @@ export namespace carteiraHandler {
             tipoTransacao: 'saque',
             valorTransacao: valor,
         }
-        await dataBaseUtils.insertTransacao(transacao);
+        await walletModelData.insertTransacao(transacao);
 
         // Response
         const response = {

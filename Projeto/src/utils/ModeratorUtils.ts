@@ -1,12 +1,12 @@
 import { NextFunction, Request, Response } from 'express';
 import { Conta } from '../models/UserModel';
-import { dataBaseUtils } from './DatabaseUtils';
+import { dataBaseutils } from './DataBaseutils';
 
 export namespace moderadorUtils {
 
     // Função para encontrar o moderador baseado no id
     export async function findModerador(idModerador: number): Promise<Conta[][]> {
-        const connection = await dataBaseUtils.ConnectionDB();
+        const connection = await dataBaseutils.ConnectionDB();
         const result = await connection.execute("SELECT * FROM usuarios WHERE id_usuario = :idModerador and moderador = 1", [idModerador]);
         await connection.close();
         return result.rows as Conta[][];

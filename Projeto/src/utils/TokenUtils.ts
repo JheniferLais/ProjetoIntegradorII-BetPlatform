@@ -1,12 +1,12 @@
 import { NextFunction, Request, Response } from 'express';
 import { Conta } from '../models/UserModel';
-import { dataBaseUtils } from './DatabaseUtils';
+import { dataBaseutils } from './DataBaseutils';
 
 export namespace tokenUtils {
 
     //Função para encontrar o token do usuario baseado no id
     export async function findToken(idUsuario: number): Promise<Conta[][]> {
-        const connection = await dataBaseUtils.ConnectionDB();
+        const connection = await dataBaseutils.ConnectionDB();
         const result = await connection.execute("SELECT token FROM usuarios WHERE id_usuario = :idUsuario", [idUsuario]);
         await connection.close();
         return result.rows as Conta[][];

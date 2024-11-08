@@ -1,7 +1,9 @@
 import { Request, RequestHandler, Response } from 'express';
-import { Conta } from '../models/UserModel';
+import { userModelData } from "../models/UserModel";
+import { Conta } from "../models/UserModel";
 import { timeUtils } from '../utils/TimeUtils';
-import { dataBaseUtils } from '../utils/DatabaseUtils'
+
+
 
 export namespace contasHandler {
 
@@ -47,7 +49,7 @@ export namespace contasHandler {
         }
 
         // Valida se o email já foi cadastrado
-        const infoEmail = await dataBaseUtils.findEmail(email);
+        const infoEmail = await userModelData.findEmail(email);
         if (infoEmail && infoEmail.length > 0) {
             res.status(409).send('O e-mail informado já está cadastrado! Tente usar outro e-mail.');
             return;
@@ -78,7 +80,7 @@ export namespace contasHandler {
         };
 
         // Insere no Banco de dados
-        await dataBaseUtils.insertUser(novaConta);
+        await userModelData.insertUser(novaConta);
 
         // Response e statusCode de sucesso
         res.status(201).send('usuario inserido com sucesso!')
@@ -96,7 +98,7 @@ export namespace contasHandler {
         }
 
         // Valida se o usuario esta cadastrado
-        const user: Conta[][] = await dataBaseUtils.findUser(email, senha);
+        const user: Conta[][] = await userModelData.findUser(email, senha);
         if (!user || user.length === 0) {
             res.status(401).send('Login ou senha inválidos!');
             return;

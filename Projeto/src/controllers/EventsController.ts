@@ -1,12 +1,14 @@
 import { Request, RequestHandler, Response } from 'express';
+import { eventModelData } from "../models/EventModel";
+import { userModelData } from "../models/UserModel";
 import { Evento } from "../models/EventModel";
-import { timeUtils } from "../utils/TimeUtils";
-import { dataBaseUtils } from "../utils/DatabaseUtils";
-import nodemailer = require("nodemailer");
 import { Conta } from '../models/UserModel';
+import { timeUtils } from "../utils/TimeUtils";
+import nodemailer = require("nodemailer");
+
+
 
 export namespace eventosHandler {
-
 
     // 'Função' para addNewEvent
     export const addNewEvent: RequestHandler =  async (req: Request, res: Response): Promise<void> => {
@@ -90,7 +92,7 @@ export namespace eventosHandler {
         }
 
         // Insere no Banco de dados
-        await dataBaseUtils.insertEvento(novoEvento);
+        await eventModelData.insertEvento(novoEvento);
 
         // Response e statusCode de sucesso
         res.status(201).send('Evento criado com sucesso!');
@@ -115,7 +117,7 @@ export namespace eventosHandler {
         //-------------------------------------------------------------------------
 
         // Obtém eventos filtrados
-        const filteredEvents: Evento[][] = await dataBaseUtils.getFilteredEvents(statusEvento);
+        const filteredEvents: Evento[][] = await eventModelData.getFilteredEvents(statusEvento);
 
         // Valida se existe algum evento com esse status
         if (!filteredEvents || filteredEvents.length === 0) {
@@ -139,7 +141,7 @@ export namespace eventosHandler {
         }
 
         // Valida se o evento existe
-        const evento: Evento | null = await dataBaseUtils.findEvento(idEvento); // Recebe o evento como um objeto
+        const evento: Evento | null = await eventModelData.findEvento(idEvento); // Recebe o evento como um objeto
         if (!evento) {
             res.status(404).send('Evento não encontrado!');
             return;
@@ -163,7 +165,7 @@ export namespace eventosHandler {
         evento.status_evento = 'excluido';  // Atualiza o status do evento
 
         // Executa a atualização no banco de dados
-        await dataBaseUtils.updateEvento(evento);
+        await eventModelData.updateEvento(evento);
 
         // Response e statusCode de sucesso
         res.status(200).send('Evento excluído com sucesso!');
@@ -188,7 +190,7 @@ export namespace eventosHandler {
         }
 
         // Valida se o evento existe
-        const evento: Evento | null = await dataBaseUtils.findEvento(idEvento);
+        const evento: Evento | null = await eventModelData.findEvento(idEvento);
         if (!evento) {
             res.status(404).send('Evento não encontrado!');
             return;
@@ -208,8 +210,8 @@ export namespace eventosHandler {
 
         //-------------------------------------------------------------------------
 
-        const emailUser: Conta | null = await dataBaseUtils.findIdUserEmail(evento.id_usuario);
-        const emailUserMod: Conta | null = await dataBaseUtils.findIdUserEmail(idModerador);
+        const emailUser: Conta | null = await userModelData.findIdUserEmail(evento.id_usuario);
+        const emailUserMod: Conta | null = await userModelData.findIdUserEmail(idModerador);
         if(!emailUser || !emailUserMod){
             res.status(404).send(`Usuario não localizado!`);
             return;
@@ -223,7 +225,7 @@ export namespace eventosHandler {
             evento.resultado = 'reprovado';
 
             // Executa a atualização no banco de dados
-            await dataBaseUtils.updateEventoReprovado(evento);
+            await eventModelData.updateEventoReprovado(evento);
 
             // Envia um email informando ao usuario que o evento foi reprovado
             const transporter = nodemailer.createTransport({
@@ -273,7 +275,7 @@ export namespace eventosHandler {
         evento.status_evento = resultado;
 
         // Executa a atualização no banco de dados
-        await dataBaseUtils.updateEvento(evento);
+        await eventModelData.updateEvento(evento);
 
         // Response e statusCode de sucesso
         res.status(200).send(`Evento ${resultado} com sucesso!`);
@@ -290,7 +292,7 @@ export namespace eventosHandler {
         }
 
         // Valida se existe algum evento com a palavra fornecida
-        const eventos: Evento | null = await dataBaseUtils.searchEvent(palavraChave);
+        const eventos: Evento | null = await eventModelData.searchEvent(palavraChave);
         if (!eventos) {
             res.status(404).send('Sem eventos com essa palavra chave!');
             return;

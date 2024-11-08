@@ -1,10 +1,13 @@
 import { Request, RequestHandler, Response } from 'express';
-import { TransacaoFinanceira } from '../models/FinancialTransactionModel';
-import { dataBaseUtils } from '../utils/DatabaseUtils'
-import { Carteira } from "../models/WalletModel";
-import { Evento } from "../models/EventModel";
+import { betModelData } from "../models/BetModel";
+import { eventModelData } from "../models/EventModel";
+import { walletModelData } from "../models/WalletModel";
 import { Aposta } from "../models/BetModel";
+import { Evento } from "../models/EventModel";
+import { Carteira } from "../models/WalletModel";
+import { TransacaoFinanceira } from "../models/WalletModel";
 import { timeUtils } from "../utils/TimeUtils";
+
 
 
 export namespace apostasHandler {
@@ -25,7 +28,7 @@ export namespace apostasHandler {
         }
 
         // Valida se o email digitado e o id do usuario sao do mesmo usuario
-        const user: true | null = await dataBaseUtils.validaUserAposta(email, idUsuario);
+        const user: true | null = await betModelData.validaUserAposta(email, idUsuario);
         if (!user) {
             res.status(403).send('O email fornecido não pertence a sua conta!');
             return;
@@ -38,14 +41,14 @@ export namespace apostasHandler {
         }
 
         // Valida se a carteira do usuario existe
-        const carteira: Carteira | null = await dataBaseUtils.findCarteira(idUsuario);
+        const carteira: Carteira | null = await walletModelData.findCarteira(idUsuario);
         if (!carteira) {
             res.status(404).send('Carteira não encontrada!');
             return;
         }
 
         // Valida se o evento existe
-        const evento: Evento | null = await dataBaseUtils.findEvento(idEvento);
+        const evento: Evento | null = await eventModelData.findEvento(idEvento);
         if (!evento) {
             res.status(404).send('Evento não encontrado!');
             return;
@@ -82,11 +85,11 @@ export namespace apostasHandler {
 
         // Retira da conta o saldo da aposta
         carteira.saldo = valorAposta;
-        await dataBaseUtils.retirarFundos(carteira);
+        await walletModelData.retirarFundos(carteira);
 
         // Aumenta a quantidade de aposta no evento
         evento.qtd_apostas = 1;
-        await dataBaseUtils.updateEventoAposta(evento);
+        await betModelData.updateEventoAposta(evento);
 
         // Insere no Banco de dados
         const apostaDoUsuario: Aposta = {
@@ -95,7 +98,7 @@ export namespace apostasHandler {
             qtd_cotas: qtd_cotas,
             aposta: aposta,
         }
-        await dataBaseUtils.betOnEvent(apostaDoUsuario);
+        await betModelData.betOnEvent(apostaDoUsuario);
 
         // Insere no banco essa transação
         const transacao: TransacaoFinanceira = {
@@ -103,7 +106,7 @@ export namespace apostasHandler {
             tipoTransacao: 'aposta',
             valorTransacao: valorAposta,
         }
-        await dataBaseUtils.insertTransacao(transacao);
+        await walletModelData.insertTransacao(transacao);
 
         // Response e statusCode de sucesso
         res.status(200).send('Aposta realizada com sucesso!');
@@ -129,7 +132,7 @@ export namespace apostasHandler {
         }
 
         // Valida se o evento existe
-        const evento: Evento | null = await dataBaseUtils.findEvento(idEvento);
+        const evento: Evento | null = await eventModelData.findEvento(idEvento);
         if (!evento) {
             res.status(404).send('Evento não encontrado!');
             return;
@@ -151,23 +154,23 @@ export namespace apostasHandler {
         //-------------------------------------------------------------------------
 
         // Finaliza o evento alterando status e o veredito
-        await dataBaseUtils.finishEvento(idEvento, veredito)
+        await betModelData.finishEvento(idEvento, veredito)
 
         // Cria uma variavel para ser a aposta perdedora
         let vereditoPerdedora: string = veredito === 'sim' ? 'nao' : 'sim';
 
         // Busca todas as apostas vencedoras do evento
-        const apostasVencedoras: Aposta[][] | null = await dataBaseUtils.getApostasFiltered(idEvento, veredito);
-        const apostasPerdedoras: Aposta[][] | null = await dataBaseUtils.getApostasFiltered(idEvento, vereditoPerdedora);
+        const apostasVencedoras: Aposta[][] | null = await betModelData.getApostasFiltered(idEvento, veredito);
+        const apostasPerdedoras: Aposta[][] | null = await betModelData.getApostasFiltered(idEvento, vereditoPerdedora);
 
         // Busca a soma do veredito(vencedoras) e das apostas perdedoras
-        const somaVencedora: number[][] | null = await dataBaseUtils.somaApostasVeredito(idEvento, veredito);
-        const somaPerdedora: number[][] | null = await dataBaseUtils.somaApostasVeredito(idEvento, vereditoPerdedora);
+        const somaVencedora: number[][] | null = await betModelData.somaApostasVeredito(idEvento, veredito);
+        const somaPerdedora: number[][] | null = await betModelData.somaApostasVeredito(idEvento, vereditoPerdedora);
 
         // Reembolsa usuários se não houver BET(usuários perdedores) ou vencedores.
         if (((!apostasVencedoras || !apostasVencedoras.length) || (!apostasPerdedoras || !apostasPerdedoras.length)) || (somaPerdedora === null || somaVencedora === null)) {
             //Busca todas as apostas  do evento
-            const apostas: Aposta[][] | null = await dataBaseUtils.getApostas(idEvento);
+            const apostas: Aposta[][] | null = await betModelData.getApostas(idEvento);
             if (!apostas) {
                 res.status(400).send('Sem apostas no evento!');
                 return;
@@ -181,13 +184,13 @@ export namespace apostasHandler {
                     const valorApostado: number = aposta[3] * evento.valor_cota
 
                     //Adiciona os ganhos na carteira do usuário
-                    const carteira: Carteira | null = await dataBaseUtils.findCarteira(aposta[2]);
+                    const carteira: Carteira | null = await walletModelData.findCarteira(aposta[2]);
                     if (!carteira) {
                         res.status(404).send('Carteira não encontrada!');
                         return;
                     }
                     carteira.saldo = valorApostado;
-                    await dataBaseUtils.addFunds(carteira);
+                    await walletModelData.addFunds(carteira);
 
                     //Cria uma transação para o histórico de transações
                     const transacao: TransacaoFinanceira = {
@@ -195,7 +198,7 @@ export namespace apostasHandler {
                         tipoTransacao: 'ganho_aposta',
                         valorTransacao: valorApostado,
                     }
-                    await dataBaseUtils.insertTransacao(transacao);
+                    await walletModelData.insertTransacao(transacao);
                 }
             }
             res.status(400).send('Evento sem bet ou sem vencedores, evento cancelado!');
@@ -210,13 +213,13 @@ export namespace apostasHandler {
                 const valorGanho: number = (aposta[3] / somaVencedora[0][0]) * ((somaVencedora[0][0] + somaPerdedora[0][0]) * evento.valor_cota);
 
                 //Adiciona os ganhos na carteira do usuário
-                const carteira: Carteira | null = await dataBaseUtils.findCarteira(aposta[2]);
+                const carteira: Carteira | null = await walletModelData.findCarteira(aposta[2]);
                 if (!carteira) {
                     res.status(404).send('Carteira não encontrada!');
                     return;
                 }
                 carteira.saldo = valorGanho;
-                await dataBaseUtils.addFunds(carteira);
+                await walletModelData.addFunds(carteira);
 
                 //Cria uma transação para o histórico de transações
                 const transacao: TransacaoFinanceira = {
@@ -224,7 +227,7 @@ export namespace apostasHandler {
                     tipoTransacao: 'ganho_aposta',
                     valorTransacao: valorGanho,
                 }
-                await dataBaseUtils.insertTransacao(transacao);
+                await walletModelData.insertTransacao(transacao);
             }
         }
 
