@@ -23,7 +23,7 @@ export namespace userModelData {
         return result.rows as Conta[][];
     }
 
-    //Função para encontrar o email no banco de dados
+    //Função para validar o email no banco de dados
     export async function findEmail(email: string) {
         const connection = await dataBaseutils.ConnectionDB();
         const result = await connection.execute("SELECT * FROM usuarios WHERE email = :email", [email]);
@@ -48,7 +48,7 @@ export namespace userModelData {
         await connection.close();
     }
 
-    //Função para encontrar a carteira do usuario
+    //Função para encontrar o email do usuario
     export async function findIdUserEmail(idUsuario: number): Promise<Conta | null> {
         const connection = await dataBaseutils.ConnectionDB();
         const result = await connection.execute("SELECT * FROM usuarios WHERE id_usuario = :idUsuario", [idUsuario]);

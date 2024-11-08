@@ -161,11 +161,12 @@ export namespace eventosHandler {
 
         //-------------------------------------------------------------------------
 
-        // Altera o status_evento para excluido
-        evento.status_evento = 'excluido';  // Atualiza o status do evento
+        // Altera o status_evento e resultado para excluido
+        evento.status_evento = 'excluido';
+        evento.resultado = 'excluido';
 
         // Executa a atualização no banco de dados
-        await eventModelData.updateEvento(evento);
+        await eventModelData.updateEventoStatusResultado(evento);
 
         // Response e statusCode de sucesso
         res.status(200).send('Evento excluído com sucesso!');
@@ -225,7 +226,7 @@ export namespace eventosHandler {
             evento.resultado = 'reprovado';
 
             // Executa a atualização no banco de dados
-            await eventModelData.updateEventoReprovado(evento);
+            await eventModelData.updateEventoStatusResultado(evento);
 
             // Envia um email informando ao usuario que o evento foi reprovado
             const transporter = nodemailer.createTransport({
@@ -277,7 +278,7 @@ export namespace eventosHandler {
         evento.status_evento = resultado;
 
         // Executa a atualização no banco de dados
-        await eventModelData.updateEvento(evento);
+        await eventModelData.updateEventoStatus(evento);
 
         // Response e statusCode de sucesso
         res.status(200).send(`Evento ${resultado} com sucesso!`);

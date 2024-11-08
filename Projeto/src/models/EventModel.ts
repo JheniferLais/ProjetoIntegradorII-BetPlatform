@@ -86,7 +86,7 @@ export namespace eventModelData {
     }
 
     //Função para alterar o status do evento
-    export async function updateEvento(evento: Evento): Promise<void> {
+    export async function updateEventoStatus(evento: Evento): Promise<void> {
         const connection = await dataBaseutils.ConnectionDB();
         await connection.execute("UPDATE eventos SET status_evento = :STATUS_EVENTO WHERE id_evento = :ID_EVENTO",
             {
@@ -98,8 +98,8 @@ export namespace eventModelData {
         await connection.close();
     }
 
-    //Função para alterar o status do evento
-    export async function updateEventoReprovado(evento: Evento): Promise<void> {
+    //Função para alterar o status do evento e o resultado
+    export async function updateEventoStatusResultado(evento: Evento): Promise<void> {
         const connection = await dataBaseutils.ConnectionDB();
         await connection.execute("UPDATE eventos SET status_evento = :STATUS_EVENTO, resultado = :RESULTADO WHERE id_evento = :ID_EVENTO",
             {
