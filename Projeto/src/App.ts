@@ -10,6 +10,6 @@ app.use(express.json());
 app.use(contasRoutes);
 app.use(eventosRoutes);
 app.use(carteiraRoutes);
-app.use(apostaRoute)
+app.use(apostaRoute);
 
 export default app;

@@ -2,8 +2,11 @@ import { Request, RequestHandler, Response } from 'express';
 import { Evento } from "../models/EventModel";
 import { timeUtils } from "../utils/TimeUtils";
 import { dataBaseUtils } from "../utils/DatabaseUtils";
+import nodemailer = require("nodemailer");
+import { Conta } from '../models/UserModel';
 
 export namespace eventosHandler {
+
 
     // 'Função' para addNewEvent
     export const addNewEvent: RequestHandler =  async (req: Request, res: Response): Promise<void> => {
@@ -197,7 +200,20 @@ export namespace eventosHandler {
             return;
         }
 
+        // Valida se o usuario existe
+        if (!evento.id_usuario){
+            res.status(404).send(`Usuario não localizado!`);
+            return;
+        }
+
         //-------------------------------------------------------------------------
+
+        const emailUser: Conta | null = await dataBaseUtils.findIdUserEmail(evento.id_usuario);
+        const emailUserMod: Conta | null = await dataBaseUtils.findIdUserEmail(idModerador);
+        if(!emailUser || !emailUserMod){
+            res.status(404).send(`Usuario não localizado!`);
+            return;
+        }
 
         // Executa a alteração do status_evento e resultado caso o evento seja reprovado
         if(resultado == 'reprovado'){
@@ -206,12 +222,51 @@ export namespace eventosHandler {
             evento.status_evento = resultado;
             evento.resultado = 'reprovado';
 
-            // Executa a atualização no Banco de dados
+            // Executa a atualização no banco de dados
             await dataBaseUtils.updateEventoReprovado(evento);
 
-            // Response e statusCode de sucesso
-            res.status(200).send(`Texto confuso, texto inapropriado, não respeita a política de privacidade e/ou termos de uso da plataforma!`);
-            return;
+            // Envia um email informando ao usuario que o evento foi reprovado
+            const transporter = nodemailer.createTransport({
+                host: 'smtp.gmail.com',
+                port: 587,
+                secure: false,
+                auth: {
+                    user: 'sistemawager@gmail.com', // Use variáveis de ambiente
+                    pass: 'nwnw qhip grys auma', // Use variáveis de ambiente
+                },
+            });
+            const mailOptions = {
+                from: 'sistemawager@gmail.com',
+                to: emailUser.email,
+                subject: `Notificação de Evento Reprovado – ${evento.titulo}`,
+                text: `
+                Olá ${emailUser.nome},
+
+                Agradecemos por enviar o evento ${evento.titulo} para a nossa plataforma! Realizamos uma análise cuidadosa do conteúdo e,
+                no momento, não conseguimos aprovar o evento para publicação.
+
+                Motivo da Reprovação: Após revisão, observamos que o evento apresenta um ou mais dos seguintes problemas:
+                Texto confuso ou com informações incompletas,
+                Conteúdo considerado inapropriado,
+                Não cumprimento da nossa política de privacidade,
+                e/ou dos termos de uso da plataforma
+                
+                Agradecemos novamente pela sua contribuição e esperamos colaborar para o sucesso do seu próximo evento!
+                
+                Atenciosamente,
+                ${emailUserMod.nome}
+                Equipe Wager
+                sistemawager@gmail.com`,
+            };
+            try {
+                await transporter.sendMail(mailOptions);
+                res.status(200).send(`Evento ${resultado} com sucesso! E-mail enviado com sucesso.`);
+                return;
+            } catch (error) {
+                console.error('Erro ao enviar e-mail:', error);
+                res.status(500).send(`Evento ${resultado} com sucesso! Falha ao enviar e-mail.`);
+                return
+            }
         }
 
         // Atualiza o status_evento
@@ -234,14 +289,14 @@ export namespace eventosHandler {
             return;
         }
 
-        //-------------------------------------------------------------------------
-
         // Valida se existe algum evento com a palavra fornecida
         const eventos: Evento | null = await dataBaseUtils.searchEvent(palavraChave);
         if (!eventos) {
             res.status(404).send('Sem eventos com essa palavra chave!');
             return;
         }
+
+        //-------------------------------------------------------------------------
 
         // Response e statusCode de sucesso
         res.status(200).send(eventos);

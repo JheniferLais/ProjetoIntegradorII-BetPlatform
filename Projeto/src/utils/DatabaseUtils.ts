@@ -46,6 +46,26 @@ export namespace dataBaseUtils {
         await connection.close();
     }
 
+    //Função para encontrar a carteira do usuario
+    export async function findIdUserEmail(idUsuario: number): Promise<Conta | null> {
+        const connection = await ConnectionDB();
+        const result = await connection.execute("SELECT * FROM usuarios WHERE id_usuario = :idUsuario", [idUsuario]);
+
+        // Verifica se há algum resultado
+        if (result.rows && result.rows.length > 0) {
+            const row = result.rows[0] as any[];
+
+            const conta: Conta = {
+                nome: row[1] as string,
+                email: row[2] as string,
+            };
+            await connection.close();
+            return conta;
+        }
+        await connection.close();
+        return null;
+    }
+
     //------------------------------------------------------------------------------------------------------------------
 
     //Função para inserir Eventos no banco de dados
@@ -143,7 +163,9 @@ export namespace dataBaseUtils {
     //Função para encontrar eventos de acordo com o titulo
     export async function searchEvent(palavraChave: string): Promise<Evento | null> {
         const connection = await ConnectionDB();
-        const result = await connection.execute("SELECT * FROM eventos WHERE LOWER(titulo) LIKE :palavraChave or LOWER(descricao) LIKE :palavraChave",
+        const result = await connection.execute(`
+            SELECT * FROM eventos WHERE LOWER(titulo) 
+            LIKE :palavraChave or LOWER(descricao) LIKE :palavraChave`,
             [`%${palavraChave.toLowerCase()}%`, `%${palavraChave.toLowerCase()}%`]);
 
         // Verifica se há algum resultado
