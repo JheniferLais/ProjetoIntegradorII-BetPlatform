@@ -4,7 +4,7 @@ import { dataBaseutils } from "../utils/DataBaseutils";
 // Tipo UserAccount
 export type Conta = {
     id?: number;
-    nome?: string;
+    nome: string;
     email: string;
     senha?: string;
     nascimento?: string;
