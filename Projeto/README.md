@@ -55,7 +55,9 @@ git clone https://github.com/JheniferLais/ProjetoIntegradorII_EngSoftware_Time8.
 
 
 <h2 id="data">🛢️ Configurando Banco de Dados</h2>
+
 Execute o arquivo `Script Banco de Dados` em seu software de SQL para gerar a estrutura completa do banco de dados wager.
+
 <p> Encontre-o em: <p>
 
 ```yaml
