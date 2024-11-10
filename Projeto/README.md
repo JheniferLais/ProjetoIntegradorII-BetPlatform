@@ -47,6 +47,7 @@
 
 
 <h2 id="clone">📂 Clonando...</h2>
+
 ```bash
 git clone https://github.com/JheniferLais/ProjetoIntegradorII_EngSoftware_Time8.git
 ```
@@ -67,6 +68,7 @@ ProjetoIntegradorII/
 
 
 <h2 id="config">⚙️ Configurando Variáveis do Ambiente .env</h2>
+
 Use `.env.exemplo` como referência para criar seu arquivo de configuração `.env` com suas credenciais
 
 ```yaml
@@ -79,7 +81,9 @@ DATABASE_STRING={YOUR_DATABASE_STRING}
 EMAIL_USERNAME={YOUR_EMAIL}
 EMAIL_PASSWORD={YOUR_EMAIL_PASSWORD_APP}
 ```
+
 Assegure-se de organizar o arquivo `.env` no diretório correto conforme o exemplo abaixo:
+
 ```yaml
 Projeto/
 ├── src/
@@ -93,6 +97,7 @@ Projeto/
 
 <h2 id="started">🚀 Executando o Projeto</h2>
 O comando abaixo instalará todas as dependências necessárias:
+
 ```shell
 npm install
 ```
@@ -104,6 +109,7 @@ na raíz do projeto `\Projeto` rode os comandos:
 npm run build 
 npm start
 ```
+
 Como consequência, será gerado o diretório build constando os arquivos em javascript e o servidor será iniciado:
 
 <h3>Uma alternativa...Iniciando o servidor com nodemon</h3>
