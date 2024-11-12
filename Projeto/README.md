@@ -89,10 +89,10 @@ Assegure-se de organizar o arquivo `.env` no diretório correto conforme o exemp
 ```yaml
 Projeto/
 ├── src/
-│   └── ...
-├── .env
-├── App.ts
-└── Server.ts
+    ├── ...
+    ├── .env
+    ├── App.ts
+    └── Server.ts
 ```
 
 
