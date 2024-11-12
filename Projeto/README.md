@@ -98,6 +98,11 @@ Projeto/
 
 
 <h2 id="started">🚀 Executando o Projeto</h2>
+
+<h3>Instalando as dependências</h3>
+
+Certifique-se de esta na raíz do projeto `\Projeto`
+
 O comando abaixo instalará todas as dependências necessárias:
 
 ```shell
@@ -106,18 +111,16 @@ npm install
 
 <h3>Iniciando o servidor</h3>
 
-na raíz do projeto `\Projeto` rode os comandos:
+Os comandos abaixo irá gerar todos os arquivos .js no diretório `build` e iniciar o servidor:
 
 ```shell
 npm run build 
 npm start
 ```
 
-Como consequência, será gerado o diretório build constando os arquivos em javascript e o servidor será iniciado:
-
 <h3>Uma alternativa...Iniciando o servidor com nodemon</h3>
-O nodemon é uma alternativa que reinicia automaticamente o projeto em Node.js sempre que há alterações no código,
-evitando a necessidade de rodá-lo manualmente a cada mudança:
+
+O nodemon é uma alternativa que reinicia automaticamente o projeto em Node.js sempre que há alterações no código, evitando a necessidade de rodá-lo manualmente a cada mudança:
 
 ```shell
 npm run dev
