@@ -28,7 +28,7 @@ html, body {
     width: 100%;
     padding: 10px 20px;
     background-color: #00050B;
-    border-bottom: 1px solid #000D1C;
+    border-bottom: 2.2px solid #000D1C;
     z-index: 10;
 }
 
@@ -95,7 +95,7 @@ html, body {
     width: 300px;
     height: 100vh;
     background-color: #00050B;
-    border-right: solid 1px #000D1C;
+    border-right: solid 2.2px #000D1C;
     padding-top: 90px;
     color: #fff;
     align-items: center;

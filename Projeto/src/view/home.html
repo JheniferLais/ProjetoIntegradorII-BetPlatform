@@ -17,10 +17,12 @@
             </div>
         </div>
         <div class="header-right">
-            <div class="balance">
-                <span class="wallet-icon">💼</span> <!-- Ícone de carteira -->
-                <span>83,50 BRL</span>
-            </div>
+            <a href="wallet.html" style="text-decoration: none;">
+                <div class="balance">
+                    <span class="wallet-icon">💼</span> <!-- Ícone de carteira -->
+                    <span>83,50 BRL</span>
+                </div>
+            </a>
             <a href="signin.html"><button class="logout-btn">Sair</button></a>
         </div>
     </header>
@@ -126,7 +128,7 @@
             ATENÇÃO, ESTE SERÁ O MODELO DE EVENTO, EM CADA CAMPO, HAVERÁ OS DADOS DOS EVENTOS,
             E CADA ROW DO BD É UM "GRID-ITEM":
 
-            <div class="grid-item">
+            <div class="grid-item" onclick="gotoEvent()>
                 <div class="titulo-categoria">
                     <div style="font-weight: 700; font-size: 30px;">
                         {TITULO}
@@ -153,7 +155,7 @@
             -->
 
 
-            <div class="grid-item">
+            <div class="grid-item" onclick="gotoEvent()">
                 <div class="titulo-categoria">
                     <div style="font-weight: 700; font-size: 30px;">
                         BRASILEIRÃO
@@ -176,7 +178,7 @@
                     </div>
                 </div>
             </div>
-            <div class="grid-item">
+            <div class="grid-item" onclick="gotoEvent()">
                 <div class="titulo-categoria">
                     <div style="font-weight: 700; font-size: 30px;">
                         MUNICIPAIS
@@ -199,10 +201,10 @@
                     </div>
                 </div>
             </div>
-            <div class="grid-item">
+            <div class="grid-item" onclick="gotoEvent()">
                 <div class="titulo-categoria">
                     <div style="font-weight: 700; font-size: 30px;">
-                        EXLPOSÃO SOLAR
+                        EXPLOSÃO SOLAR
                     </div>
                     <div style="font-weight: 300; font-size: 30px; margin-top: -10px;">
                         CATÁSTROFE
@@ -241,6 +243,10 @@
                 popup.style.display = 'none';
                 blur.style.display = 'none';
             }
+        }
+
+        function gotoEvent(){
+            window.location.href = 'event.html';
         }
 
         function formatDateTime(input) {

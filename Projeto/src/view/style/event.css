@@ -1,0 +1,133 @@
+@import url("https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+html, body {
+    display: grid;
+    height: 100%;
+    width: 100%;
+    background: #00050B !important;
+    color: #fff;
+    overflow-x: hidden;
+}
+
+/* Estilos do cabeçalho */
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 10px 20px;
+    background-color: #00050B;
+    border-bottom: 1px solid #000D1C;
+    z-index: 10;
+}
+
+.menu-icon {
+    display: flex;
+    flex-direction: row;
+    font-size: 24px;
+    cursor: pointer;
+    color: #fff;
+}
+
+.logo {
+    display: flex;
+    margin-left: 20px;
+}
+
+.logo img {
+    margin-right: 8px;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.balance {
+    display: flex;
+    align-items: center;
+    padding: 8px 15px;
+    border: 1px solid #ffffff;
+    border-radius: 5px;
+    font-weight: 500;
+    color: #fff;
+}
+
+.balance:hover {
+    background-color: #ffffff2a;
+    cursor: pointer;
+}
+
+.wallet-icon {
+    margin-right: 5px;
+}
+
+.logout-btn {
+    padding: 8px 20px;
+    background-color: #00BFFF;
+    border: none;
+    border-radius: 5px;
+    color: #ffffff;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.logout-btn:hover {
+    background-color: #009ACD;
+}
+
+.main {
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    padding: 90px;
+    background-color: #00050B;
+    height: calc(100vh - 90px); /* ajusta a altura do .main para ocupar a tela toda, menos o header */
+}
+
+.grid-item {
+    display: flex;
+    background-color: #000D1C;
+    cursor: pointer;
+    border-radius: 8px;
+    color: white;
+    font-family: 'Montserrat', sans-serif;
+    padding: 15px;
+    height: 200px;
+    transition: ease 0.5s;
+}
+
+.grid-item:hover {
+    background-color: #1a273a;
+}
+
+.submit-btn {
+    background: linear-gradient(to right, #1c92d2, #16b7ed); /* Cores de gradiente */
+    border: none;
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 10px 20px;
+    border-radius: 8px;
+    width: 100%;
+    cursor: pointer;
+    text-align: center;
+    transition: background 0.3s ease;
+}
+
+.submit-btn:hover {
+    background: linear-gradient(to right, #2296d5, #1fbaed); /* Efeito hover */
+}

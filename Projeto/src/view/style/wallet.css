@@ -1,0 +1,242 @@
+@import url("https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+html, body {
+    display: grid;
+    height: 100%;
+    width: 100%;
+    background: #00050B !important;
+    color: #fff;
+    overflow-x: hidden;
+}
+
+/* Estilos do cabeçalho */
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 10px 20px;
+    background-color: #00050B;
+    border-bottom: 1px solid #000D1C;
+    z-index: 10;
+}
+
+.menu-icon {
+    display: flex;
+    flex-direction: row;
+    font-size: 24px;
+    cursor: pointer;
+    color: #fff;
+}
+
+.logo {
+    display: flex;
+    margin-left: 20px;
+}
+
+.logo img {
+    margin-right: 8px;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.balance {
+    display: flex;
+    align-items: center;
+    padding: 8px 15px;
+    border: 1px solid #ffffff;
+    border-radius: 5px;
+    font-weight: 500;
+    color: #fff;
+}
+
+.balance:hover {
+    background-color: #ffffff2a;
+    cursor: pointer;
+}
+
+.wallet-icon {
+    margin-right: 5px;
+}
+
+.logout-btn {
+    padding: 8px 20px;
+    background-color: #00BFFF;
+    border: none;
+    border-radius: 5px;
+    color: #ffffff;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.logout-btn:hover {
+    background-color: #009ACD;
+}
+
+#banner {
+    position: relative;
+    width: 100%;
+    z-index: 1; /* Definindo z-index para o banner */
+}
+
+.balance-section {
+    position: absolute;
+    top: -60px; /* Ajuste conforme necessário */
+    left: 500px;
+    transform: translateX(-50%);
+    width: 600px;
+    text-align: center;
+    background-color: #00050B;
+    padding: 20px;
+    border-radius: 15px;
+    z-index: 2; /* Definindo z-index para ficar na frente do banner */
+}
+
+.main {
+    width: 100vw;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: 90px;
+    padding-top: 130px;
+    background-color: #00050B;
+    height: calc(100vh - 90px); /* ajusta a altura do .main para ocupar a tela toda, menos o header */
+}
+
+.grid-item {
+    display: flex;
+    background-color: #000D1C;
+    cursor: pointer;
+    border-radius: 8px;
+    color: white;
+    font-family: 'Montserrat', sans-serif;
+    padding: 15px;
+    height: 200px;
+    transition: ease 0.5s;
+}
+
+.grid-item:hover {
+    background-color: #1a273a;
+}
+
+.submit-btn {
+    background: linear-gradient(to right, #1c92d2, #16b7ed); /* Cores de gradiente */
+    border: none;
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 10px 20px;
+    border-radius: 8px;
+    width: 100%;
+    cursor: pointer;
+    text-align: center;
+    transition: background 0.3s ease;
+}
+
+.submit-btn:hover {
+    background: linear-gradient(to right, #2296d5, #1fbaed); /* Efeito hover */
+}
+
+.balance-section h2 {
+    font-size: 18px;
+    color: #ffffffa1;
+    margin-bottom: -15px;
+}
+
+.balance-amount {
+    font-size: 48px;
+    color: #fff;
+    margin: 5px 0;
+}
+
+.buttons {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+}
+
+.deposit-btn {
+    background-color: #00BFFF;
+    border: none;
+    border-radius: 5px;
+    color: #ffffff;
+    padding: 10px 20px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+.withdraw-btn{
+    background-color: #00050B;
+    border: 2px solid #fff;
+    border-radius: 5px;
+    color: #ffffff;
+    padding: 10px 20px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.deposit-btn:hover {
+    background-color: #4fc7ef;
+}
+.withdraw-btn:hover{
+    background-color: #00BFFF;
+    border-color: #00BFFF;
+}
+
+.transaction-history, .bet-history {
+    background-color: #000D1C;
+    width: 82%;
+    border-radius: 8px;
+    padding: 15px;
+    margin-top: 20px;
+    margin-left: 100px;
+}
+
+.transaction-history h3, .bet-history h3 {
+    font-size: 18px;
+    color: #ffffffa1;
+    margin-bottom: 10px;
+}
+
+.credit-list, .bet-list {
+    list-style-type: none;
+    padding: 0;
+    color: #fff;
+}
+
+.credit-list li, .bet-list li {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    font-size: 16px;
+}
+
+.credit-list li .debit, .bet-list li .loss {
+    color: #ff4d4d;
+}
+
+.credit-list li .credit, .bet-list li .win {
+    color: #00FF7F;
+}
+
+.bet-list li span, .credit-list li span {
+    font-size: 14px;
+    color: #ffffffa1;
+}
