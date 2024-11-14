@@ -71,24 +71,24 @@ ProjetoIntegradorII/
 
 <h2 id="config">⚙️ Configurando Variáveis do Ambiente .env</h2>
 
-Use `.env.exemplo` como referência para criar seu arquivo de configuração `.env` com suas credenciais
+Use o exemplo abaixo como referência para substituir o arquivo de configuração `.env` com suas credenciais. Remova as chaves `{}` e insira suas informações reais.
 
 ```yaml
 # Configurações de Banco de Dados
-DATABASE_USER={YOUR_DATABASE_USER}
-DATABASE_PASSWORD={YOUR_DATABSE_PASSSWORD}
-DATABASE_STRING={YOUR_DATABASE_STRING}
+DATABASE_USER={YOUR_DATABASE_USER}          # Substitua pelo seu nome de usuário do banco de dados
+DATABASE_PASSWORD={YOUR_DATABASE_PASSWORD}  # Substitua pela sua senha do banco de dados
+DATABASE_STRING={YOUR_DATABASE_STRING}      # Substitua pelo seu string de conexão do banco de dados
 
-# Configurações de email
-EMAIL_USERNAME={YOUR_EMAIL}
-EMAIL_PASSWORD={YOUR_EMAIL_PASSWORD_APP}
+# Configurações de Email
+EMAIL_USERNAME={YOUR_EMAIL}                 # Substitua pelo seu endereço de email
+EMAIL_PASSWORD={YOUR_EMAIL_PASSWORD_APP}    # Substitua pela senha do seu aplicativo de email
 ```
 
-Assegure-se de organizar o arquivo `.env` no diretório correto conforme o exemplo abaixo:
+Assegure-se de que o arquivo `.env` está no diretório correto conforme o exemplo abaixo:
 
 ```yaml
 Projeto/
-├── src/
+└── src/
     ├── ...
     ├── .env
     ├── App.ts
@@ -111,7 +111,7 @@ npm install
 
 <h3>Iniciando o servidor</h3>
 
-Os comandos abaixo irá gerar todos os arquivos .js no diretório `build` e iniciar o servidor:
+Os comandos abaixo iram gerar todos os arquivos .js no diretório `build` e iniciar o servidor:
 
 ```shell
 npm run build 
