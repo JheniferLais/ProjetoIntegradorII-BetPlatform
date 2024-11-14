@@ -11,7 +11,7 @@ html, body {
     display: grid;
     height: 100%;
     width: 100%;
-    background: #000D1C !important;
+    background: #00050B !important;
     color: #fff;
     overflow-x: hidden;
 }
@@ -27,8 +27,8 @@ html, body {
     align-items: center;
     width: 100%;
     padding: 10px 20px;
-    background-color: #000D1C;
-    border-bottom: 1px solid #1a273a;
+    background-color: #00050B;
+    border-bottom: 2.2px solid #000D1C;
     z-index: 10;
 }
 
@@ -94,8 +94,8 @@ html, body {
     position: fixed;
     width: 300px;
     height: 100vh;
-    background-color: #000D1C;
-    border-right: solid 1px #1a273a;
+    background-color: #00050B;
+    border-right: solid 2.2px #000D1C;
     padding-top: 90px;
     color: #fff;
     align-items: center;
@@ -113,12 +113,12 @@ html, body {
     margin-bottom: 20px;
     color: #fff;
     font-weight: 700;
-    background-color: #27536246;
+    background-color: #000D1C;
     text-align: center;
     cursor: pointer;
     border-radius: 5px;
-    border: 1px solid #27536246;
-    background-image: linear-gradient(91deg, #27536246 24.89%, #0088ffaa 41.03%, #2acaff 55.67%, #0088ffaa 76.24%, #2590edaa 85.67%, #2acaff 102.51%);
+    border: 1px solid #000D1C;
+    background-image: linear-gradient(91deg, #000D1C 24.89%, #0088ffaa 41.03%, #2acaff 55.67%, #0088ffaa 76.24%, #2590edaa 85.67%, #2acaff 102.51%);
     background-repeat: no-repeat;
     background-size: 400%;
     background-position-x: 0;
@@ -136,37 +136,90 @@ html, body {
     width: 100vw;
     height: auto;
     display: flex;
+    flex-direction: column;
     padding-left: 350px;
     padding-top: 90px;
     padding-right: 50px;
     padding-bottom: 30px;
-    background-color: #000D1C;
-    height: calc(100vh - 90px); /* Ajusta a altura do .main para ocupar a tela toda, menos o header */
+    background-color: #00050B;
+    height: calc(100vh - 90px); /* ajusta a altura do .main para ocupar a tela toda, menos o header */
 }
 .main .main-content {
     display: grid;
-    grid-template-columns: repeat(3, 1fr); /* Define 3 colunas de tamanhos iguais */
-    gap: 20px;
+    grid-template-columns: repeat(2, 1fr); /* define 2 colunas de tamanhos iguais */
+    gap: 30px;
     width: 100%;
     height: auto;
 }
-.grid-item {
-    background-color: rgba(255, 255, 255, 0.8);
-    border: 1px solid rgba(0, 0, 0, 0.8);
-    padding: 20px;
-    font-size: 30px;
-    text-align: center;
-    height: 200px; /* Define uma altura fixa para os itens */
+.search-container{
+    width: 100%;
     display: flex;
-    align-items: center;
-    justify-content: center;
+    justify-content: space-between;
+}
+.search-bar{
+    width: 400px;
+    margin-bottom: 40px;
+    float: left;
+}
+.filters{
+    float: right;
+}
+.filters button{
+    background-color: #000D1C;
+    border: solid 0px;
+    color: white;
+    margin-left: 4px;
+}
+.filters button:hover{
+    background-color: #009ACD;
+}
+.filters button:active{
+    background-color: #009ACD !important;
+    transform: scale(0.95);
+}
+#search{
+    border: none;
+}
+.grid-item {
+    position: relative;
+    display: flex;
+    background-color: #000D1C;
+    cursor: pointer;
+    border-radius: 8px;
+    color: white;
+    font-family: 'Montserrat', sans-serif;
+    padding: 15px;
+    height: 200px;
+    transition: ease 0.5s;
+}
+.grid-item:hover{
+    background-color: #1a273a;
+}
+.grid-item .titulo-categoria{
+    position: absolute;
+    top: 10px;
+    left: 17px;
+    text-align: left;
+}
+.grid-item .apostas-data{
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    text-align: end;
+}
+.grid-item .descricao{
+    position: absolute;
+    bottom: 15px;
+    left: 18px;
+    text-align: end;
 }
 .blur{
+    cursor: pointer;
     position: absolute;
     z-index: 11;
     width: 100vw;
     height: 100vh;
-    background-color: #000d1c91;
+    background-color: #00050B91;
     backdrop-filter: blur(8px);
     display: none;
 }
