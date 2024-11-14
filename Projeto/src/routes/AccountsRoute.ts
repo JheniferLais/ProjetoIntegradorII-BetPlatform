@@ -5,6 +5,6 @@ const route: Router = Router();
 
 // Rotas para autenticação
 route.post('/signUp', contasHandler.signUpHandler);
-route.post('/login', contasHandler.loginHandler);
+route.post('/signIn', contasHandler.signInHandler);
 
 export default route;

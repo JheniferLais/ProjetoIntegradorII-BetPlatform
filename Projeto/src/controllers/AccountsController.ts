@@ -87,7 +87,7 @@ export namespace contasHandler {
     };
 
     // 'Função' para login
-    export const loginHandler: RequestHandler = async (req: Request, res: Response): Promise<void> => {
+    export const signInHandler: RequestHandler = async (req: Request, res: Response): Promise<void> => {
         const email = req.get('email');
         const senha = req.get('senha');
 

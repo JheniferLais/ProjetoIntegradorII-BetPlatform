@@ -31,7 +31,7 @@ export namespace userModelData {
         return result.rows;
     }
 
-    //Função para inserir Usuarios no banco de dados e automaticamente criar sua carteira
+    //Função para inserir Usuarios no banco de dados
     export async function insertUser(conta: Conta): Promise<void> {
         const connection = await dataBaseutils.ConnectionDB();
         await connection.execute(`INSERT INTO usuarios (id_usuario, nome, email, senha, data_nascimento, token)
