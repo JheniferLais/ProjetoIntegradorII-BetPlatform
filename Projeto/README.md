@@ -84,18 +84,6 @@ EMAIL_USERNAME={YOUR_EMAIL}                 # Substitua pelo seu endereço de em
 EMAIL_PASSWORD={YOUR_EMAIL_PASSWORD_APP}    # Substitua pela senha do seu aplicativo de email
 ```
 
-Assegure-se de que o arquivo `.env` está no diretório correto conforme o exemplo abaixo:
-
-```yaml
-Projeto/
-└── src/
-    ├── ...
-    ├── .env
-    ├── App.ts
-    └── Server.ts
-```
-
-
 
 <h2 id="started">🚀 Executando o Projeto</h2>
 

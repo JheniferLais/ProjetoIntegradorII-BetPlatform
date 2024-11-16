@@ -1,6 +1,7 @@
 import oracledb from "oracledb";
 
-require('dotenv').config();
+import dotenv from 'dotenv';
+dotenv.config();
 
 export namespace dataBaseutils {
 
