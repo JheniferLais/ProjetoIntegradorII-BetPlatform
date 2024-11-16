@@ -39,6 +39,11 @@ async function handleFormSubmission(event) {
 
     // Valida se todos os campos foram preenchidos
     if (!nome || !senha || !email || !nascimento) {
+        const feedbackNaoCadastrado = document.querySelector('.feedbackNaoCadastrado');
+        feedbackNaoCadastrado.textContent = 'Preencha todos os campos';
+        feedbackNaoCadastrado.style.display = 'block';
+        return;
+
         alert('Preencha todos os campos')
         return;
     }

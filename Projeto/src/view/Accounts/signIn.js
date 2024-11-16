@@ -66,16 +66,16 @@ async function handleFormSubmission(event) {
 
     // Valida se ocorreu algum erro e exibe a mensagem de erro
     if (!response.ok) {
-        const feedbackNaoCadastrado = document.querySelector('.feedbackNaoLogado');
-        feedbackNaoCadastrado.textContent = result.message || result || '❌ Ocorreu um erro! Tente novamente.';
-        feedbackNaoCadastrado.style.display = 'block';
+        const feedbackNaoLogado = document.querySelector('.feedbackNaoLogado');
+        feedbackNaoLogado.textContent = result.message || result || '❌ Ocorreu um erro! Tente novamente.';
+        feedbackNaoLogado.style.display = 'block';
         return;
     }
 
     // Caso o login seja bem-sucedido exibe a mensagem de sucesso
-    const feedbackCadastrado = document.querySelector('.feedbackLogado');
-    feedbackCadastrado.textContent = result.message || '✅ Logado com sucesso!';
-    feedbackCadastrado.style.display = 'block';
+    const feedbackLogado = document.querySelector('.feedbackLogado');
+    feedbackLogado.textContent = result.message || '✅ Logado com sucesso!';
+    feedbackLogado.style.display = 'block';
 
     // Redireciona para a pagina de home
     setTimeout(openHomePage, 1200);
