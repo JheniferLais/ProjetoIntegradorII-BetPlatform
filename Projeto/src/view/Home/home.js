@@ -7,14 +7,6 @@ function openSignUpPage(){
     }, 500);
 }
 
-// Redireciona o usuario para o home
-function openHomePage(){
-    document.body.classList.add("fade-out");
-    setTimeout(() => {
-        window.location.href = `${apiBaseUrl}/home`;
-    }, 500);
-}
-
 function openWalletPage(){
     document.body.classList.add("fade-out");
     setTimeout(() => {
@@ -52,3 +44,29 @@ function formatDateTime(input) {
 
     input.value = value;
 }
+
+
+document.addEventListener("DOMContentLoaded", () => {
+    document.body.classList.add("fade-in"); // Adiciona um efeito de fade-in na página ao carregar
+
+    // Redireciona para a página de Cadastro ao clicar em "Sair"
+    document.getElementById('signUpButton').addEventListener('click', openSignUpPage);
+
+    // Redireciona para a página da Carteira ao clicar na seção de saldo
+    document.getElementById('walletLink').addEventListener('click', openWalletPage);
+
+    // Exibe o popup de cadastro de evento ao clicar no botão "Criar Evento"
+    document.getElementById('createEventButton').addEventListener('click', openPopUpCadastrarEvento);
+
+    // Fecha o popup de cadastro de evento ao clicar no blur
+    document.getElementById('popupBlur').addEventListener('click', closePopUpCadastrarEvento);
+
+    // Fecha o popup de cadastro de evento ao clicar no botão de fechar
+    document.getElementById('popupClose').addEventListener('click', closePopUpCadastrarEvento);
+
+    // Aplica formatação de data e hora em campos específicos quando o usuário digitar
+    const dateTimeInputs = document.querySelectorAll('#inputDataHoraInicio, #inputDataHoraFim');
+    dateTimeInputs.forEach(input => {
+        input.addEventListener('input', () => formatDateTime(input));
+    });
+});

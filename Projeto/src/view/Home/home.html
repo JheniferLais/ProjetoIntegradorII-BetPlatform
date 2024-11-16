@@ -25,13 +25,13 @@
 
         <!-- Icones da Carteira e Sair -->
         <div class="header-right">
-            <a href="#" onclick="openWalletPage()" style="text-decoration: none;">
+            <a id="walletLink" style="text-decoration: none;">
                 <div class="balance">
                     <span class="wallet-icon">💼</span>
                     <span>83,50 BRL</span>
                 </div>
             </a>
-            <button onclick="openSignUpPage()" class="logout-btn">Sair</button>
+            <button id="signUpButton" class="logout-btn">Sair</button>
         </div>
     </header>
 
@@ -39,7 +39,7 @@
     <div class="sidebar">
         <ul class="sidebar-list">
             <inline>
-                <button class="sidebar-items" onclick="openPopUpCadastrarEvento()">Criar Evento</button>
+                <button id="createEventButton" class="sidebar-items">Criar Evento</button>
             </inline>
             <inline>
                 <button class="sidebar-items">Meus Eventos</button>
@@ -54,18 +54,18 @@
     </div>
 
     <!-- 'Botão' para fechar o Popup de Criação do Evento -->
-    <div class="blur" onclick="closePopUpCadastrarEvento()"></div>
+    <div id="popupBlur" class="blur"></div>
 
     <!-- Pop Up para criação do evento -->
     <div class="popup-cadastro-evento">
-        <div class="close-popup" onclick="closePopUpCadastrarEvento()">
+        <div id="popupClose" class="close-popup">
             <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
                 <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
               </svg>
         </div>
 
         <!-- Formulario de Cadastro de evento -->
-        <form id="registerEvent" action="#">
+        <form id="registerEvent">
             <!-- Formulario de Cadastro de evento lado ESQUERDO -->
             <div class="left">
                 <h4>Dados do Evento</h4>
@@ -112,14 +112,14 @@
                         <!-- Input da Data e Hora do Inicio das Apostas -->
                         <div class="form-group-item">
                             <label for="inputDataHoraInicio">Data/Hora Início:</label>
-                            <input id="inputDataHoraInicio" type="text" wrap="hard" class="form-control" placeholder="aaaa/mm/dd HH:MM:SS" oninput="formatDateTime(this)">
+                            <input id="inputDataHoraInicio" type="text" wrap="hard" class="form-control" placeholder="aaaa/mm/dd HH:MM:SS">
                             <small style="color:#ffffffa8; font-size: 12px;">Ano/Mês/Dia Hora:Minuto:Segundo</small>
                         </div>
 
                         <!-- Input da Data e Hora do Fim das Apostas -->
                         <div class="form-group-item">
                             <label for="inputDataHoraFim">Data/Hora Fim:</label>
-                            <input id="inputDataHoraFim"  type="text" wrap="hard" class="form-control" placeholder="aaaa/mm/dd HH:MM:SS" oninput="formatDateTime(this)">
+                            <input id="inputDataHoraFim"  type="text" wrap="hard" class="form-control" placeholder="aaaa/mm/dd HH:MM:SS">
                             <small style="color:#ffffffa8; font-size: 12px;">Ano/Mês/Dia Hora:Minuto:Segundo</small>
                         </div>
 
@@ -165,7 +165,7 @@
             <!--
             ESTRUTURA BASE DE CADA EVENTO, CADA ROW DO BANCO É UM GRID-ITEM:
 
-            <div class="grid-item" onclick="openHomePage()">
+            <div id="gradeEvento" class="grid-item">
                 <div class="titulo-categoria">
                     <div style="font-weight: 700; font-size: 30px;">
                         {TITULO}
@@ -191,7 +191,7 @@
             -->
 
             <!-- APENAS EXEMPLOS DE EVENTOS PARA FINS DE DESIGN -->
-            <div class="grid-item" onclick="openHomePage()">
+            <div id="gradeEvento" class="grid-item">
                 <div class="titulo-categoria">
                     <div style="font-weight: 700; font-size: 30px;">
                         BRASILEIRÃO
@@ -214,30 +214,8 @@
                     </div>
                 </div>
             </div>
-            <div class="grid-item" onclick="openHomePage()">
-                <div class="titulo-categoria">
-                    <div style="font-weight: 700; font-size: 30px;">
-                        MUNICIPAIS
-                    </div>
-                    <div style="font-weight: 300; font-size: 30px; margin-top: -10px;">
-                        ELEIÇÕES
-                    </div>
-                </div>
-                <div class="apostas-data">
-                    <div style="font-weight: 500; font-size: 15px;">
-                        1.200 Apostas 👥
-                    </div>
-                    <div style="font-weight: 500; font-size: 15px;">
-                        31/11 📅
-                    </div>
-                </div>
-                <div class="descricao">
-                    <div style="font-weight: 300; font-size: 20px;">
-                        Thiago 15 X Rinaldo 11
-                    </div>
-                </div>
-            </div>
-            <div class="grid-item" onclick="openHomePage()">
+
+            <div id="gradeEvento" class="grid-item">
                 <div class="titulo-categoria">
                     <div style="font-weight: 700; font-size: 30px;">
                         EXPLOSÃO SOLAR
