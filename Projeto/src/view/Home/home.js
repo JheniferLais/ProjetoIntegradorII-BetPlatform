@@ -1,11 +1,28 @@
-function openSignupPage(){
+const apiBaseUrl = 'http://localhost:3000';
+
+function openSignUpPage(){
     document.body.classList.add("fade-out");
     setTimeout(() => {
-        window.location.href = "signUp";
+        window.location.href = `${apiBaseUrl}/signUp`;
     }, 500);
 }
 
-function openPopUpCadastraraEvento(){
+// Redireciona o usuario para o home
+function openHomePage(){
+    document.body.classList.add("fade-out");
+    setTimeout(() => {
+        window.location.href = `${apiBaseUrl}/home`;
+    }, 500);
+}
+
+function openWalletPage(){
+    document.body.classList.add("fade-out");
+    setTimeout(() => {
+        window.location.href = `${apiBaseUrl}/wallet`;
+    }, 500);
+}
+
+function openPopUpCadastrarEvento(){
     const popup = document.querySelector('.popup-cadastro-evento');
     const blur = document.querySelector('.blur');
     if(popup && blur){
@@ -14,17 +31,13 @@ function openPopUpCadastraraEvento(){
     }
 }
 
-function closePopUpCadastraraEvento(){
+function closePopUpCadastrarEvento(){
     const popup = document.querySelector('.popup-cadastro-evento');
     const blur = document.querySelector('.blur');
     if(popup && blur){
         popup.style.display = 'none';
         blur.style.display = 'none';
     }
-}
-
-function gotoEvent(){
-    window.location.href = 'event';
 }
 
 function formatDateTime(input) {

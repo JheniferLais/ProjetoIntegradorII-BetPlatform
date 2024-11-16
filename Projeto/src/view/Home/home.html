@@ -4,69 +4,89 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" sizes="32x32" href="../assets/favicon.ico" type="image/x-icon">
+
+    <!-- Linkagem do style (.css) da pagina de home -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="home.css" media="screen" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <title>Página Inicial - Wager</title>
 </head>
+
 <body>
+    <!-- Header do Site -->
     <header class="header">
+        <!-- Logo Wager -->
         <div class="menu-icon">
             <span>&#9776;</span> <!-- Ícone do menu (hambúrguer) -->
             <div class="logo">
                 <img src="../assets/whitetextlogo.png" alt="Wager Logo" height="30">
             </div>
         </div>
+
+        <!-- Icones da Carteira e Sair -->
         <div class="header-right">
-            <a href="../Wallet/wallet.html" style="text-decoration: none;">
+            <a href="#" onclick="openWalletPage()" style="text-decoration: none;">
                 <div class="balance">
-                    <span class="wallet-icon">💼</span> <!-- Ícone de carteira -->
+                    <span class="wallet-icon">💼</span>
                     <span>83,50 BRL</span>
                 </div>
             </a>
-            <button onclick="openSignupPage()" class="logout-btn">Sair</button>
+            <button onclick="openSignUpPage()" class="logout-btn">Sair</button>
         </div>
     </header>
+
+    <!-- Sidebar lateral -->
     <div class="sidebar">
         <ul class="sidebar-list">
-            <il>
-                <button class="sidebar-items" onclick="openPopUpCadastraraEvento()">Criar Evento</button>
-            </il>
-            <il>
+            <inline>
+                <button class="sidebar-items" onclick="openPopUpCadastrarEvento()">Criar Evento</button>
+            </inline>
+            <inline>
                 <button class="sidebar-items">Meus Eventos</button>
-            </il>
-            <il>
+            </inline>
+            <inline>
                 <button class="sidebar-items">Avaliar Eventos</button>
-            </il>
-            <il>
+            </inline>
+            <inline>
                 <button class="sidebar-items">Finalizar Eventos</button>
-            </il>
+            </inline>
         </ul>
     </div>
-    <div class="blur" onclick="closePopUpCadastraraEvento()">
-    </div>
-    <!-- POP UP CRIAÇÃO DE EVENTO -->
+
+    <!-- 'Botão' para fechar o Popup de Criação do Evento -->
+    <div class="blur" onclick="closePopUpCadastrarEvento()"></div>
+
+    <!-- Pop Up para criação do evento -->
     <div class="popup-cadastro-evento">
-        <div class="close-popup" onclick="closePopUpCadastraraEvento()">
+        <div class="close-popup" onclick="closePopUpCadastrarEvento()">
             <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
                 <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
               </svg>
         </div>
-        <form action="#">
+
+        <!-- Formulario de Cadastro de evento -->
+        <form id="registerEvent" action="#">
+            <!-- Formulario de Cadastro de evento lado ESQUERDO -->
             <div class="left">
                 <h4>Dados do Evento</h4>
                 <div class="form-group">
+                    <!-- Input do Titulo do Evento -->
                     <div class="form-group-item">
-                        <label for="exampleInputEmail1">Título:</label>
-                        <input type="text" wrap="hard" class="form-control" id="exampleInputEmail1" placeholder="Título do Evento (máx: 50)" maxlength="50">
+                        <label for="inputTitulo">Título:</label>
+                        <input id="inputTitulo" type="text" wrap="hard" class="form-control" placeholder="Título do Evento (máx: 50)" maxlength="50">
                     </div>
+
+                    <!-- Input da Descrição do Evento -->
                     <div class="form-group-item">
-                        <label for="exampleFormControlTextarea1">Descrição:</label>
-                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" placeholder="Descrição do Evento (máx: 150)" maxlength="150"></textarea>
+                        <label for="inputDescricao">Descrição:</label>
+                        <textarea id="inputDescricao" class="form-control" rows="3" placeholder="Descrição do Evento (máx: 150)" maxlength="150"></textarea>
                     </div>
+
+                    <!-- Input da Categoria do Evento -->
                     <div class="form-group-item">
-                        <label class="mr-sm-2" for="inlineFormCustomSelect">Categoria:</label>
-                        <select class="form-control" id="categoria">
+                        <label class="mr-sm-2">Categoria:</label>
+                        <label for="inputCategoria"></label>
+                        <select id="inputCategoria" class="form-control">
                             <option value="esportes">Esportes</option>
                             <option value="catastrofes">Catástrofes</option>
                             <option value="eleicoes">Eleições</option>
@@ -74,32 +94,43 @@
                             <option value="e-sports">E-Sports</option>
                         </select>
                     </div>
+
+                    <!-- Input do Valor da Cota do Evento -->
                     <div class="form-group-item">
-                        <label for="exampleInputEmail1">Valor da Cota:</label>
-                        <input type="number" wrap="hard" class="form-control" id="exampleInputEmail1" placeholder="R$1,00">
+                        <label for="inputValorCota">Valor da Cota:</label>
+                        <input id="inputValorCota" type="number" wrap="hard" class="form-control" placeholder="R$1,00">
                         <small style="color:#ffffffa8; font-size: 12px;">Apenas valores maiores ou iguais a R$1,00</small>
                     </div>
                 </div>
             </div>
+
+            <!-- Formulario de Cadastro de evento lado DIREITO -->
             <div class="right">
                 <h3>Períodos de Apostas</h3>
                 <div class="form-group">
                     <div class="form-group-item">
+                        <!-- Input da Data e Hora do Inicio das Apostas -->
                         <div class="form-group-item">
-                            <label for="startDate">Data/Hora Início:</label>
-                            <input type="text" wrap="hard" class="form-control" id="startDate" placeholder="aaaa/mm/dd HH:MM:SS" oninput="formatDateTime(this)">
+                            <label for="inputDataHoraInicio">Data/Hora Início:</label>
+                            <input id="inputDataHoraInicio" type="text" wrap="hard" class="form-control" placeholder="aaaa/mm/dd HH:MM:SS" oninput="formatDateTime(this)">
                             <small style="color:#ffffffa8; font-size: 12px;">Ano/Mês/Dia Hora:Minuto:Segundo</small>
                         </div>
+
+                        <!-- Input da Data e Hora do Fim das Apostas -->
                         <div class="form-group-item">
-                            <label for="startDate">Data/Hora Fim:</label>
-                            <input type="text" wrap="hard" class="form-control" id="startDate" placeholder="aaaa/mm/dd HH:MM:SS" oninput="formatDateTime(this)">
+                            <label for="inputDataHoraFim">Data/Hora Fim:</label>
+                            <input id="inputDataHoraFim"  type="text" wrap="hard" class="form-control" placeholder="aaaa/mm/dd HH:MM:SS" oninput="formatDateTime(this)">
                             <small style="color:#ffffffa8; font-size: 12px;">Ano/Mês/Dia Hora:Minuto:Segundo</small>
                         </div>
+
+                        <!-- Input da Data do Evento -->
                         <div class="form-group-item">
-                            <label for="exampleInputEmail1">Data do Evento:</label>
-                            <input type="date" wrap="hard" class="form-control" id="exampleInputEmail1" placeholder="aaaa/mm/dd">
+                            <label for="inputDataEvento">Data do Evento:</label>
+                            <input id="inputDataEvento"  type="date" wrap="hard" class="form-control" placeholder="aaaa/mm/dd">
                             <!--<small style="color:#ffffffa8; font-size: 12px;">Ano/Mês/Dia</small>-->
                         </div>
+
+                        <!-- Botão para enviar o formulario de Cadastro de Evento -->
                         <div class="form-group-item">
                             <input type="submit" value="Enviar para Apuração" class="submit-btn">
                         </div>
@@ -108,28 +139,33 @@
             </div>
         </form>
     </div>
+
+    <!-- Espaço de Pesquisa e Eventos -->
     <div class="main">
+        <!-- Container de busca por Barra de Pesquisa ou Filtros -->
         <div class="search-container">
+            <!-- Barra de pesquisa -->
             <div class="search-bar">
                 <form class="d-flex" role="search">
                     <input id="search" class="form-control me-2" type="search" placeholder="Pesquisar..." aria-label="Search">
                     <button class="btn btn-outline-success" type="submit">Buscar</button>
                 </form>
             </div>
+
+            <!-- Filtros de pesquisa -->
             <div class="filters">
                 <button class="btn btn-outline-success" type="submit">Próximos à Vencer</button>
                 <button class="btn btn-outline-success" type="submit">Mais Apostados</button>
                 <button class="btn btn-outline-success" type="submit">Por Categoria</button>
             </div>
         </div>
-        
+
+        <!-- Grade de eventos -->
         <div class="main-content">
-
             <!--
-            ATENÇÃO, ESTE SERÁ O MODELO DE EVENTO, EM CADA CAMPO, HAVERÁ OS DADOS DOS EVENTOS,
-            E CADA ROW DO BD É UM "GRID-ITEM":
+            ESTRUTURA BASE DE CADA EVENTO, CADA ROW DO BANCO É UM GRID-ITEM:
 
-            <div class="grid-item" onclick="gotoEvent()>
+            <div class="grid-item" onclick="openHomePage()">
                 <div class="titulo-categoria">
                     <div style="font-weight: 700; font-size: 30px;">
                         {TITULO}
@@ -152,11 +188,10 @@
                     </div>
                 </div>
             </div>
-
             -->
 
-
-            <div class="grid-item" onclick="gotoEvent()">
+            <!-- APENAS EXEMPLOS DE EVENTOS PARA FINS DE DESIGN -->
+            <div class="grid-item" onclick="openHomePage()">
                 <div class="titulo-categoria">
                     <div style="font-weight: 700; font-size: 30px;">
                         BRASILEIRÃO
@@ -179,7 +214,7 @@
                     </div>
                 </div>
             </div>
-            <div class="grid-item" onclick="gotoEvent()">
+            <div class="grid-item" onclick="openHomePage()">
                 <div class="titulo-categoria">
                     <div style="font-weight: 700; font-size: 30px;">
                         MUNICIPAIS
@@ -202,7 +237,7 @@
                     </div>
                 </div>
             </div>
-            <div class="grid-item" onclick="gotoEvent()">
+            <div class="grid-item" onclick="openHomePage()">
                 <div class="titulo-categoria">
                     <div style="font-weight: 700; font-size: 30px;">
                         EXPLOSÃO SOLAR
@@ -227,6 +262,8 @@
             </div>  
         </div>
     </div>
+
+    <!-- Linkagem do script (.js) da pagina de home -->
     <script src="home.js"></script>
 </body>
 </html>

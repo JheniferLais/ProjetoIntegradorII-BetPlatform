@@ -27,6 +27,10 @@ app.get('/signIn', (req, res) => {
     res.sendFile(path.join(__dirname, 'view', 'Accounts', 'signIn.html'));
 });
 
+app.get('/wallet', (req, res) => {
+    res.sendFile(path.join(__dirname, 'view', 'Wallet', 'wallet.html'));
+})
+
 app.use(contasRoutes);
 app.use(eventosRoutes);
 app.use(carteiraRoutes);

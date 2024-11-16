@@ -4,57 +4,69 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" sizes="32x32" href="../assets/favicon.ico" type="image/x-icon">
+
+    <!-- Linkagem do style (.css) da pagina de Cadastro -->
     <link rel="stylesheet" type="text/css" href="signUp.css" media="screen" />
     <title>Cadastrar</title>
 </head>
+
 <body class="fade-in">
     <!-- partial:index.partial.html -->
     <div class="container">
         <div class="wrapper">
             <div class="title-text">
-            <div class="title login">Cadastrar Conta</div>
+                <div class="title login">Cadastrar Conta</div>
             </div>
             <div class="form-container">
-            <div class="slide-controls">
-                <input type="radio" name="slide" id="login">
-                <input type="radio" name="slide" id="signup" checked>
-                <label for="login" class="slide login" onclick="openSigninPage()">Entrar</label>
-                <label for="signup" class="slide signup">Cadastrar</label>
-                <div class="slider-tab"></div>
-            </div>
-            <div class="form-inner">
 
-                <form id="registerForm" onsubmit="handleSignup(event)" class="login">
-                    <div class="field">
-                        <input id="registerName" type="text" placeholder="Nome Completo" required>
-                    </div>
-                    <div class="field">
-                        <input id="registerBirthdate" type="date" placeholder="Data de Nascimento" oninput="formatDate(this)" required>
-                    </div>
-                    <div class="field">
-                        <input id="registerEmail" type="text" placeholder="Email" required>
-                    </div>
-                    <div class="field">
-                        <input id="registerPassword" type="password" placeholder="Senha" required>
-                    </div>
-                    <div class="field btn">
-                        <div class="btn-layer"></div>
-                        <input type="submit" value="Cadastrar">
-                    </div>
-                    <p class="feedbackCadastrado">Cadastrado com sucesso!✅</p>
-                    <p class="feedbackNaoCadastrado">Ocorreu um erro! tente novamente.❌</p>
-                </form>
+                <!-- Botões deslizantes de Entrar/Cadastrar -->
+                <div class="slide-controls">
+                    <input id="login" type="radio" name="slide">
+                    <input id="signup" type="radio" name="slide" checked>
+                    <label for="login" class="slide login">Entrar</label>
+                    <label for="signup" class="slide signup">Cadastrar</label>
+                    <div class="slider-tab"></div>
+                </div>
 
-            </div>
+                <!-- Formulario de Cadastro do usuario -->
+                <div class="form-inner">
+                    <form id="registerForm" class="login">
+                        <div class="field">
+                            <input id="registerName" type="text" placeholder="Nome Completo" required>
+                        </div>
+                        <div class="field">
+                            <input id="registerBirthdate" type="date" required>
+                        </div>
+                        <div class="field">
+                            <input id="registerEmail" type="email" placeholder="Email" required>
+                        </div>
+                        <div class="field">
+                            <input id="registerPassword" type="password" placeholder="Senha" required>
+                        </div>
+
+                        <!-- Botão para enviar o formulario de Cadastro-->
+                        <div class="field btn">
+                            <div class="btn-layer"></div>
+                            <input type="submit" value="Cadastrar">
+                        </div>
+
+                        <!-- Feedback de sucesso ou erro ao tentar cadastrar -->
+                        <p class="feedbackCadastrado"></p>
+                        <p class="feedbackNaoCadastrado"></p>
+                    </form>
+                </div>
             </div>
         </div>
+
+        <!-- Parte de design do container (Logo, imagens e texto) -->
         <div class="wrapper2">
-        <img class="logo" src="../assets/whitetextlogo.png" height="30px">
-            <b>Acumule Pontos apostando na Wager!</b>
-        <img class="chips" src="../assets/chips.png" height="370px">
+            <img class="logo" src="../assets/whitetextlogo.png" height="30px">
+                <b>Acumule Pontos apostando na Wager!</b>
+            <img class="chips" src="../assets/chips.png" height="370px">
         </div>
     </div>
-    <!-- partial -->
+
+    <!-- Linkagem do script (.js) da pagina de Cadastro -->
     <script src="signUp.js"></script>
-  </body>
+</body>
 </html>

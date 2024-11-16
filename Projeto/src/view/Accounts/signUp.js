@@ -1,38 +1,43 @@
 const apiBaseUrl = 'http://localhost:3000';
 
-function openSigninPage(){
+// Redireciona o usuario para o signIn
+function openSignInPage(){
     document.body.classList.add("fade-out");
     setTimeout(() => {
-        window.location.href = "signIn";
+        window.location.href = `${apiBaseUrl}/signIn`;
     }, 500);
 }
 
 document.addEventListener("DOMContentLoaded", () => {
     document.body.classList.add("fade-in");
+
+    // Redireciona para a página de login ao clicar em "Entrar"
+    document.querySelector('.slide.login').addEventListener('click', openSignInPage);
+
+    // Esconder mensagens de feedback de sucesso e erro quando o usuário interagir com qualquer campo do formulário
+    const formFields = document.querySelectorAll('#registerForm input');
+    formFields.forEach(field => {
+        field.addEventListener('focus', () => {
+            document.querySelector('.feedbackCadastrado').style.display = 'none';
+            document.querySelector('.feedbackNaoCadastrado').style.display = 'none';
+        });
+    });
+
+    // Configura o envio do formulário
+    document.getElementById('registerForm').addEventListener('submit', handleFormSubmission);
 });
 
-function handleSignup(event) {
-    event.preventDefault(); // Previne o comportamento padrão do formulário
-
-    // Exibe o feedback de sucesso
-    const feedbackCadastrado = document.querySelector('.feedbackCadastrado');
-    feedbackCadastrado.style.display = 'block';
-
-    // Aguarda 2 segundos e redireciona para home.html
-    setTimeout(() => {
-        window.location.href = "home";
-    }, 2000);
-}
-
 // Pega as informções do formulario e envia a requisição para o backend
-document.getElementById('registerForm').onsubmit = async function(event){
+async function handleFormSubmission(event) {
     event.preventDefault();
 
+    // Captura os valores de input do formulario
     const nome = document.getElementById('registerName').value;
     const senha = document.getElementById('registerPassword').value;
     const email = document.getElementById('registerEmail').value;
     const nascimento = document.getElementById('registerBirthdate').value;
 
+    // Valida se todos os campos foram preenchidos
     if (!nome || !senha || !email || !nascimento) {
         alert('Preencha todos os campos')
         return;
@@ -50,15 +55,22 @@ document.getElementById('registerForm').onsubmit = async function(event){
         },
     });
 
+    // Result recebe o texto de response do backend
+    const result = await response.text();
+
+    // Valida se ocorreu algum erro e exibe a mensagem de erro
     if (!response.ok) {
-        const statusCode = response.status;
-        const errorMessage = await response.text();
-        alert(`Erro ${statusCode}: ${errorMessage}`);
+        const feedbackNaoCadastrado = document.querySelector('.feedbackNaoCadastrado');
+        feedbackNaoCadastrado.textContent = result.message || result || '❌ Ocorreu um erro! Tente novamente.❌';
+        feedbackNaoCadastrado.style.display = 'block';
         return;
     }
 
-    const resultMessage = await response.text();
-    alert(resultMessage);
+    // Caso o cadastro seja bem-sucedido exibe a mensagem de sucesso
+    const feedbackCadastrado = document.querySelector('.feedbackCadastrado');
+    feedbackCadastrado.textContent = result.message || '✅ Cadastrado com sucesso!';
+    feedbackCadastrado.style.display = 'block';
 
-    openSigninPage();
+    // Redireciona para a pagina de login
+    setTimeout(openSignInPage, 1200);
 }

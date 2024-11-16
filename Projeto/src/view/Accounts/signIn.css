@@ -222,6 +222,21 @@ form .btn input[type="submit"] {
   font-weight: 500;
   cursor: pointer;
 }
+form .feedbackLogado{
+  display: none;
+  margin-top: 10px;
+  width: 100%;
+  text-align: center;
+  color: green;
+}
+form .feedbackNaoLogado{
+  display: none;
+  margin-top: 10px;
+  width: 100%;
+  text-align: center;
+  color: red;
+}
+
 .wrapper2{
   width: auto;
   height: auto;

@@ -1,95 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <!-- Link para o ícone de favoritos (favicon) -->
     <link rel="icon" sizes="32x32" href="../assets/favicon.ico" type="image/x-icon">
 
-    <!-- Importação do arquivo de estilo CSS para a página de login -->
+    <!-- Linkagem do style (.css) da pagina de Login -->
     <link rel="stylesheet" type="text/css" href="signIn.css" media="screen" />
-
-    <!-- Título da página exibido na aba do navegador -->
     <title>Login</title>
 </head>
 
 <body class="fade-in">
-<!-- Container principal da página -->
+<!-- partial:index.partial.html -->
 <div class="container">
-
-    <!-- Wrapper para a seção de login e cadastro -->
     <div class="wrapper">
-        <!-- Título da seção de autenticação -->
         <div class="title-text">
             <div class="title login">Entrar na Conta</div>
         </div>
-
-        <!-- Container para os formulários de login e cadastro -->
         <div class="form-container">
 
-            <!-- Controles deslizantes para alternar entre "Entrar" e "Cadastrar" -->
+            <!-- Botões deslizantes de Entrar/Cadastrar -->
             <div class="slide-controls">
-                <!-- Radio buttons para controlar o estado dos formulários -->
-                <input type="radio" name="slide" id="login" checked>
-                <input type="radio" name="slide" id="signup">
-
-                <!-- Rótulo para a opção de Login -->
+                <input id="signup" type="radio" name="slide">
+                <input id="login" type="radio" name="slide" checked>
                 <label for="login" class="slide login">Entrar</label>
-
-                <!-- Rótulo para a opção de Cadastro -->
-                <label for="signup" class="slide signup" onclick="openSignupPage()">Cadastrar</label>
-
-                <!-- Barra deslizante visual para indicar a aba selecionada -->
+                <label for="signup" class="slide signup">Cadastrar</label>
                 <div class="slider-tab"></div>
             </div>
 
-            <!-- Conteúdo interno dos formulários -->
+            <!-- Formulario de Login do usuario -->
             <div class="form-inner">
-                <!-- Formulário de Login -->
-                <form id="loginForm" action="../Home/home.html" class="login">
-
-                    <!-- Campo de entrada para o email -->
+                <form id="loginForm" class="login">
                     <div class="field">
                         <input id="loginEmail" type="text" placeholder="Email" required>
                     </div>
-
-                    <!-- Campo de entrada para a senha -->
                     <div class="field">
                         <input id="loginPassword" type="password" placeholder="Senha" required>
                     </div>
 
-                    <br>
-                    <br>
+                    <br>  <!-- Cambiarra para espaço vazio (Arrumar no .css) -->
+                    <br>  <!-- Cambiarra para espaço vazio (Arrumar no .css) -->
 
-                    <!-- Botão de submissão do formulário de login -->
+                    <!-- Botão para enviar o formulario de Login -->
                     <div class="field btn">
                         <div class="btn-layer"></div>
                         <input type="submit" value="Login">
                     </div>
 
-                    <br>
+                    <br> <!-- Cambiarra para espaço vazio (Arrumar no .css) -->
+
+                    <!-- Feedback de sucesso ou erro ao tentar logar -->
+                    <p class="feedbackLogado"></p>
+                    <p class="feedbackNaoLogado"></p>
                 </form>
             </div>
         </div>
     </div>
 
-    <!-- Segunda seção da página contendo imagens e promoções -->
+    <!-- Parte de design do container (Logo, imagens e texto) -->
     <div class="wrapper2">
-        <!-- Logo da página ou aplicação -->
         <img class="logo" src="../assets/blacktextlogo.png" height="30px">
-
-        <!-- Texto promocional -->
-        <b>Convide amigos e ganhe bônus para apostar mais!</b>
-
-        <!-- Imagem decorativa de dados -->
+            <b>Convide amigos e ganhe bônus para apostar mais!</b>
         <img class="dice" src="../assets/dice.png" height="400px">
     </div>
-
 </div>
 
-<!-- Inclusão do script JavaScript para a página de login -->
-<script src="signIn.js"></script>
+    <!-- Linkagem do script (.js) da pagina de login -->
+    <script src="signIn.js"></script>
 </body>
 </html>

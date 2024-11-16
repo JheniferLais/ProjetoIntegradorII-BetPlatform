@@ -4,30 +4,43 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" sizes="32x32" href="../assets/favicon.ico" type="image/x-icon">
+
+    <!-- Linkagem do style (.css) da pagina de wallet -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="wallet.css" media="screen" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <title>Minha Carteira</title>
 </head>
+
 <body>
+    <!-- Header do Site -->
     <header class="header">
+        <!-- Logo Wager -->
         <div class="menu-icon">
             <span>&#9776;</span> <!-- Ícone do menu (hambúrguer) -->
             <div class="logo">
                 <img src="../assets/whitetextlogo.png" alt="Wager Logo" height="30">
             </div>
         </div>
+
+        <!-- Botões de Sair e Voltar -->
         <div class="header-right">
-            <a href="../Home/home.html" style="text-decoration: none;">
+            <a href="#" onclick="openHomePage()" style="text-decoration: none;">
                 <div class="balance">
                     <span class="wallet-icon">🏠</span> <!-- Ícone de carteira -->
                     <span>Voltar</span>
                 </div>
             </a>
-            <a href="../Accounts/signIn.html"><button class="logout-btn">Sair</button></a>
+            <a href="#">
+                <button class="logout-btn" onclick="openSignUpPage()">Sair</button>
+            </a>
         </div>
     </header>
+
+    <!-- Imagem de fundo desfocado -->
     <img id="banner" src="../assets/banner.png">
+
+    <!-- Sessão de Depositar e Sacar -->
     <div class="main">
         <div class="balance-section">
             <h2>Balance</h2>
@@ -37,8 +50,10 @@
                 <button class="withdraw-btn">💸 Sacar 💸</button>
             </div>
         </div>
-        
+
+        <!-- Lista de Historicos -->
         <div class="history-container">
+            <!-- Lista de Historico de Transações Financeiras -->
             <div class="transaction-history">
                 <h3>Lista de Compra de Créditos:</h3>
                 <ul class="credit-list">
@@ -47,7 +62,8 @@
                     <li class="credit">+ R$17,00 <span>depósito</span></li>
                 </ul>
             </div>
-            
+
+            <!-- Lista de Historico de Apostas -->
             <div class="bet-history">
                 <h3>Histórico de apostas:</h3>
                 <ul class="bet-list">
@@ -63,6 +79,8 @@
             </div>
         </div>
     </div>
+
+    <!-- Linkagem do script (.js) da pagina de wallet -->
     <script src="wallet.js"></script>
 </body>
 </html>
