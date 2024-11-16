@@ -43,9 +43,6 @@ async function handleFormSubmission(event) {
         feedbackNaoCadastrado.textContent = 'Preencha todos os campos';
         feedbackNaoCadastrado.style.display = 'block';
         return;
-
-        alert('Preencha todos os campos')
-        return;
     }
 
     // Envia a requisição ao backend
