@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelector('.slide.signup').addEventListener('click', openSignUpPage);
 
     // Esconder mensagens de feedback de sucesso e erro quando o usuário interagir com qualquer campo do formulário
-    const formFields = document.querySelectorAll('#loginForm input');
+    const formFields = document.querySelectorAll('#loginForm');
     formFields.forEach(field => {
         field.addEventListener('focus', () => {
             document.querySelector('.feedbackLogado').style.display = 'none';
@@ -43,14 +43,6 @@ async function handleFormSubmission(event) {
     const email = document.getElementById('loginEmail').value;
     const senha = document.getElementById('loginPassword').value;
 
-    // Valida se todos os campos foram preenchidos
-    if (!email || !senha) {
-        const feedbackNaoCadastrado = document.querySelector('.feedbackNaoLogado');
-        feedbackNaoCadastrado.textContent = 'Preencha todos os campos';
-        feedbackNaoCadastrado.style.display = 'block';
-        return;
-    }
-
     // Envia a requisição ao backend
     const response = await fetch(`${apiBaseUrl}/signIn`, {
         method: 'POST',
@@ -62,15 +54,20 @@ async function handleFormSubmission(event) {
     });
 
     // Result recebe o texto de response do backend
-    const result = await response.text();
+    const result = await response.json();
 
     // Valida se ocorreu algum erro e exibe a mensagem de erro
     if (!response.ok) {
         const feedbackNaoLogado = document.querySelector('.feedbackNaoLogado');
-        feedbackNaoLogado.textContent = result.message || result || '❌ Ocorreu um erro! Tente novamente.';
+        feedbackNaoLogado.textContent = result || '❌ Ocorreu um erro! Tente novamente.';
         feedbackNaoLogado.style.display = 'block';
         return;
     }
+
+    // Armazena o token, nome e id do usuario na sessionStorage
+    sessionStorage.setItem('nomeUsuario', result.nomeUsuario);
+    sessionStorage.setItem('idUsuario', result.idUsuario);
+    sessionStorage.setItem('sessionToken', result.token);
 
     // Caso o login seja bem-sucedido exibe a mensagem de sucesso
     const feedbackLogado = document.querySelector('.feedbackLogado');

@@ -17,15 +17,13 @@ export namespace eventosHandler {
         const desc = req.get('desc');
         const valorCota = parseFloat(req.get('valorCota') || ''); // Converte para número
 
-        const inicioApostas = req.get('inicioApostas'); //YYYY-MM-DD
-        const inicioApostasHora = req.get('inicioApostasHora'); //HH:mm:ss
-        const fimApostas = req.get('fimApostas'); //YYYY-MM-DD
-        const fimApostasHora = req.get('fimApostasHora'); //HH:mm:ss
+        const dataHoraInicioApostas = req.get('inicioApostas'); //YYYY-MM-DDTHH:mm:ss
+        const dataHoraFimApostas = req.get('fimApostas'); //YYYY-MM-DDTHH:mm:ss
         const dataEvento = req.get('dataEvento'); //YYYY-MM-DD
         const categoria = req.get('categoria'); // esportes, catastrofes, eleicoes, bolsa de valores, e-sports
 
         // Valida se todos os campos foram preenchidos
-        if (!idUsuario || !titulo || !desc || !valorCota || !inicioApostas || !inicioApostasHora|| !fimApostas || !fimApostasHora|| !dataEvento || !categoria) {
+        if (!idUsuario || !titulo || !desc || !valorCota || !dataHoraInicioApostas || !dataHoraFimApostas|| !dataEvento || !categoria) {
             res.status(400).send('Campos obrigatórios estão faltando!');
             return;
         }
@@ -49,13 +47,9 @@ export namespace eventosHandler {
             return;
         }
 
-        // Concatena a data e a hora
-        const dataHoraInicio = `${inicioApostas}T${inicioApostasHora}`;
-        const dataHoraFim = `${fimApostas}T${fimApostasHora}`;
-
         // Valida o formato das datas
-        const dataInicio: boolean = timeUtils.validarDataHora(dataHoraInicio);
-        const dataFim: boolean = timeUtils.validarDataHora(dataHoraFim);
+        const dataInicio: boolean = timeUtils.validarDataHora(dataHoraInicioApostas);
+        const dataFim: boolean = timeUtils.validarDataHora(dataHoraFimApostas);
         const eventoData: boolean  = timeUtils.validarDataReal(dataEvento);
         if(!dataInicio || !dataFim || !eventoData) {
             res.status(400).send('Formato de data inválido!');
@@ -63,13 +57,13 @@ export namespace eventosHandler {
         }
 
         // Valida se a data de início é anterior à data de fim
-        if (new Date(inicioApostas) > new Date(fimApostas)) {
+        if (new Date(dataHoraInicioApostas) > new Date(dataHoraFimApostas)) {
             res.status(400).send('A data de início deve ser anterior à data de fim!');
             return;
         }
 
         // Valida se a data do evento é após o periodo de apostas
-        if(new Date(dataEvento) < new Date(dataHoraFim)){
+        if(new Date(dataEvento) < new Date(dataHoraFimApostas)){
             res.status(400).send('A data do evento deve ser após o periodo de apostas!');
             return;
         }
@@ -82,8 +76,8 @@ export namespace eventosHandler {
             titulo: titulo,
             descricao: desc,
             valor_cota: valorCota,
-            data_hora_inicio: dataHoraInicio,
-            data_hora_fim: dataHoraFim,
+            data_hora_inicio: dataHoraInicioApostas,
+            data_hora_fim: dataHoraFimApostas,
             data_evento: dataEvento,
             qtd_apostas: 0,
             resultado: 'pendente',
@@ -268,9 +262,18 @@ export namespace eventosHandler {
 
         //-------------------------------------------------------------------------
 
-        console.log(eventos);
-
         // Response e statusCode de sucesso
+        res.status(200).json(eventos);
+    }
+
+    export const getAllEvents: RequestHandler = async (req: Request, res: Response): Promise<void> => {
+        const eventos = await eventModelData.getAllEvents();
+        if (!eventos) {
+            res.status(404).send('Sem eventos registrados!');
+            return;
+        }
+
+        console.log(eventos);
         res.status(200).json(eventos);
     }
 }

@@ -1,5 +1,50 @@
 const apiBaseUrl = 'http://localhost:3000';
 
+
+document.addEventListener("DOMContentLoaded", () => {
+    document.body.classList.add("fade-in"); // Adiciona um efeito de fade-in na página ao carregar
+
+    // Redireciona para a página de Cadastro ao clicar em "Sair"
+    document.getElementById('signUpButton').addEventListener('click', openSignUpPage);
+
+    // Redireciona para a página da Carteira ao clicar na seção de saldo
+    document.getElementById('walletLink').addEventListener('click', openWalletPage);
+
+    // Exibe o popup de cadastro de evento ao clicar no botão "Criar Evento"
+    document.getElementById('createEventButton').addEventListener('click', openPopUpCadastrarEvento);
+
+    // Fecha o popup de cadastro de evento ao clicar no blur
+    document.getElementById('popupBlur').addEventListener('click', closePopUpCadastrarEvento);
+
+    // Fecha o popup de cadastro de evento ao clicar no botão de fechar
+    document.getElementById('popupClose').addEventListener('click', closePopUpCadastrarEvento);
+
+
+    // Configura o envio do formulário da searchBar
+    document.getElementById('searchForm').addEventListener('submit', handleSearchFormSubmission);
+
+    // Configura o envio do formulário de criação de eventos
+    document.getElementById('registerEventForm').addEventListener('submit', handleRegisterEventFormSubmission);
+
+
+    // Aplica formatação de data e hora em campos específicos quando o usuário digitar
+    const dateTimeInputs = document.querySelectorAll('#inputDataHoraInicio, #inputDataHoraFim');
+    dateTimeInputs.forEach(input => {
+        input.addEventListener('input', () => formatDateTime(input));
+    });
+
+
+    // Esconder mensagens de feedback de sucesso e erro quando o usuário interagir com qualquer campo do formulário
+    const formFields = document.querySelectorAll('#registerEventForm input');
+    formFields.forEach(field => {
+        field.addEventListener('focus', () => {
+            document.querySelector('.feedbackCriado').style.display = 'none';
+            document.querySelector('.feedbackNaoCriado').style.display = 'none';
+        });
+    });
+});
+
+
 function openSignUpPage(){
     document.body.classList.add("fade-out");
     setTimeout(() => {
@@ -36,45 +81,63 @@ function formatDateTime(input) {
     let value = input.value.replace(/\D/g, ''); // Remove caracteres não numéricos
 
     // Aplica a formatação desejada para a data e hora
-    if (value.length > 4) value = value.slice(0, 4) + '/' + value.slice(4);
-    if (value.length > 7) value = value.slice(0, 7) + '/' + value.slice(7);
-    if (value.length > 10) value = value.slice(0, 10) + ' ' + value.slice(10); // Adiciona espaço entre data e hora
+    if (value.length > 4) value = value.slice(0, 4) + '-' + value.slice(4);
+    if (value.length > 7) value = value.slice(0, 7) + '-' + value.slice(7);
+    if (value.length > 10) value = value.slice(0, 10) + 'T' + value.slice(10);
     if (value.length > 13) value = value.slice(0, 13) + ':' + value.slice(13);
     if (value.length > 16) value = value.slice(0, 16) + ':' + value.slice(16);
 
     input.value = value;
 }
 
+function inserirEventosNaGrade(eventosContainer, eventos){
+    eventos.forEach(evento => {
+        const gradeEvento = document.createElement('div');
+        gradeEvento.classList.add('grid-item');
 
-document.addEventListener("DOMContentLoaded", () => {
-    document.body.classList.add("fade-in"); // Adiciona um efeito de fade-in na página ao carregar
-
-    // Redireciona para a página de Cadastro ao clicar em "Sair"
-    document.getElementById('signUpButton').addEventListener('click', openSignUpPage);
-
-    // Redireciona para a página da Carteira ao clicar na seção de saldo
-    document.getElementById('walletLink').addEventListener('click', openWalletPage);
-
-    // Exibe o popup de cadastro de evento ao clicar no botão "Criar Evento"
-    document.getElementById('createEventButton').addEventListener('click', openPopUpCadastrarEvento);
-
-    // Fecha o popup de cadastro de evento ao clicar no blur
-    document.getElementById('popupBlur').addEventListener('click', closePopUpCadastrarEvento);
-
-    // Fecha o popup de cadastro de evento ao clicar no botão de fechar
-    document.getElementById('popupClose').addEventListener('click', closePopUpCadastrarEvento);
-
-    // Aplica formatação de data e hora em campos específicos quando o usuário digitar
-    const dateTimeInputs = document.querySelectorAll('#inputDataHoraInicio, #inputDataHoraFim');
-    dateTimeInputs.forEach(input => {
-        input.addEventListener('input', () => formatDateTime(input));
+        // Define o conteúdo dinâmico do evento
+        gradeEvento.innerHTML = `
+            <div class="titulo-categoria">
+                <div style="font-weight: 700; font-size: 30px;">${evento.titulo}</div>
+                <div style="font-weight: 300; font-size: 30px; margin-top: -10px;">${evento.categoria}</div>
+            </div>
+            <div class="apostas-data">
+                <div style="font-weight: 500; font-size: 15px;">${evento.qtd_apostas} Apostas 👥</div>
+                <div style="font-weight: 500; font-size: 15px;">${evento.data_evento} 📅</div>
+            </div>
+            <div class="descricao">
+                <div style="font-weight: 300; font-size: 20px;">${evento.descricao}</div>
+            </div>
+        `;
+        eventosContainer.appendChild(gradeEvento);
     });
+}
 
-    // Configura o envio do formulário
-    document.getElementById('searchForm').addEventListener('submit', handleFormSubmission);
-});
 
-async function handleFormSubmission(event) {
+// Função para buscar e exibir todos os eventos ao carregar a pagina
+async function carregarGradeEventos() {
+    const response = await fetch(`${apiBaseUrl}/getAllEvents`);
+
+    const eventosContainer = document.querySelector('.main-content');
+    eventosContainer.innerHTML = '';
+
+    if (!response.ok) {
+        const gradeEvento = document.createElement('div');
+        gradeEvento.innerHTML = `
+            <div class="feedbackNaoEncontrado">
+                <p>Sem eventos registrados!</p>
+            </div>
+        `;
+        eventosContainer.appendChild(gradeEvento);
+    }
+
+    const eventos = await response.json();
+    inserirEventosNaGrade(eventosContainer, eventos);
+}
+window.onload = carregarGradeEventos;
+
+// Função para buscar os eventos da search bar e mostra-los
+async function handleSearchFormSubmission(event) {
     event.preventDefault();
 
     const palavraChave = document.getElementById('search').value;
@@ -101,24 +164,58 @@ async function handleFormSubmission(event) {
     }
 
     const eventos = await response.json();
-    eventos.forEach(evento => {
-        const gradeEvento = document.createElement('div');
-        gradeEvento.classList.add('grid-item');
+    inserirEventosNaGrade(eventosContainer, eventos);
+}
 
-        // Define o conteúdo dinâmico do evento
-        gradeEvento.innerHTML = `
-            <div class="titulo-categoria">
-                <div style="font-weight: 700; font-size: 30px;">${evento.titulo}</div>
-                <div style="font-weight: 300; font-size: 30px; margin-top: -10px;">${evento.categoria}</div>
-            </div>
-            <div class="apostas-data">
-                <div style="font-weight: 500; font-size: 15px;">${evento.qtd_apostas} Apostas 👥</div>
-                <div style="font-weight: 500; font-size: 15px;">${evento.data_evento} 📅</div>
-            </div>
-            <div class="descricao">
-                <div style="font-weight: 300; font-size: 20px;">${evento.descricao}</div>
-            </div>
-        `;
-        eventosContainer.appendChild(gradeEvento);
+// Função para registrar o evento no banco de dados...
+async function handleRegisterEventFormSubmission(event){
+    event.preventDefault();
+
+    const titulo = document.getElementById('inputTitulo').value;
+    const descricao = document.getElementById('inputDescricao').value;
+    const categoria = document.getElementById('inputCategoria').value;
+    const valorCota = document.getElementById('inputValorCota').value;
+    const dataHoraInicio = document.getElementById('inputDataHoraInicio').value;
+    const dataHoraFim = document.getElementById('inputDataHoraFim').value;
+    const dataEvento = document.getElementById('inputDataEvento').value;
+
+    const token = sessionStorage.getItem('sessionToken');
+    const idUsuario = sessionStorage.getItem('idUsuario');
+
+    if(!token || !idUsuario){
+        alert('Sem permissão para a rota!!!');
+        return;
+    }
+
+    const response = await fetch(`${apiBaseUrl}/addNewEvent/${idUsuario}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'titulo': titulo,
+            'desc': descricao,
+            'valorCota': valorCota,
+            'inicioApostas': dataHoraInicio,
+            'fimApostas': dataHoraFim,
+            'dataEvento': dataEvento,
+            'categoria': categoria,
+            'authorization': token,
+        },
     });
+
+    const result = await response.text();
+
+    if(!response.ok){
+        const feedbackNaoCriado = document.querySelector('.feedbackNaoCriado');
+        feedbackNaoCriado.textContent = result || '❌Ocorreu um erro! Tente novamente.';
+        feedbackNaoCriado.style.display = 'block';
+        return;
+    }
+
+    const feedbackCriado = document.querySelector('.feedbackCriado');
+    feedbackCriado.textContent = result || '✅Evento criado com sucesso!';
+    feedbackCriado.style.display = 'block';
+
+    setTimeout(closePopUpCadastrarEvento, 1200);
+
+    document.getElementById('registerEventForm').reset();
 }

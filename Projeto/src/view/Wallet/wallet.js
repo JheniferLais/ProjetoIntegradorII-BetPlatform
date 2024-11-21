@@ -13,3 +13,5 @@ function openSignUpPage(){
         window.location.href = `${apiBaseUrl}/signUp`;
     }, 500);
 }
+
+// const tokenAuth= req.get('Authorization');

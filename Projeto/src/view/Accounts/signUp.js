@@ -37,14 +37,6 @@ async function handleFormSubmission(event) {
     const email = document.getElementById('registerEmail').value;
     const nascimento = document.getElementById('registerBirthdate').value;
 
-    // Valida se todos os campos foram preenchidos
-    if (!nome || !senha || !email || !nascimento) {
-        const feedbackNaoCadastrado = document.querySelector('.feedbackNaoCadastrado');
-        feedbackNaoCadastrado.textContent = 'Preencha todos os campos';
-        feedbackNaoCadastrado.style.display = 'block';
-        return;
-    }
-
     // Envia a requisição ao backend
     const response = await fetch(`${apiBaseUrl}/signUp`, {
         method: 'POST',
@@ -63,14 +55,14 @@ async function handleFormSubmission(event) {
     // Valida se ocorreu algum erro e exibe a mensagem de erro
     if (!response.ok) {
         const feedbackNaoCadastrado = document.querySelector('.feedbackNaoCadastrado');
-        feedbackNaoCadastrado.textContent = result.message || result || '❌ Ocorreu um erro! Tente novamente.❌';
+        feedbackNaoCadastrado.textContent = result || '❌ Ocorreu um erro! Tente novamente.';
         feedbackNaoCadastrado.style.display = 'block';
         return;
     }
 
     // Caso o cadastro seja bem-sucedido exibe a mensagem de sucesso
     const feedbackCadastrado = document.querySelector('.feedbackCadastrado');
-    feedbackCadastrado.textContent = result.message || '✅ Cadastrado com sucesso!';
+    feedbackCadastrado.textContent = result || '✅ Cadastrado com sucesso!';
     feedbackCadastrado.style.display = 'block';
 
     // Redireciona para a pagina de login

@@ -108,12 +108,13 @@ export namespace contasHandler {
 
         // Response
         const response = {
-            status: 'login efetuado com sucesso!',
-            message: `Seja bem vindo(a)! ${user[0][1]}`,
+            response: 'login efetuado com sucesso!',
+            idUsuario: user[0][0],
+            nomeUsuario: user[0][1],
             token: user[0][5]
         };
 
         // Response e statusCode de sucesso
-        res.status(200).send(response);
+        res.status(200).json(response);
     };
 }
