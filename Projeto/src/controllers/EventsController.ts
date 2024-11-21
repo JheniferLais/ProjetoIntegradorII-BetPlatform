@@ -11,7 +11,6 @@ import { emailUtils } from "../utils/EmailUtils";
 export namespace eventosHandler {
 
     // 'Função' para addNewEvent
-    import mailOptions = emailUtils.mailOptions;
     export const addNewEvent: RequestHandler =  async (req: Request, res: Response): Promise<void> => {
         const idUsuario = parseInt(req.params.id); // ID do usuario passado como parâmetro na URL
         const titulo = req.get('titulo');
@@ -229,7 +228,7 @@ export namespace eventosHandler {
             // Executa a atualização no banco de dados
             await eventModelData.updateEventoStatusResultado(evento);
 
-            const options = mailOptions(User.email, User.nome, evento.titulo, UserMod.nome)
+            const options = emailUtils.mailOptions(User.email, User.nome, evento.titulo, UserMod.nome)
             try {
                 await emailUtils.transporter.sendMail(options);
                 res.status(200).send(`Evento ${resultado} com sucesso! E-mail enviado com sucesso.`);
@@ -252,7 +251,7 @@ export namespace eventosHandler {
 
     // 'Função' para searchEvent
     export const searchEvent: RequestHandler = async (req: Request, res: Response): Promise<void> => {
-        const palavraChave = req.get('palavraChave');
+        const palavraChave = req.params.palavraChave;
 
         // Valida se todos os campos foram preenchidos
         if (!palavraChave) {
@@ -261,7 +260,7 @@ export namespace eventosHandler {
         }
 
         // Valida se existe algum evento com a palavra fornecida
-        const eventos: Evento | null = await eventModelData.searchEvent(palavraChave);
+        const eventos: Evento[] | null = await eventModelData.searchEvent(palavraChave);
         if (!eventos) {
             res.status(404).send('Sem eventos com essa palavra chave!');
             return;
@@ -269,7 +268,9 @@ export namespace eventosHandler {
 
         //-------------------------------------------------------------------------
 
+        console.log(eventos);
+
         // Response e statusCode de sucesso
-        res.status(200).send(eventos);
+        res.status(200).json(eventos);
     }
 }

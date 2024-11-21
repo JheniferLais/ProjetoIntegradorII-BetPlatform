@@ -113,7 +113,7 @@ export namespace eventModelData {
     }
 
     //Função para encontrar eventos de acordo com o titulo
-    export async function searchEvent(palavraChave: string): Promise<Evento | null> {
+    export async function searchEvent(palavraChave: string): Promise<Evento[] | null> {
         const connection = await dataBaseutils.ConnectionDB();
         const result = await connection.execute(`
             SELECT * FROM eventos WHERE LOWER(titulo) 
@@ -122,9 +122,8 @@ export namespace eventModelData {
 
         // Verifica se há algum resultado
         if (result.rows && result.rows.length > 0) {
-            const row = result.rows as any[];
-
-            const evento: Evento = {
+            const rows = result.rows as any[][];
+            const eventos = rows.map(row => ({
                 id_evento: row[0] as number,
                 id_usuario: row[1] as number,
                 titulo: row[2] as string,
@@ -136,11 +135,10 @@ export namespace eventModelData {
                 qtd_apostas: row[8] as number,
                 resultado: row[9] as string,
                 status_evento: row[10] as string,
-                categoria: row[11] as string,
-            };
-
+                categoria: row[11] as string
+            }));
             await connection.close();
-            return evento;
+            return eventos; // Retorna um array de objetos de eventos
         }
         await connection.close();
         return null;  // Retorna null se não encontrar nenhum evento

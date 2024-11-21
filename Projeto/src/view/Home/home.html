@@ -146,7 +146,7 @@
         <div class="search-container">
             <!-- Barra de pesquisa -->
             <div class="search-bar">
-                <form class="d-flex" role="search">
+                <form id=searchForm class="d-flex" role="search">
                     <input id="search" class="form-control me-2" type="search" placeholder="Pesquisar..." aria-label="Search">
                     <button class="btn btn-outline-success" type="submit">Buscar</button>
                 </form>
@@ -162,82 +162,7 @@
 
         <!-- Grade de eventos -->
         <div class="main-content">
-            <!--
-            ESTRUTURA BASE DE CADA EVENTO, CADA ROW DO BANCO É UM GRID-ITEM:
-
-            <div id="gradeEvento" class="grid-item">
-                <div class="titulo-categoria">
-                    <div style="font-weight: 700; font-size: 30px;">
-                        {TITULO}
-                    </div>
-                    <div style="font-weight: 300; font-size: 30px; margin-top: -10px;">
-                        {CATEGORIA}
-                    </div>
-                </div>
-                <div class="apostas-data">
-                    <div style="font-weight: 500; font-size: 15px;">
-                        {QNT_APOSTAS} Apostas 👥
-                    </div>
-                    <div style="font-weight: 500; font-size: 15px;">
-                        {DATA_EVENTO} 📅
-                    </div>
-                </div>
-                <div class="descricao">
-                    <div style="font-weight: 300; font-size: 20px;">
-                        {DESCRICAO}
-                    </div>
-                </div>
-            </div>
-            -->
-
-            <!-- APENAS EXEMPLOS DE EVENTOS PARA FINS DE DESIGN -->
-            <div id="gradeEvento" class="grid-item">
-                <div class="titulo-categoria">
-                    <div style="font-weight: 700; font-size: 30px;">
-                        BRASILEIRÃO
-                    </div>
-                    <div style="font-weight: 300; font-size: 30px; margin-top: -10px;">
-                        ESPORTE
-                    </div>
-                </div>
-                <div class="apostas-data">
-                    <div style="font-weight: 500; font-size: 15px;">
-                        32 Apostas 👥
-                    </div>
-                    <div style="font-weight: 500; font-size: 15px;">
-                        17/12 📅
-                    </div>
-                </div>
-                <div class="descricao">
-                    <div style="font-weight: 300; font-size: 20px;">
-                        Classe A X Classe B...
-                    </div>
-                </div>
-            </div>
-
-            <div id="gradeEvento" class="grid-item">
-                <div class="titulo-categoria">
-                    <div style="font-weight: 700; font-size: 30px;">
-                        EXPLOSÃO SOLAR
-                    </div>
-                    <div style="font-weight: 300; font-size: 30px; margin-top: -10px;">
-                        CATÁSTROFE
-                    </div>
-                </div>
-                <div class="apostas-data">
-                    <div style="font-weight: 500; font-size: 15px;">
-                        78.350 Apostas 👥
-                    </div>
-                    <div style="font-weight: 500; font-size: 15px;">
-                        31/12 📅
-                    </div>
-                </div>
-                <div class="descricao">
-                    <div style="font-weight: 300; font-size: 20px;">
-                        EXPLODE OU NÃO?
-                    </div>
-                </div>
-            </div>  
+            <!-- Os eventos serão adicionados dinamicamente aqui -->
         </div>
     </div>
 

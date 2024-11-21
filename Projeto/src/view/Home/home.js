@@ -69,4 +69,56 @@ document.addEventListener("DOMContentLoaded", () => {
     dateTimeInputs.forEach(input => {
         input.addEventListener('input', () => formatDateTime(input));
     });
+
+    // Configura o envio do formulário
+    document.getElementById('searchForm').addEventListener('submit', handleFormSubmission);
 });
+
+async function handleFormSubmission(event) {
+    event.preventDefault();
+
+    const palavraChave = document.getElementById('search').value;
+    if(!palavraChave){
+        return;
+    }
+    
+    const response = await fetch(`${apiBaseUrl}/searchEvent/${palavraChave}`, {
+        method: 'GET',
+    });
+
+    // Limpa o conteiner de eventos para a proxima grade de informaçoes...
+    const eventosContainer = document.querySelector('.main-content');
+    eventosContainer.innerHTML = '';
+
+    if (!response.ok) {
+        const gradeEvento = document.createElement('div');
+        gradeEvento.innerHTML = `
+            <div class="feedbackNaoEncontrado">
+                <p>Nenhum evento encontrado!</p>
+            </div>
+        `;
+        eventosContainer.appendChild(gradeEvento);
+    }
+
+    const eventos = await response.json();
+    eventos.forEach(evento => {
+        const gradeEvento = document.createElement('div');
+        gradeEvento.classList.add('grid-item');
+
+        // Define o conteúdo dinâmico do evento
+        gradeEvento.innerHTML = `
+            <div class="titulo-categoria">
+                <div style="font-weight: 700; font-size: 30px;">${evento.titulo}</div>
+                <div style="font-weight: 300; font-size: 30px; margin-top: -10px;">${evento.categoria}</div>
+            </div>
+            <div class="apostas-data">
+                <div style="font-weight: 500; font-size: 15px;">${evento.qtd_apostas} Apostas 👥</div>
+                <div style="font-weight: 500; font-size: 15px;">${evento.data_evento} 📅</div>
+            </div>
+            <div class="descricao">
+                <div style="font-weight: 300; font-size: 20px;">${evento.descricao}</div>
+            </div>
+        `;
+        eventosContainer.appendChild(gradeEvento);
+    });
+}

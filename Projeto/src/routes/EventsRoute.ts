@@ -9,6 +9,6 @@ route.post('/addNewEvent/:id', tokenUtils.checkToken, eventosHandler.addNewEvent
 route.get('/getEvent', eventosHandler.getEvent);
 route.delete('/deleteEvent/:idEvento/:id', tokenUtils.checkToken, eventosHandler.deleteEvent);
 route.post('/evaluateNewEvent/:idEvento/:id', tokenUtils.checkToken, moderadorUtils.checkModerador, eventosHandler.evaluateNewEvent); // Apenas moderadores
-route.get('/searchEvent', eventosHandler.searchEvent);
+route.get('/searchEvent/:palavraChave', eventosHandler.searchEvent);
 
 export default route;
