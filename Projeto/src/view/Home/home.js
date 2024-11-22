@@ -1,7 +1,7 @@
 const apiBaseUrl = 'http://localhost:3000';
 
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
     document.body.classList.add("fade-in"); // Adiciona um efeito de fade-in na página ao carregar
 
     // Redireciona para a página de Cadastro ao clicar em "Sair"
@@ -33,7 +33,6 @@ document.addEventListener("DOMContentLoaded", () => {
         input.addEventListener('input', () => formatDateTime(input));
     });
 
-
     // Esconder mensagens de feedback de sucesso e erro quando o usuário interagir com qualquer campo do formulário
     const formFields = document.querySelectorAll('#registerEventForm input');
     formFields.forEach(field => {
@@ -42,6 +41,8 @@ document.addEventListener("DOMContentLoaded", () => {
             document.querySelector('.feedbackNaoCriado').style.display = 'none';
         });
     });
+
+    await saldoDaCarteira();
 });
 
 
@@ -113,6 +114,28 @@ function inserirEventosNaGrade(eventosContainer, eventos){
     });
 }
 
+// Função para mostrar o saldo da carteira no homePage
+async function saldoDaCarteira(){
+    const idUsuario = sessionStorage.getItem('idUsuario');
+    const token = sessionStorage.getItem('sessionToken');
+
+    const response = await fetch(`${apiBaseUrl}/getAllWalletInformation/${idUsuario}`, {
+        method: 'GET',
+        headers: {
+            'authorization': token,
+        },
+    });
+
+    if (!response.ok) {
+        alert(response.status);
+    }
+    const data = await response.json();
+
+    const balanceElement = document.getElementById('balance-value');
+
+    // Update balance
+    balanceElement.textContent = data.saldo + ' BRL';
+}
 
 // Função para buscar e exibir todos os eventos ao carregar a pagina
 async function carregarGradeEventos() {

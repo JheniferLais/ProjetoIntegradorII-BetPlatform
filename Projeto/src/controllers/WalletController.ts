@@ -164,4 +164,25 @@ export namespace carteiraHandler {
         // Response e statusCode de sucesso
         res.status(200).send(response);
     }
+
+    export const getAllWalletInformation: RequestHandler = async (req: Request, res: Response): Promise<void> => {
+        const idUsuario = parseInt(req.params.id); //ID do usuario passado como parâmetro na URL
+
+        const transacoes: TransacaoFinanceira[] | null = await walletModelData.getAllTransactions(idUsuario);
+        const apostas = await walletModelData.getAllBets(idUsuario);
+        const carteira = await walletModelData.findCarteira(idUsuario);
+        if(!carteira) {
+            res.status(404).send('Carteira não existe!');
+            return;
+        }
+
+        const response = {
+            saldo: carteira.saldo,
+            transactions: transacoes,
+            bets: apostas
+        }
+
+        // Response e statusCode de sucesso
+        res.status(200).json(response);
+    }
 }

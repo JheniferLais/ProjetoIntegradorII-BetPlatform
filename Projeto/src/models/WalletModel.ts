@@ -1,4 +1,5 @@
 import { dataBaseutils } from "../utils/DataBaseutils";
+import { Aposta } from "./BetModel";
 
 
 // Tipo Carteira
@@ -78,4 +79,49 @@ export namespace walletModelData {
         await connection.commit();
         await connection.close();
     }
+
+    export async function getAllTransactions(idUsuario: number): Promise<TransacaoFinanceira[] | null> {
+        const connection = await dataBaseutils.ConnectionDB();
+        const result = await connection.execute("SELECT * FROM TRANSACOES_FINANCEIRAS WHERE id_usuario = :idUsuario", [idUsuario]);
+
+        // Verifica se há algum resultado
+        if (result.rows && result.rows.length > 0) {
+            const rows = result.rows as any[][];
+            const transacoes = rows.map(row => ({
+                idTransacao: row[0] as number,
+                idUsuario: row[1] as number,
+                tipoTransacao: row[2] as string,
+                valorTransacao: row[3] as number,
+                dataTransacao: row[4] as string,
+            }));
+            await connection.close();
+            return transacoes; // Retorna um array de objetos de transações
+        }
+        await connection.close();
+        return null;  // Retorna null se não encontrar nenhum evento
+    }
+
+    export async function getAllBets(idUsuario: number): Promise<Aposta[] | null> {
+        const connection = await dataBaseutils.ConnectionDB();
+        const result = await connection.execute("SELECT * FROM APOSTAS WHERE id_usuario = :idUsuario", [idUsuario]);
+
+        // Verifica se há algum resultado
+        if (result.rows && result.rows.length > 0) {
+            const rows = result.rows as any[][];
+            const apostas = rows.map(row => ({
+                idAposta: row[0] as number,
+                idEvento: row[1] as number,
+                idUsuario: row[2] as number,
+                qtd_cotas: row[3] as number,
+                aposta: row[4] as string,
+                dataAposta: row[0] as string,
+            }));
+            await connection.close();
+            return apostas; // Retorna um array de objetos de transações
+        }
+        await connection.close();
+        return null;  // Retorna null se não encontrar nenhum evento
+    }
+
+
 }

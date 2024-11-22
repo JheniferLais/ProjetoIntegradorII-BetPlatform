@@ -266,6 +266,7 @@ export namespace eventosHandler {
         res.status(200).json(eventos);
     }
 
+    // 'Função' para buscar todos os eventos
     export const getAllEvents: RequestHandler = async (req: Request, res: Response): Promise<void> => {
         const eventos = await eventModelData.getAllEvents();
         if (!eventos) {
@@ -273,7 +274,6 @@ export namespace eventosHandler {
             return;
         }
 
-        console.log(eventos);
         res.status(200).json(eventos);
     }
 }

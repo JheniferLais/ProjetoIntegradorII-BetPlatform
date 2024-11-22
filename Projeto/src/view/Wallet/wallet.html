@@ -13,74 +13,72 @@
 </head>
 
 <body>
-    <!-- Header do Site -->
-    <header class="header">
-        <!-- Logo Wager -->
-        <div class="menu-icon">
-            <span>&#9776;</span> <!-- Ícone do menu (hambúrguer) -->
-            <div class="logo">
-                <img src="../assets/whitetextlogo.png" alt="Wager Logo" height="30">
-            </div>
-        </div>
-
-        <!-- Botões de Sair e Voltar -->
-        <div class="header-right">
-            <a href="#" onclick="openHomePage()" style="text-decoration: none;">
-                <div class="balance">
-                    <span class="wallet-icon">🏠</span> <!-- Ícone de carteira -->
-                    <span>Voltar</span>
-                </div>
-            </a>
-            <a href="#">
-                <button class="logout-btn" onclick="openSignUpPage()">Sair</button>
-            </a>
-        </div>
-    </header>
-
-    <!-- Imagem de fundo desfocado -->
-    <img id="banner" src="../assets/banner.png">
-
-    <!-- Sessão de Depositar e Sacar -->
-    <div class="main">
-        <div class="balance-section">
-            <h2>Balance</h2>
-            <div class="balance-amount"><b>83,50</b> BRL</div>
-            <div class="buttons">
-                <button class="deposit-btn">🏦 Depositar 🏦</button>
-                <button class="withdraw-btn">💸 Sacar 💸</button>
-            </div>
-        </div>
-
-        <!-- Lista de Historicos -->
-        <div class="history-container">
-            <!-- Lista de Historico de Transações Financeiras -->
-            <div class="transaction-history">
-                <h3>Lista de Compra de Créditos:</h3>
-                <ul class="credit-list">
-                    <li class="debit">- R$44,00 <span>saque</span></li>
-                    <li class="credit">+ R$12,50 <span>depósito</span></li>
-                    <li class="credit">+ R$17,00 <span>depósito</span></li>
-                </ul>
-            </div>
-
-            <!-- Lista de Historico de Apostas -->
-            <div class="bet-history">
-                <h3>Histórico de apostas:</h3>
-                <ul class="bet-list">
-                    <li class="win">+ R$12,50 <span>esporte</span></li>
-                    <li class="win">+ R$17,00 <span>esporte</span></li>
-                    <li class="loss">- R$44,00 <span>eleições</span></li>
-                    <li class="win">+ R$34,60 <span>e-sports</span></li>
-                    <li class="win">+ R$5,00 <span>catástrofe</span></li>
-                    <li class="loss">- R$44,00 <span>esporte</span></li>
-                    <li class="win">+ R$44,00 <span>bolsa de valores</span></li>
-                    <li class="win">+ R$50,00 <span>esporte</span></li>
-                </ul>
-            </div>
+<!-- Header do Site -->
+<header class="header">
+    <!-- Logo Wager -->
+    <div class="menu-icon">
+        <span>&#9776;</span> <!-- Ícone do menu (hambúrguer) -->
+        <div class="logo">
+            <img src="../assets/whitetextlogo.png" alt="Wager Logo" height="30">
         </div>
     </div>
 
-    <!-- Linkagem do script (.js) da pagina de wallet -->
-    <script src="wallet.js"></script>
+    <!-- Botões de Sair e Voltar -->
+    <div class="header-right">
+        <a id="homeLink" style="text-decoration: none;">
+            <div class="balance">
+                <span class="wallet-icon">🏠</span> <!-- Ícone de carteira -->
+                <span>Voltar</span>
+            </div>
+        </a>
+
+        <!-- Botao de sair -->
+        <a>
+            <button id="signUpButton" class="logout-btn">Sair</button>
+        </a>
+    </div>
+</header>
+
+<!-- Imagem de fundo desfocado -->
+<img id="banner" src="../assets/banner.png">
+
+<!-- Sessão de Depositar e Sacar -->
+<div class="main">
+    <div class="balance-section">
+        <h2>Balance</h2>
+        <div class="balance-amount">
+            <b>Carregando...</b> <!-- Placeholder para o saldo dinâmico -->
+        </div>
+        <div class="buttons">
+            <button class="deposit-btn">🏦 Depositar 🏦</button>
+            <button class="withdraw-btn">💸 Sacar 💸</button>
+        </div>
+    </div>
+
+    <!-- Lista de Historicos -->
+    <div class="history-container">
+        <!-- Lista de Historico de Transações Financeiras -->
+        <div class="transaction-history">
+            <h3>Lista de Compra de Créditos:</h3>
+            <ul class="credit-list">
+
+                <!-- Lista será preenchida dinamicamente via JavaScript -->
+                <li>Carregando...</li> <!-- Placeholder inicial -->
+            </ul>
+        </div>
+
+        <!-- Lista de Historico de Apostas -->
+        <div class="bet-history">
+            <h3>Histórico de apostas:</h3>
+            <ul class="bet-list">
+                <!-- Lista será preenchida dinamicamente via JavaScript -->
+                <li>Carregando...</li> <!-- Placeholder inicial -->
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- Linkagem do script (.js) da pagina de wallet -->
+<script src="wallet.js"></script>
 </body>
 </html>
