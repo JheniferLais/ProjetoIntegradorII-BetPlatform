@@ -42,7 +42,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     });
 
+
+    await carregarGradeEventos();
     await saldoDaCarteira();
+    validarLogin();
 });
 
 
@@ -127,7 +130,6 @@ async function saldoDaCarteira(){
     });
 
     if (!response.ok) {
-        alert(response.status);
     }
     const data = await response.json();
 
@@ -135,6 +137,25 @@ async function saldoDaCarteira(){
 
     // Update balance
     balanceElement.textContent = data.saldo + ' BRL';
+}
+
+function validarLogin() {
+    const token = sessionStorage.getItem('sessionToken');
+    const idUsuario = sessionStorage.getItem('idUsuario');
+
+    //Caso o usuario nao tenha logado...A home já esta com os botoes ajustados corretamente
+    if (!token || !idUsuario) {
+        return;
+    }
+
+    const balanceDiv = document.querySelector('.balance');
+    const sideBarList = document.querySelector('.sidebar-list');
+    const logOutBtn = document.querySelector('.logout-btn');
+
+    //Caso tenha logado... A home mostra os botoes escondidos
+    balanceDiv.style.display = 'flex';
+    sideBarList.style.display = 'flex';
+    logOutBtn.textContent = 'Sair';
 }
 
 // Função para buscar e exibir todos os eventos ao carregar a pagina
@@ -157,7 +178,6 @@ async function carregarGradeEventos() {
     const eventos = await response.json();
     inserirEventosNaGrade(eventosContainer, eventos);
 }
-window.onload = carregarGradeEventos;
 
 // Função para buscar os eventos da search bar e mostra-los
 async function handleSearchFormSubmission(event) {
@@ -167,7 +187,7 @@ async function handleSearchFormSubmission(event) {
     if(!palavraChave){
         return;
     }
-    
+
     const response = await fetch(`${apiBaseUrl}/searchEvent/${palavraChave}`, {
         method: 'GET',
     });

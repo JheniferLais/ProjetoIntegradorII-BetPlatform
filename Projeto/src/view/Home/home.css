@@ -15,8 +15,6 @@ html, body {
     color: #fff;
     overflow-x: hidden;
 }
-
-/* Estilos do cabeçalho */
 .header {
     position: fixed;
     top: 0;
@@ -61,7 +59,7 @@ html, body {
 }
 
 .balance {
-    display: flex;
+    display: none;
     align-items: center;
     padding: 8px 15px;
     border: 1px solid #ffffff;
@@ -101,7 +99,7 @@ html, body {
     align-items: center;
 }
 .sidebar-list{
-    display: flex;
+    display: none;
     align-items: center;
     margin: 0;
     padding: 0;

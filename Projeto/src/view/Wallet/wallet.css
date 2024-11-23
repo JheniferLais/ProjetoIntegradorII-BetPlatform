@@ -265,6 +265,7 @@ html, body {
     border-radius: 10px;
     display: none;
     color: #fff;
+    flex-direction: column;
 }
 .claim-popup{
     position: absolute;
