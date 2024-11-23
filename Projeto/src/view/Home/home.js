@@ -49,14 +49,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 function openSignUpPage(){
     document.body.classList.add("fade-out");
     setTimeout(() => {
-        window.location.href = `${apiBaseUrl}/signUp`;
+        window.location.href = `../Accounts/signUp.html`;
     }, 500);
 }
 
 function openWalletPage(){
     document.body.classList.add("fade-out");
     setTimeout(() => {
-        window.location.href = `${apiBaseUrl}/wallet`;
+        window.location.href = `../Wallet/wallet.html`;
     }, 500);
 }
 

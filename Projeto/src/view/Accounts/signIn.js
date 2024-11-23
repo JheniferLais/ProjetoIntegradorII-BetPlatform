@@ -4,7 +4,7 @@ const apiBaseUrl = 'http://localhost:3000';
 function openSignUpPage(){
     document.body.classList.add("fade-out");
     setTimeout(() => {
-        window.location.href = `${apiBaseUrl}/signUp`;
+        window.location.href = `signUp.html`;
     }, 500);
 }
 
@@ -12,7 +12,7 @@ function openSignUpPage(){
 function openHomePage(){
     document.body.classList.add("fade-out");
     setTimeout(() => {
-        window.location.href = `${apiBaseUrl}/home`;
+        window.location.href = `../Home/home.html`;
     }, 500);
 }
 

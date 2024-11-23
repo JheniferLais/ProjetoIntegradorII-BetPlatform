@@ -4,7 +4,7 @@ const apiBaseUrl = 'http://localhost:3000';
 function openSignInPage(){
     document.body.classList.add("fade-out");
     setTimeout(() => {
-        window.location.href = `${apiBaseUrl}/signIn`;
+        window.location.href = `signIn.html`;
     }, 500);
 }
 
@@ -62,7 +62,7 @@ async function handleFormSubmission(event) {
 
     // Caso o cadastro seja bem-sucedido exibe a mensagem de sucesso
     const feedbackCadastrado = document.querySelector('.feedbackCadastrado');
-    feedbackCadastrado.textContent = result || '✅ Cadastrado com sucesso!';
+    feedbackCadastrado.textContent = result.message || '✅ Cadastrado com sucesso!';
     feedbackCadastrado.style.display = 'block';
 
     // Redireciona para a pagina de login

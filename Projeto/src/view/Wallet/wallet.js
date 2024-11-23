@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
 function openHomePage(){
     document.body.classList.add("fade-out");
     setTimeout(() => {
-        window.location.href = `${apiBaseUrl}/home`;
+        window.location.href = `../Home/home.html`;
     }, 500);
 }
 
@@ -34,7 +34,7 @@ function openHomePage(){
 function openSignUpPage(){
     document.body.classList.add("fade-out");
     setTimeout(() => {
-        window.location.href = `${apiBaseUrl}/signUp`;
+        window.location.href = `../Accounts/signUp.html`;
     }, 500);
 }
 
