@@ -22,7 +22,6 @@
             <img src="../assets/whitetextlogo.png" alt="Wager Logo" height="30">
         </div>
     </div>
-
     <!-- Botões de Sair e Voltar -->
     <div class="header-right">
         <a id="homeLink" style="text-decoration: none;">
@@ -38,7 +37,79 @@
         </a>
     </div>
 </header>
+<div class="blur">
 
+</div>
+<div class="deposit-popup">
+    <div id="popupClose" class="close-popup" onclick="closeDeposit()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708" />
+        </svg>
+    </div>
+    <div class="container py-4">
+        <form method="POST" action="/addFunds>
+            <div class="mb-3">
+                <label for="cardNumber" class="form-label">Cartão Fictício</label>
+                <input type="text" class="form-control" id="cardNumber" placeholder="Número do cartão">
+            </div>
+            <div class="mb-3">
+                <label for="ccv" class="form-label">CCV</label>
+                <input type="text" class="form-control" id="ccv" placeholder="CCV">
+            </div>
+            <div class="mb-3">
+                <label for="depositAmount" class="form-label">Valor de Depósito (R$)</label>
+                <input type="number" class="form-control" id="depositAmount" placeholder="Ex: 100.00">
+            </div>
+            <div class="mb-3">
+                <label for="transactionType" class="form-label">Tipo de Transação</label>
+                <select class="form-select" id="transactionType" disabled>
+                    <option value="deposito" selected>Depósito</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Realizar Depósito</button>
+        </form>
+    </div>
+</div>
+<div class="claim-popup">
+    <div id="popupClose" class="close-popup" onclick="closeClaim()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708" />
+        </svg>
+    </div>
+    <!-- Formulário de saque -->
+    <form id="withdrawForm" class="container p-4" method="POST" action="/withdrawFunds">
+        <!-- Opções de saque -->
+        <div class="form-group mb-3">
+            <label class="text-white">Selecione o método:</label>
+            <div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="withdrawOption" id="optionAccount" value="account" onchange="updateForm()">
+                    <label class="form-check-label text-white" for="optionAccount">Ag./Conta Corrente</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" name="withdrawOption" id="optionPix" value="pix" onchange="updateForm()" checked>
+                    <label class="form-check-label text-white" for="optionPix">Chave PIX</label>
+                </div>
+            </div>
+        </div>
+        <!-- Formulário dinâmico -->
+        <div id="dynamicForm">
+            <!-- O conteúdo aqui será atualizado via JavaScript -->
+        </div>
+        <!-- Valor de saque -->
+        <div class="form-group mb-3">
+            <label for="withdrawAmount" class="text-white">Valor do Saque (R$):</label>
+            <input type="number" id="withdrawAmount" name="withdrawAmount" class="form-control" placeholder="Digite o valor do saque" required>
+        </div>
+        <!-- Tipo de transação fixo -->
+        <div class="form-group mb-4">
+            <label class="text-white">Tipo de Transação:</label>
+            <input type="text" class="form-control" value="Saque" name="transactionType" readonly>
+        </div>
+        <!-- Botão para realizar saque -->
+        <button type="submit" class="btn btn-primary w-100">Realizar Saque</button>
+    </form>
+</div>
 <!-- Imagem de fundo desfocado -->
 <img id="banner" src="../assets/banner.png">
 
@@ -50,8 +121,8 @@
             <b>Carregando...</b> <!-- Placeholder para o saldo dinâmico -->
         </div>
         <div class="buttons">
-            <button class="deposit-btn">🏦 Depositar 🏦</button>
-            <button class="withdraw-btn">💸 Sacar 💸</button>
+            <button class="deposit-btn" onclick="openDeposit()">🏦 Depositar 🏦</button>
+            <button class="withdraw-btn" onclick="openClaim()">💸 Sacar 💸</button>
         </div>
     </div>
 

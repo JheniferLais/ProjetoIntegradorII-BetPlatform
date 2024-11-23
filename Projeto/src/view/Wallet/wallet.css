@@ -240,3 +240,121 @@ html, body {
     font-size: 14px;
     color: #ffffffa1;
 }
+
+.blur{
+    cursor: pointer;
+    position: absolute;
+    z-index: 11;
+    width: 100vw;
+    height: 100vh;
+    background-color: #00050B91;
+    backdrop-filter: blur(8px);
+    display: none;
+}
+.deposit-popup{
+    position: absolute;
+    left: 0%;
+    right: 0%;
+    top: 0%;
+    bottom: 0%;
+    margin: auto;
+    width: 580px;
+    height: 510px;
+    background-color: #031933;
+    z-index: 12;
+    border-radius: 10px;
+    display: none;
+    color: #fff;
+}
+.claim-popup{
+    position: absolute;
+    left: 0%;
+    right: 0%;
+    top: 0%;
+    bottom: 0%;
+    margin: auto;
+    width: 650px;
+    height: 580px;
+    background-color: #031933;
+    z-index: 12;
+    border-radius: 10px;
+    display: none;
+    color: #fff;
+}
+.close-popup{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 35px;
+    width: 35px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    border-radius: 10px;
+    cursor: pointer;
+}
+.close-popup:hover{
+    background-color: #1c92d2;
+}
+
+.deposit-popup .container {
+    max-width: 400px;
+    margin: auto;
+}
+
+.deposit-popup .form-control,
+.deposit-popup .form-select {
+    height: 45px;
+    border: 1px solid #000D1C;
+}
+
+.deposit-popup .form-control:focus,
+.deposit-popup .form-select:focus {
+    border-color: #1c92d2;
+    box-shadow: 0 0 5px rgba(28, 146, 210, 0.5);
+}
+
+.deposit-popup button {
+    background-color: #1c92d2;
+    margin-top: 15px;
+    height: 50px;
+    border: none;
+    color: #fff;
+    max-width: 300px;
+}
+
+.deposit-popup button:hover {
+    background-color: #00BFFF;
+    font-weight: 500;
+}
+
+.claim-popup .container {
+    max-width: 500px;
+    margin: auto;
+}
+
+.claim-popup .form-control,
+.claim-popup .form-select {
+    height: 45px;
+    border: 1px solid #000D1C;
+}
+
+.claim-popup .form-control:focus,
+.claim-popup .form-select:focus {
+    border-color: #1c92d2;
+    box-shadow: 0 0 5px rgba(28, 146, 210, 0.5);
+}
+
+.claim-popup button {
+    background-color: #1c92d2;
+    margin-top: 10px;
+    height: 50px;
+    border: none;
+    color: #fff;
+    max-width: 300px;
+}
+
+.claim-popup button:hover {
+    background-color: #00BFFF;
+    font-weight: 500;
+}
