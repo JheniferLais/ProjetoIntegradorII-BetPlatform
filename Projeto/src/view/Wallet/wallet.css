@@ -267,6 +267,7 @@ html, body {
     color: #fff;
     flex-direction: column;
 }
+
 .claim-popup{
     position: absolute;
     left: 0%;

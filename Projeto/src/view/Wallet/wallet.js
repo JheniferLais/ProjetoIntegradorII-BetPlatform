@@ -38,6 +38,7 @@ function openSignUpPage(){
     }, 500);
 }
 
+
 function openDeposit(){
     const popup = document.querySelector('.deposit-popup');
     const blur = document.querySelector('.blur');

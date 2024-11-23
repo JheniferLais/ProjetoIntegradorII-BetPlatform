@@ -105,6 +105,7 @@ html, body {
     padding: 0;
     flex-direction: column;
 }
+
 .sidebar-items{
     width: 220px;
     padding: 8px 0px;

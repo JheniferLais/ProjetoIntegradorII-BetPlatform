@@ -18,7 +18,7 @@ export namespace userModelData {
     //Função para encontrar o usuario no banco de dados
     export async function findUser(email: string, password: string): Promise<Conta[][]> {
         const connection = await dataBaseutils.ConnectionDB();
-        const result = await connection.execute("SELECT * FROM usuarios WHERE email = :email AND senha = :password", [email, password]);
+        const result = await connection.execute("SELECT * FROM usuarios WHERE email = :email AND senha = :password AND moderator = 0", [email, password]);
         await connection.close();
         return result.rows as Conta[][];
     }

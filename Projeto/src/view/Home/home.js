@@ -43,6 +43,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
 
+
     await carregarGradeEventos();
     await saldoDaCarteira();
     validarLogin();
