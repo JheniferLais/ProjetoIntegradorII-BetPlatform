@@ -1,39 +1,38 @@
 const apiBaseUrl = 'http://localhost:3000';
 
-
 document.addEventListener("DOMContentLoaded", async () => {
-    document.body.classList.add("fade-in"); // Adiciona um efeito de fade-in na página ao carregar
 
-    // Redireciona para a página de Cadastro ao clicar em "Sair"
+    // Adiciona um efeito de fade-in na página ao carregar...
+    document.body.classList.add("fade-in");
+
+    // Redireciona para a página de Cadastro ao clicar em "Sair"...
     document.getElementById('signUpButton').addEventListener('click', openSignUpPage);
 
-    // Redireciona para a página da Carteira ao clicar na seção de saldo
+    // Redireciona para a página da Carteira ao clicar na seção de saldo...
     document.getElementById('walletLink').addEventListener('click', openWalletPage);
 
-    // Exibe o popup de cadastro de evento ao clicar no botão "Criar Evento"
+    // Exibe o popup de cadastro de evento ao clicar no botão "Criar Evento"...
     document.getElementById('createEventButton').addEventListener('click', openPopUpCadastrarEvento);
 
-    // Fecha o popup de cadastro de evento ao clicar no blur
+    // Fecha o popup de cadastro de evento ao clicar no blur...
     document.getElementById('popupBlur').addEventListener('click', closePopUpCadastrarEvento);
 
-    // Fecha o popup de cadastro de evento ao clicar no botão de fechar
+    // Fecha o popup de cadastro de evento ao clicar no botão de fechar...
     document.getElementById('popupClose').addEventListener('click', closePopUpCadastrarEvento);
 
-
-    // Configura o envio do formulário da searchBar
+    // Configura o envio do formulário da searchBar...
     document.getElementById('searchForm').addEventListener('submit', handleSearchFormSubmission);
 
-    // Configura o envio do formulário de criação de eventos
+    // Configura o envio do formulário de criação de eventos...
     document.getElementById('registerEventForm').addEventListener('submit', handleRegisterEventFormSubmission);
 
-
-    // Aplica formatação de data e hora em campos específicos quando o usuário digitar
+    // Aplica formatação de data e hora em campos específicos quando o usuário digitar...
     const dateTimeInputs = document.querySelectorAll('#inputDataHoraInicio, #inputDataHoraFim');
     dateTimeInputs.forEach(input => {
         input.addEventListener('input', () => formatDateTime(input));
     });
 
-    // Esconder mensagens de feedback de sucesso e erro quando o usuário interagir com qualquer campo do formulário
+    // Esconder os feedbacks de sucesso e/ou erro quando o usuário interagir com os campos do formulário..
     const formFields = document.querySelectorAll('#registerEventForm input');
     formFields.forEach(field => {
         field.addEventListener('focus', () => {
@@ -42,14 +41,17 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     });
 
-
-
+    // Carrega a grade de eventos Default...
     await carregarGradeEventos();
+
+    // Mostra o saldo do usuário no botao wallet da home...
     await saldoDaCarteira();
-    validarLogin();
+
+    // Exibe e esconde botões a depender de login...
+    validarLoginParaBotoesHome();
 });
 
-
+// Redireciona o usuario para o signUp.html...
 function openSignUpPage(){
     document.body.classList.add("fade-out");
     setTimeout(() => {
@@ -57,6 +59,7 @@ function openSignUpPage(){
     }, 500);
 }
 
+// Redireciona o usuario para o wallet.html...
 function openWalletPage(){
     document.body.classList.add("fade-out");
     setTimeout(() => {
@@ -64,6 +67,7 @@ function openWalletPage(){
     }, 500);
 }
 
+// Abre o popup de cadastro de evento...
 function openPopUpCadastrarEvento(){
     const popup = document.querySelector('.popup-cadastro-evento');
     const blur = document.querySelector('.blur');
@@ -73,6 +77,7 @@ function openPopUpCadastrarEvento(){
     }
 }
 
+// Fecha o popup de cadastro de evento...
 function closePopUpCadastrarEvento(){
     const popup = document.querySelector('.popup-cadastro-evento');
     const blur = document.querySelector('.blur');
@@ -80,12 +85,16 @@ function closePopUpCadastrarEvento(){
         popup.style.display = 'none';
         blur.style.display = 'none';
     }
+    document.getElementById('registerEventForm').reset();
 }
 
+// Aplica a formatação de data no formulario de cadastro de evento....
 function formatDateTime(input) {
-    let value = input.value.replace(/\D/g, ''); // Remove caracteres não numéricos
 
-    // Aplica a formatação desejada para a data e hora
+    // Remove caracteres não numéricos...
+    let value = input.value.replace(/\D/g, '');
+
+    // Aplica a formatação para a data e hora...
     if (value.length > 4) value = value.slice(0, 4) + '-' + value.slice(4);
     if (value.length > 7) value = value.slice(0, 7) + '-' + value.slice(7);
     if (value.length > 10) value = value.slice(0, 10) + 'T' + value.slice(10);
@@ -95,13 +104,34 @@ function formatDateTime(input) {
     input.value = value;
 }
 
+
+
+// Função para mostrar/bloquear os botoes do home a depender de login...
+function validarLoginParaBotoesHome() {
+
+    // Captura as informações guardadas na sessionStorage...
+    const token = sessionStorage.getItem('sessionToken');
+    const idUsuario = sessionStorage.getItem('idUsuario');
+
+    // Caso o usuario nao tenha logado...A home já esta com os botoes ajustados corretamente...
+    if (!token || !idUsuario) {
+        return;
+    }
+
+    // Caso tenha logado... A home mostra os botoes escondidos...
+    document.querySelector('.balance').style.display = 'flex';
+    document.querySelector('.sidebar-list').style.display = 'flex';
+    document.querySelector('.logout-btn').textContent = 'Sair';
+}
+
+// Função para inserir dinamicamente os eventos na grade...
 function inserirEventosNaGrade(eventosContainer, eventos){
     eventos.forEach(evento => {
-        const gradeEvento = document.createElement('div');
-        gradeEvento.classList.add('grid-item');
+        const gridItem = document.createElement('div');
+        gridItem.classList.add('grid-item');
 
-        // Define o conteúdo dinâmico do evento
-        gradeEvento.innerHTML = `
+        // Define o conteúdo dinâmico do evento...
+        gridItem.innerHTML = `
             <div class="titulo-categoria">
                 <div style="font-weight: 700; font-size: 30px;">${evento.titulo}</div>
                 <div style="font-weight: 300; font-size: 30px; margin-top: -10px;">${evento.categoria}</div>
@@ -114,58 +144,26 @@ function inserirEventosNaGrade(eventosContainer, eventos){
                 <div style="font-weight: 300; font-size: 20px;">${evento.descricao}</div>
             </div>
         `;
-        eventosContainer.appendChild(gradeEvento);
+        eventosContainer.appendChild(gridItem);
     });
 }
 
-// Função para mostrar o saldo da carteira no homePage
-async function saldoDaCarteira(){
-    const idUsuario = sessionStorage.getItem('idUsuario');
-    const token = sessionStorage.getItem('sessionToken');
+// Função para buscar todos os eventos 'aprovados' para serem inseridos na grade default...
+async function carregarGradeEventos() {
 
-    const response = await fetch(`${apiBaseUrl}/getAllWalletInformation/${idUsuario}`, {
+    // Consome da API...
+    const response = await fetch(`${apiBaseUrl}/getEvent`, {
         method: 'GET',
         headers: {
-            'authorization': token,
+            'Content-Type': 'application/json',
+            'statusEvento': 'aprovado',
         },
     });
 
-    if (!response.ok) {
-    }
-    const data = await response.json();
+    // Limpa a grade de eventos para a proxima grade de informaçoes...
+    document.querySelector('.main-content').innerHTML = '';
 
-    const balanceElement = document.getElementById('balance-value');
-
-    // Update balance
-    balanceElement.textContent = data.saldo + ' BRL';
-}
-
-function validarLogin() {
-    const token = sessionStorage.getItem('sessionToken');
-    const idUsuario = sessionStorage.getItem('idUsuario');
-
-    //Caso o usuario nao tenha logado...A home já esta com os botoes ajustados corretamente
-    if (!token || !idUsuario) {
-        return;
-    }
-
-    const balanceDiv = document.querySelector('.balance');
-    const sideBarList = document.querySelector('.sidebar-list');
-    const logOutBtn = document.querySelector('.logout-btn');
-
-    //Caso tenha logado... A home mostra os botoes escondidos
-    balanceDiv.style.display = 'flex';
-    sideBarList.style.display = 'flex';
-    logOutBtn.textContent = 'Sair';
-}
-
-// Função para buscar e exibir todos os eventos ao carregar a pagina
-async function carregarGradeEventos() {
-    const response = await fetch(`${apiBaseUrl}/getAllEvents`);
-
-    const eventosContainer = document.querySelector('.main-content');
-    eventosContainer.innerHTML = '';
-
+    // Valida se ocorreu algum erro e exibe o feedback de erro...
     if (!response.ok) {
         const gradeEvento = document.createElement('div');
         gradeEvento.innerHTML = `
@@ -173,30 +171,63 @@ async function carregarGradeEventos() {
                 <p>Sem eventos registrados!</p>
             </div>
         `;
-        eventosContainer.appendChild(gradeEvento);
+        document.querySelector('.main-content').appendChild(gradeEvento);
     }
 
+    // Caso exista eventos os insere na grade...
     const eventos = await response.json();
-    inserirEventosNaGrade(eventosContainer, eventos);
+    inserirEventosNaGrade(document.querySelector('.main-content'), eventos);
 }
 
-// Função para buscar os eventos da search bar e mostra-los
+// Função para mostrar o saldo da carteira no homePage...
+async function saldoDaCarteira(){
+
+    // Captura as informações guardas da sessionStorage...
+    const idUsuario = sessionStorage.getItem('idUsuario');
+    const token = sessionStorage.getItem('sessionToken');
+
+    // Consome da API...
+    const response = await fetch(`${apiBaseUrl}/getAllWalletInformation/${idUsuario}`, {
+        method: 'GET',
+        headers: {
+            'authorization': token,
+        },
+    });
+
+    // Valida se ocorreu algum erro e retorna...
+    if (!response.ok) {
+        return;
+    }
+
+    // Saldo recebe a response do backend...
+    const saldo = await response.json();
+
+    // Mostra o valor do saldo do usuario no wallet home...
+    const balanceElement = document.getElementById('balance-value');
+    balanceElement.textContent = saldo.saldo + ' BRL';
+}
+
+
+
+// Função para buscar os eventos da search bar e mostra-los...
 async function handleSearchFormSubmission(event) {
     event.preventDefault();
 
+    // Captura o valor de input do formulario...
     const palavraChave = document.getElementById('search').value;
     if(!palavraChave){
         return;
     }
 
+    // Consome da API...
     const response = await fetch(`${apiBaseUrl}/searchEvent/${palavraChave}`, {
         method: 'GET',
     });
 
     // Limpa o conteiner de eventos para a proxima grade de informaçoes...
-    const eventosContainer = document.querySelector('.main-content');
-    eventosContainer.innerHTML = '';
+    document.querySelector('.main-content').innerHTML = '';
 
+    // Valida se ocorreu algum erro e exibe o feedback de erro...
     if (!response.ok) {
         const gradeEvento = document.createElement('div');
         gradeEvento.innerHTML = `
@@ -204,17 +235,19 @@ async function handleSearchFormSubmission(event) {
                 <p>Nenhum evento encontrado!</p>
             </div>
         `;
-        eventosContainer.appendChild(gradeEvento);
+        document.querySelector('.main-content').appendChild(gradeEvento);
     }
 
+    // Caso exista eventos os insere na grade...
     const eventos = await response.json();
-    inserirEventosNaGrade(eventosContainer, eventos);
+    inserirEventosNaGrade(document.querySelector('.main-content'), eventos);
 }
 
 // Função para registrar o evento no banco de dados...
 async function handleRegisterEventFormSubmission(event){
     event.preventDefault();
 
+    // Captura os valores de input do formulario...
     const titulo = document.getElementById('inputTitulo').value;
     const descricao = document.getElementById('inputDescricao').value;
     const categoria = document.getElementById('inputCategoria').value;
@@ -223,14 +256,11 @@ async function handleRegisterEventFormSubmission(event){
     const dataHoraFim = document.getElementById('inputDataHoraFim').value;
     const dataEvento = document.getElementById('inputDataEvento').value;
 
+    // Captura as informações guardas da sessionStorage...
     const token = sessionStorage.getItem('sessionToken');
     const idUsuario = sessionStorage.getItem('idUsuario');
 
-    if(!token || !idUsuario){
-        alert('Sem permissão para a rota!!!');
-        return;
-    }
-
+    // Consome da API...
     const response = await fetch(`${apiBaseUrl}/addNewEvent/${idUsuario}`, {
         method: 'POST',
         headers: {
@@ -246,20 +276,20 @@ async function handleRegisterEventFormSubmission(event){
         },
     });
 
+    // Result recebe a response do backend...
     const result = await response.text();
 
+    // Valida se ocorreu algum erro e exibe o feedback de erro...
     if(!response.ok){
-        const feedbackNaoCriado = document.querySelector('.feedbackNaoCriado');
-        feedbackNaoCriado.textContent = result || '❌Ocorreu um erro! Tente novamente.';
-        feedbackNaoCriado.style.display = 'block';
+        document.querySelector('.feedbackNaoCriado').textContent = result;
+        document.querySelector('.feedbackNaoCriado').style.display = 'block';
         return;
     }
 
-    const feedbackCriado = document.querySelector('.feedbackCriado');
-    feedbackCriado.textContent = result || '✅Evento criado com sucesso!';
-    feedbackCriado.style.display = 'block';
+    // Caso o cadastro do evento seja bem-sucedido exibe o feedback de sucesso...
+    document.querySelector('.feedbackCriado').textContent = result;
+    document.querySelector('.feedbackCriado').style.display = 'block';
 
+    // Fecha o popUp e Limpa o formulario...
     setTimeout(closePopUpCadastrarEvento, 1200);
-
-    document.getElementById('registerEventForm').reset();
 }

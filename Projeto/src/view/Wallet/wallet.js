@@ -1,17 +1,20 @@
 const apiBaseUrl = 'http://localhost:3000';
 
-
 document.addEventListener("DOMContentLoaded", () => {
-    document.body.classList.add("fade-in"); // Adiciona um efeito de fade-in na página ao carregar
 
-    // Redireciona para a página de Cadastro ao clicar em "Sair"
+    // Adiciona um efeito de fade-in na página ao carregar...
+    document.body.classList.add("fade-in");
+
+    // Redireciona para a página de Cadastro ao clicar em "Sair" ou "Entrar/Cadastrar"...
     document.getElementById('signUpButton').addEventListener('click', openSignUpPage);
 
-    // Redireciona para a página da Carteira ao clicar na seção de saldo
+    // Redireciona para a página da Carteira ao clicar na seção de saldo...
     document.getElementById('homeLink').addEventListener('click', openHomePage);
 
+    // Configura o envio do formulário de addFunds...
+    document.getElementById('formAddFunds').addEventListener('submit', handleAddFundsFormSubmission);
 
-    // Esconder mensagens de feedback de sucesso e erro quando o usuário interagir com qualquer campo do formulário
+    // Esconder os feedbacks de sucesso e/ou erro quando o usuário interagir com os campos do formulário..
     const formFields = document.querySelectorAll('#registerEventForm input');
     formFields.forEach(field => {
         field.addEventListener('focus', () => {
@@ -22,7 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
-// Redireciona o usuario para o home
+// Redireciona o usuario para a home.html...
 function openHomePage(){
     document.body.classList.add("fade-out");
     setTimeout(() => {
@@ -30,7 +33,7 @@ function openHomePage(){
     }, 500);
 }
 
-// Redireciona o usuario para o signUp
+// Redireciona o usuario para o signUp.html...
 function openSignUpPage(){
     document.body.classList.add("fade-out");
     setTimeout(() => {
@@ -74,7 +77,7 @@ function closeClaim(){
     }
 }
 
-// Função para carregar os dados da wallet(saldo, historio de creditos, historico de apostas )
+// Função para carregar os dados da wallet(saldo, historio de créditos, histórico de apostas)
 async function dadosDaWallet() {
     const idUsuario = sessionStorage.getItem('idUsuario');
     const token = sessionStorage.getItem('sessionToken');
@@ -105,6 +108,12 @@ async function dadosDaWallet() {
         li.innerHTML = `${transaction.valorTransacao > 0 ? '+' : ''} R$${transaction.valorTransacao.toFixed(2)} <span>${transaction.tipoTransacao}</span>`;
         creditListElement.appendChild(li);
     });
+}
+
+async function handleAddFundsFormSubmission(event){
+    event.preventDefault();
+
+
 }
 
 function updateForm() {

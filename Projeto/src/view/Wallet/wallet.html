@@ -47,7 +47,9 @@
         </svg>
     </div>
     <div class="container py-4">
-        <form method="POST" action="/addFunds">
+
+
+        <form id="formAddFunds">
             <div class="mb-3">
                 <label for="cardNumber" class="form-label">Cartão Fictício</label>
                 <input type="text" class="form-control" id="cardNumber" placeholder="Número do cartão">
@@ -68,6 +70,8 @@
             </div>
             <button type="submit" class="btn btn-primary w-100">Realizar Depósito</button>
         </form>
+
+
     </div>
 </div>
 <div class="claim-popup">
@@ -77,7 +81,7 @@
         </svg>
     </div>
     <!-- Formulário de saque -->
-    <form id="withdrawForm" class="container p-4" method="POST" action="/withdrawFunds">
+    <form id="formWithdrawFunds" class="container p-4" method="POST" action="/withdrawFunds">
         <!-- Opções de saque -->
         <div class="form-group mb-3">
             <label class="text-white">Selecione o método:</label>

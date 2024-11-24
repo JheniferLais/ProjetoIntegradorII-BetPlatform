@@ -41,14 +41,14 @@ export namespace contasHandler {
             return;
         }
 
-        // Valida  o formato do email
+        // Valida o formato do e-mail
         const validEmail = validarEmail(email);
         if (!validEmail) {
             res.status(400).send('Formato de email inválido!');
             return;
         }
 
-        // Valida se o email já foi cadastrado
+        // Valida se o e-mail já foi cadastrado
         const infoEmail = await userModelData.findEmail(email);
         if (infoEmail && infoEmail.length > 0) {
             res.status(409).send('O e-mail informado já está cadastrado! Tente usar outro e-mail.');
@@ -83,7 +83,7 @@ export namespace contasHandler {
         await userModelData.insertUser(novaConta);
 
         // Response e statusCode de sucesso
-        res.status(201).send('usuario inserido com sucesso!')
+        res.status(201).send('Usuário cadastrado com sucesso!')
     };
 
     // 'Função' para login
@@ -93,14 +93,14 @@ export namespace contasHandler {
 
         // Valida se todos os campos foram preenchidos
         if (!email || !senha) {
-            res.status(400).send('Campos obrigatórios estão faltando!');
+            res.status(400).json('Campos obrigatórios estão faltando!');
             return;
         }
 
         // Valida se o usuario esta cadastrado
         const user: Conta[][] = await userModelData.findUser(email, senha);
         if (!user || user.length === 0) {
-            res.status(401).send('Login ou senha inválidos!');
+            res.status(401).json('Login ou senha inválidos!');
             return;
         }
 
@@ -108,7 +108,7 @@ export namespace contasHandler {
 
         // Response
         const response = {
-            response: 'login efetuado com sucesso!',
+            response: 'Login efetuado com sucesso!',
             idUsuario: user[0][0],
             nomeUsuario: user[0][1],
             token: user[0][5]

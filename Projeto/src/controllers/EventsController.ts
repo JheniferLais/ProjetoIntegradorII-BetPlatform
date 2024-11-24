@@ -265,15 +265,4 @@ export namespace eventosHandler {
         // Response e statusCode de sucesso
         res.status(200).json(eventos);
     }
-
-    // 'Função' para buscar todos os eventos
-    export const getAllEvents: RequestHandler = async (req: Request, res: Response): Promise<void> => {
-        const eventos = await eventModelData.getAllEvents();
-        if (!eventos) {
-            res.status(404).send('Sem eventos registrados!');
-            return;
-        }
-
-        res.status(200).json(eventos);
-    }
 }
