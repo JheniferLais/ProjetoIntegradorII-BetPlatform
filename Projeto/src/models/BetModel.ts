@@ -9,6 +9,7 @@ export type Aposta = {
     qtd_cotas: number;
     aposta: string; //sim ou nao
     dataAposta?: string;
+    valorGasto?: number; // Nova propriedade
 }
 
 

@@ -111,16 +111,16 @@ export namespace eventosHandler {
         //-------------------------------------------------------------------------
 
         // Obtém eventos filtrados
-        const filteredEvents: Evento[][] = await eventModelData.getFilteredEvents(statusEvento);
+        const filteredEvents: Evento[] | null = await eventModelData.getFilteredEvents(statusEvento);
 
         // Valida se existe algum evento com esse status
-        if (!filteredEvents || filteredEvents.length === 0) {
+        if (!filteredEvents) {
             res.status(404).send('Sem eventos com esse status!');
             return;
         }
 
         // Response e statusCode de sucesso
-        res.status(200).send(filteredEvents);
+        res.status(200).json(filteredEvents);
     }
 
     // 'Função para deleteEvent

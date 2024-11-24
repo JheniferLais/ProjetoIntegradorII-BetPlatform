@@ -41,14 +41,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     });
 
-    // Carrega a grade de eventos Default...
+    await validarLoginParaBotoesHome();
     await carregarGradeEventos();
 
-    // Mostra o saldo do usuário no botao wallet da home...
-    await saldoDaCarteira();
-
-    // Exibe e esconde botões a depender de login...
-    validarLoginParaBotoesHome();
 });
 
 // Redireciona o usuario para o signUp.html...
@@ -104,10 +99,8 @@ function formatDateTime(input) {
     input.value = value;
 }
 
-
-
 // Função para mostrar/bloquear os botoes do home a depender de login...
-function validarLoginParaBotoesHome() {
+async function validarLoginParaBotoesHome() {
 
     // Captura as informações guardadas na sessionStorage...
     const token = sessionStorage.getItem('sessionToken');
@@ -122,69 +115,6 @@ function validarLoginParaBotoesHome() {
     document.querySelector('.balance').style.display = 'flex';
     document.querySelector('.sidebar-list').style.display = 'flex';
     document.querySelector('.logout-btn').textContent = 'Sair';
-}
-
-// Função para inserir dinamicamente os eventos na grade...
-function inserirEventosNaGrade(eventosContainer, eventos){
-    eventos.forEach(evento => {
-        const gridItem = document.createElement('div');
-        gridItem.classList.add('grid-item');
-
-        // Define o conteúdo dinâmico do evento...
-        gridItem.innerHTML = `
-            <div class="titulo-categoria">
-                <div style="font-weight: 700; font-size: 30px;">${evento.titulo}</div>
-                <div style="font-weight: 300; font-size: 30px; margin-top: -10px;">${evento.categoria}</div>
-            </div>
-            <div class="apostas-data">
-                <div style="font-weight: 500; font-size: 15px;">${evento.qtd_apostas} Apostas 👥</div>
-                <div style="font-weight: 500; font-size: 15px;">${evento.data_evento} 📅</div>
-            </div>
-            <div class="descricao">
-                <div style="font-weight: 300; font-size: 20px;">${evento.descricao}</div>
-            </div>
-        `;
-        eventosContainer.appendChild(gridItem);
-    });
-}
-
-// Função para buscar todos os eventos 'aprovados' para serem inseridos na grade default...
-async function carregarGradeEventos() {
-
-    // Consome da API...
-    const response = await fetch(`${apiBaseUrl}/getEvent`, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-            'statusEvento': 'aprovado',
-        },
-    });
-
-    // Limpa a grade de eventos para a proxima grade de informaçoes...
-    document.querySelector('.main-content').innerHTML = '';
-
-    // Valida se ocorreu algum erro e exibe o feedback de erro...
-    if (!response.ok) {
-        const gradeEvento = document.createElement('div');
-        gradeEvento.innerHTML = `
-            <div class="feedbackNaoEncontrado">
-                <p>Sem eventos registrados!</p>
-            </div>
-        `;
-        document.querySelector('.main-content').appendChild(gradeEvento);
-    }
-
-    // Caso exista eventos os insere na grade...
-    const eventos = await response.json();
-    inserirEventosNaGrade(document.querySelector('.main-content'), eventos);
-}
-
-// Função para mostrar o saldo da carteira no homePage...
-async function saldoDaCarteira(){
-
-    // Captura as informações guardas da sessionStorage...
-    const idUsuario = sessionStorage.getItem('idUsuario');
-    const token = sessionStorage.getItem('sessionToken');
 
     // Consome da API...
     const response = await fetch(`${apiBaseUrl}/getAllWalletInformation/${idUsuario}`, {
@@ -208,6 +138,63 @@ async function saldoDaCarteira(){
 }
 
 
+// Função para inserir dinamicamente os eventos na grade...
+function inserirEventosNaGrade(eventosContainer, eventos){
+    eventos.forEach(evento => {
+        const gradeEvento = document.createElement('div');
+        gradeEvento.classList.add('grid-item');
+
+        // Define o conteúdo dinâmico do evento
+        gradeEvento.innerHTML = `
+            <div class="titulo-categoria">
+                <div style="font-weight: 700; font-size: 30px;">${evento.titulo}</div>
+                <div style="font-weight: 300; font-size: 30px; margin-top: -10px;">${evento.categoria}</div>
+            </div>
+            <div class="apostas-data">
+                <div style="font-weight: 500; font-size: 15px;">${evento.qtd_apostas} Apostas 👥</div>
+                <div style="font-weight: 500; font-size: 15px;">${evento.data_evento} 📅</div>
+            </div>
+            <div class="descricao">
+                <div style="font-weight: 300; font-size: 20px;">${evento.descricao}</div>
+            </div>
+        `;
+        eventosContainer.appendChild(gradeEvento);
+    });
+}
+
+// Função para limpar a grade e validar a response
+async function limpaGradeValidaResponse(response){
+    document.querySelector('.main-content').innerHTML = '';
+    if (!response.ok) {
+        const gradeEvento = document.createElement('div');
+        gradeEvento.innerHTML = `
+            <div class="feedbackNaoEncontrado">
+                <p>Nenhum evento encontrado!</p>
+            </div>
+        `;
+        document.querySelector('.main-content').appendChild(gradeEvento);
+        return;
+    }
+
+    const eventos = await response.json();
+    inserirEventosNaGrade(document.querySelector('.main-content'), eventos);
+}
+
+// Função para buscar todos os eventos 'aprovados' para serem inseridos na grade default...
+async function carregarGradeEventos() {
+
+    // Consome da API...
+    const response = await fetch(`${apiBaseUrl}/getEvent`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+            'statusEvento': 'aprovado',
+        },
+    });
+
+    await limpaGradeValidaResponse(response);
+}
+
 
 // Função para buscar os eventos da search bar e mostra-los...
 async function handleSearchFormSubmission(event) {
@@ -224,23 +211,7 @@ async function handleSearchFormSubmission(event) {
         method: 'GET',
     });
 
-    // Limpa o conteiner de eventos para a proxima grade de informaçoes...
-    document.querySelector('.main-content').innerHTML = '';
-
-    // Valida se ocorreu algum erro e exibe o feedback de erro...
-    if (!response.ok) {
-        const gradeEvento = document.createElement('div');
-        gradeEvento.innerHTML = `
-            <div class="feedbackNaoEncontrado">
-                <p>Nenhum evento encontrado!</p>
-            </div>
-        `;
-        document.querySelector('.main-content').appendChild(gradeEvento);
-    }
-
-    // Caso exista eventos os insere na grade...
-    const eventos = await response.json();
-    inserirEventosNaGrade(document.querySelector('.main-content'), eventos);
+    await limpaGradeValidaResponse(response);
 }
 
 // Função para registrar o evento no banco de dados...

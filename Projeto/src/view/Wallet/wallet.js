@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById('homeLink').addEventListener('click', openHomePage);
 
     // Configura o envio do formulário de addFunds...
-    document.getElementById('formAddFunds').addEventListener('submit', handleAddFundsFormSubmission);
+    //document.getElementById('formAddFunds').addEventListener('submit', handleAddFundsFormSubmission);
 
     // Esconder os feedbacks de sucesso e/ou erro quando o usuário interagir com os campos do formulário..
     const formFields = document.querySelectorAll('#registerEventForm input');
@@ -67,6 +67,7 @@ function closeDeposit(){
         popup.style.display = 'none';
         blur.style.display = 'none';
     }
+    document.getElementById('formAddFunds').reset();
 }
 function closeClaim(){
     const popup = document.querySelector('.claim-popup');
@@ -75,13 +76,18 @@ function closeClaim(){
         popup.style.display = 'none';
         blur.style.display = 'none';
     }
+    document.getElementById('formWithdrawFunds').reset();
+    document.getElementById('formAddFunds').reset();
 }
 
 // Função para carregar os dados da wallet(saldo, historio de créditos, histórico de apostas)
-async function dadosDaWallet() {
+async function carregarDadosDaWallet() {
+
+    // Captura as informações guardas da sessionStorage...
     const idUsuario = sessionStorage.getItem('idUsuario');
     const token = sessionStorage.getItem('sessionToken');
 
+    // Consome da API...
     const response = await fetch(`${apiBaseUrl}/getAllWalletInformation/${idUsuario}`, {
         method: 'GET',
         headers: {
@@ -89,32 +95,36 @@ async function dadosDaWallet() {
         },
     });
 
-    if (!response.ok) {
-        alert(response.status);
-    }
-    const data = await response.json();
+    // result recebe a response do backend...
+    const result = await response.json();
 
+    // Mostra o valor do saldo do usuario na wallet...
     const balanceElement = document.querySelector('.balance-amount');
     const creditListElement = document.querySelector('.credit-list');
+    const betListElement = document.querySelector('.bet-list');
+    balanceElement.textContent = result.saldo + ' BRL';
 
-    // Update balance
-    balanceElement.textContent = data.saldo + ' BRL';
+    // Limpa a grade de historico de transações para a proxima grade de informações...
+    creditListElement.innerHTML = '';
+    betListElement.innerHTML = '';
 
-    // Update transaction history
-    creditListElement.innerHTML = ''; // Clear existing entries
-    data.transactions.forEach(transaction => {
+    // Adiciona dinamicamente o historico de transações...
+    result.transactions.forEach(transaction => {
         const li = document.createElement('li');
         li.className = transaction.valorTransacao > 0 ? 'credit' : 'debit';
         li.innerHTML = `${transaction.valorTransacao > 0 ? '+' : ''} R$${transaction.valorTransacao.toFixed(2)} <span>${transaction.tipoTransacao}</span>`;
         creditListElement.appendChild(li);
     });
+
+    // Adiciona dinamicamente o historico de apostas...
+    result.bets.forEach(bet => {
+        const li = document.createElement('li');
+        li.className = bet.valorGasto > 0 ? 'credit' : 'debit';
+        li.innerHTML = `${bet.valorGasto > 0 ? '+' : ''} R$${bet.valorGasto.toFixed(2)} <span>${bet.aposta}</span>`;
+        betListElement.appendChild(li);
+    });
 }
-
-async function handleAddFundsFormSubmission(event){
-    event.preventDefault();
-
-
-}
+window.onload = carregarDadosDaWallet();
 
 function updateForm() {
     const dynamicForm = document.getElementById("dynamicForm");
@@ -124,24 +134,20 @@ function updateForm() {
     if (selectedOption === "account") {
         formContent = `
             <div class="form-group mb-3">
-                <label for="agency" class="text-white">Agência:</label>
-                <input type="text" id="agency" name="agency" class="form-control" placeholder="Digite o número da agência" required>
+                <label for="agency" class="text-white">Agência</label>
+                <input id="agency" type="text" name="agency" class="form-control" placeholder="Digite o número da agência" required>
             </div>
             <div class="form-group mb-3">
-                <label for="accountNumber" class="text-white">Número da Conta Corrente:</label>
-                <input type="text" id="accountNumber" name="accountNumber" class="form-control" placeholder="Digite o número da conta" required>
+                <label for="accountNumber" class="text-white">Número da Conta Corrente</label>
+                <input id="accountNumber" type="text" name="accountNumber" class="form-control" placeholder="Digite o número da conta" required>
             </div>`;
     } else if (selectedOption === "pix") {
         formContent = `
             <div class="form-group mb-3">
-                <label for="pixKey" class="text-white">Chave PIX:</label>
-                <input type="text" id="pixKey" name="pixKey" class="form-control" placeholder="Digite sua chave PIX" required>
+                <label for="pixKey" class="text-white">Chave PIX</label>
+                <input id="pixKey" type="text" name="pixKey" class="form-control" placeholder="Digite sua chave PIX" required>
             </div>`;
     }
 
     dynamicForm.innerHTML = formContent;
 }
-
-
-
-window.onload = dadosDaWallet();

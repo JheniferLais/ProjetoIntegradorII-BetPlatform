@@ -65,7 +65,7 @@ export namespace apostasHandler {
             return;
         }
 
-        // Valida se o evento já pode receber apostas
+        //Valida se o evento já pode receber apostas
         if(new Date() < new Date(evento.data_hora_inicio)){
             res.status(400).send('O evento ainda não pode receber apostas!');
             return;

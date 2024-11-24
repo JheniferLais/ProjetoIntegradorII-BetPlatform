@@ -2,6 +2,7 @@ import { Request, RequestHandler, Response } from 'express';
 import { walletModelData } from "../models/WalletModel";
 import { Carteira } from "../models/WalletModel";
 import { TransacaoFinanceira } from "../models/WalletModel";
+import {eventModelData} from "../models/EventModel";
 
 
 
@@ -168,12 +169,20 @@ export namespace carteiraHandler {
     export const getAllWalletInformation: RequestHandler = async (req: Request, res: Response): Promise<void> => {
         const idUsuario = parseInt(req.params.id); //ID do usuario passado como parâmetro na URL
 
-        const transacoes: TransacaoFinanceira[] | null = await walletModelData.getAllTransactions(idUsuario);
-        const apostas = await walletModelData.getAllBets(idUsuario);
         const carteira = await walletModelData.findCarteira(idUsuario);
         if(!carteira) {
             res.status(404).send('Carteira não existe!');
             return;
+        }
+
+        const transacoes: TransacaoFinanceira[] | null = await walletModelData.getAllTransactions(idUsuario);
+
+        const apostas = await walletModelData.getAllBets(idUsuario) ?? [];
+
+        for (const aposta of apostas) {
+            const evento = await eventModelData.findEvento(aposta.idEvento);
+            if(!evento) return
+            aposta.valorGasto = (evento.valor_cota) * aposta.qtd_cotas; // Calcula o valor gasto
         }
 
         const response = {
