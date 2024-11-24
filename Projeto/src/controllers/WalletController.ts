@@ -10,7 +10,7 @@ export namespace carteiraHandler {
 
     // Função para a validação do formato do cartão de crédito
     export function validarCartao(numeroCartao: string, validade: string, cvv: string): boolean {
-        return numeroCartao.length === 16 && validade.length === 5 && cvv.length === 3;
+        return numeroCartao.length === 19 && validade.length === 5 && cvv.length === 3;
     }
 
     // Função para a validação da chave pix
@@ -103,7 +103,11 @@ export namespace carteiraHandler {
         const idUsuario = parseInt(req.params.id); //ID do usuario passado como parâmetro na URL
 
         const valor = parseFloat(req.get('valor') || '');
+
         const pix = req.get('pix');
+
+        const agencia = req.get('agencia');
+        const numeroCartao = req.get('numeroCartao');
 
         // Valida se todos os campos foram preenchidos
         if(!idUsuario || !valor || !pix){

@@ -1,6 +1,6 @@
 const apiBaseUrl = 'http://localhost:3000';
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded",  () => {
 
     // Adiciona um efeito de fade-in na página ao carregar...
     document.body.classList.add("fade-in");
@@ -12,16 +12,26 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById('homeLink').addEventListener('click', openHomePage);
 
     // Configura o envio do formulário de addFunds...
-    //document.getElementById('formAddFunds').addEventListener('submit', handleAddFundsFormSubmission);
+    document.getElementById('formAddFunds').addEventListener('submit', handleAddFundsFormSubmission);
 
-    // Esconder os feedbacks de sucesso e/ou erro quando o usuário interagir com os campos do formulário..
-    const formFields = document.querySelectorAll('#registerEventForm input');
-    formFields.forEach(field => {
+    // Aplica formatação de data e hora em campos específicos quando o usuário digitar...
+    document.querySelectorAll('#validade').forEach(input => {
+        input.addEventListener('input', () => formatMonthYear(input));
+    });
+
+    // Esconder os feedbacks de sucesso e/ou erro quando o usuário interagir com os campos do formulário...
+    document.querySelectorAll('#formAddFunds input').forEach(field => {
         field.addEventListener('focus', () => {
-            document.querySelector('.feedbackCriado').style.display = 'none';
-            document.querySelector('.feedbackNaoCriado').style.display = 'none';
+            document.querySelector('.feedbackAdicionado').style.display = 'none';
+            document.querySelector('.feedbackNaoAdicionado').style.display = 'none';
         });
     });
+
+    document.querySelectorAll('#cvv').forEach(input => {
+        input.addEventListener('input', () => formatCVV(input));
+    });
+
+
 });
 
 
@@ -35,12 +45,12 @@ function openHomePage(){
 
 // Redireciona o usuario para o signUp.html...
 function openSignUpPage(){
+    sessionStorage.clear();
     document.body.classList.add("fade-out");
     setTimeout(() => {
         window.location.href = `../Accounts/signUp.html`;
     }, 500);
 }
-
 
 function openDeposit(){
     const popup = document.querySelector('.deposit-popup');
@@ -67,6 +77,7 @@ function closeDeposit(){
         popup.style.display = 'none';
         blur.style.display = 'none';
     }
+    location.reload()
     document.getElementById('formAddFunds').reset();
 }
 function closeClaim(){
@@ -77,7 +88,78 @@ function closeClaim(){
         blur.style.display = 'none';
     }
     document.getElementById('formWithdrawFunds').reset();
-    document.getElementById('formAddFunds').reset();
+}
+
+// Aplica o formato MM-YY para validade do cartao
+function formatMonthYear(input) {
+    // Remove caracteres não numéricos
+    let value = input.value.replace(/\D/g, '');
+
+    // Limita a entrada a no máximo 4 caracteres (MMAA)
+    value = value.slice(0, 4);
+
+    // Aplica a formatação para MM/AA
+    if (value.length > 2) {
+        value = value.slice(0, 2) + '/' + value.slice(2);
+    }
+
+    // Atualiza o valor do input
+    input.value = value;
+}
+
+function formatCVV(input) {
+    // Remove caracteres não numéricos
+    let value = input.value.replace(/\D/g, '');
+
+    // Limita a entrada a no máximo 3 dígitos
+    value = value.slice(0, 3);
+
+    // Atualiza o valor do input
+    input.value = value;
+}
+
+async function handleAddFundsFormSubmission(event){
+    event.preventDefault();
+
+    const numeroCartao = document.getElementById('cardNumber').value;
+    const cvv = document.getElementById('cvv').value;
+    const valorDeposito = document.getElementById('depositAmount').value;
+    const validade = document.getElementById('validade').value;
+
+    // Captura as informações guardas da sessionStorage...
+    const token = sessionStorage.getItem('sessionToken');
+    const idUsuario = sessionStorage.getItem('idUsuario');
+
+    // Consome da API...
+    const response = await fetch(`${apiBaseUrl}/addFunds/${idUsuario}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'valor': valorDeposito,
+            'numeroCartao': numeroCartao,
+            'validade': validade,
+            'cvv': cvv,
+            'authorization': token,
+        },
+    });
+
+    // Result recebe a response do backend...
+    const result = await response.text();
+
+    // Valida se ocorreu algum erro e exibe o feedback de erro...
+    if(!response.ok){
+        document.querySelector('.feedbackNaoAdicionado').textContent = result;
+        document.querySelector('.feedbackNaoAdicionado').style.display = 'block';
+        return;
+    }
+
+    // Caso a adição de fundos seja bem-sucedido exibe o feedback de sucesso...
+    document.querySelector('.feedbackAdicionado').textContent = result;
+    document.querySelector('.feedbackAdicionado').style.display = 'block';
+
+    // Fecha o popUp e Limpa o formulario...
+    setTimeout(closeDeposit, 1200);
+
 }
 
 // Função para carregar os dados da wallet(saldo, historio de créditos, histórico de apostas)

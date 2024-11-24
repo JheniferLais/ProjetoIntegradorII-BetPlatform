@@ -27,6 +27,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.getElementById('registerEventForm').addEventListener('submit', handleRegisterEventFormSubmission);
 
     // Aplica formatação de data e hora em campos específicos quando o usuário digitar...
+    const dateInputs = document.querySelectorAll('#inputDataEvento');
+    dateInputs.forEach(input => {
+        input.addEventListener('input', (e) => formatDate(input));
+    });
     const dateTimeInputs = document.querySelectorAll('#inputDataHoraInicio, #inputDataHoraFim');
     dateTimeInputs.forEach(input => {
         input.addEventListener('input', () => formatDateTime(input));
@@ -48,6 +52,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 // Redireciona o usuario para o signUp.html...
 function openSignUpPage(){
+    sessionStorage.clear();
     document.body.classList.add("fade-out");
     setTimeout(() => {
         window.location.href = `../Accounts/signUp.html`;
@@ -89,13 +94,32 @@ function formatDateTime(input) {
     // Remove caracteres não numéricos...
     let value = input.value.replace(/\D/g, '');
 
-    // Aplica a formatação para a data e hora...
-    if (value.length > 4) value = value.slice(0, 4) + '-' + value.slice(4);
-    if (value.length > 7) value = value.slice(0, 7) + '-' + value.slice(7);
-    if (value.length > 10) value = value.slice(0, 10) + 'T' + value.slice(10);
-    if (value.length > 13) value = value.slice(0, 13) + ':' + value.slice(13);
-    if (value.length > 16) value = value.slice(0, 16) + ':' + value.slice(16);
+    // Limita a quantidade de caracteres...
+    value = value.slice(0, 14);
 
+    // Aplica a formatação para a data e hora...
+    if (value.length > 4) value = value.slice(0, 4) + '-' + value.slice(4); // AAAA-MM
+    if (value.length > 7) value = value.slice(0, 7) + '-' + value.slice(7); // AAAA-MM-DD
+    if (value.length > 10) value = value.slice(0, 10) + 'T' + value.slice(10); // AAAA-MM-DDTHH
+    if (value.length > 13) value = value.slice(0, 13) + ':' + value.slice(13); // AAAA-MM-DDTHH:mm
+    if (value.length > 16) value = value.slice(0, 16) + ':' + value.slice(16); // AAAA-MM-DDTHH:mm:ss
+
+    // Atualiza o valor do input
+    input.value = value;
+}
+
+function formatDate(input) {
+    // Remove caracteres não numéricos
+    let value = input.value.replace(/\D/g, '');
+
+    // Limita a entrada a no máximo 8 dígitos
+    value = value.slice(0, 8);
+
+    // Aplica a formatação para AAAA-MM-DD
+    if (value.length > 4) value = value.slice(0, 4) + '-' + value.slice(4); // AAAA-MM
+    if (value.length > 7) value = value.slice(0, 7) + '-' + value.slice(7); // AAAA-MM-DD
+
+    // Atualiza o valor do input
     input.value = value;
 }
 

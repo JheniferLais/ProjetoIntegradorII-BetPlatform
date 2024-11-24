@@ -50,26 +50,32 @@
 
 
         <form id="formAddFunds">
-
             <div class="mb-3">
                 <h1 class="text-center">Deposito</h1>
             </div>
 
             <div class="mb-3">
                 <label for="cardNumber" class="form-label">Cartão Fictício</label>
-                <input type="text" class="form-control" id="cardNumber" placeholder="Número do cartão">
+                <input id="cardNumber" type="text" class="form-control" placeholder="Número do cartão">
             </div>
 
             <div class="mb-3">
-                <label for="ccv" class="form-label">CCV</label>
-                <input type="text" class="form-control" id="ccv" placeholder="CCV">
+                <label for="cvv" class="form-label">CCV</label>
+                <input id="cvv" type="text" class="form-control" placeholder="CCV">
+            </div>
+
+            <div class="mb-3">
+                <label for="validade" class="form-label">validade</label>
+                <input id="validade" type="text" class="form-control" placeholder="Validade do Cartão mm/yy">
             </div>
 
             <div class="mb-3">
                 <label for="depositAmount" class="form-label">Valor de Depósito (R$)</label>
-                <input type="number" class="form-control" id="depositAmount" placeholder="Ex: 100.00">
+                <input id="depositAmount" type="number" class="form-control" placeholder="Ex: 100.00">
             </div>
-            <button type="submit" class="btn btn-primary w-100">Realizar Depósito</button>
+            <button id="addFundsButton" type="submit" class="btn btn-primary w-100">Realizar Depósito</button>
+            <p class="feedbackAdicionado"></p>
+            <p class="feedbackNaoAdicionado"></p>
         </form>
 
 

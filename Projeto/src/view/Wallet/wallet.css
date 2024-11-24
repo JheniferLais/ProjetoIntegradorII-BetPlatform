@@ -360,3 +360,18 @@ html, body {
     background-color: #00BFFF;
     font-weight: 500;
 }
+
+form .feedbackAdicionado{
+    display: none;
+    margin-top: 10px;
+    width: 100%;
+    text-align: center;
+    color: green;
+}
+form .feedbackNaoAdicionado{
+    display: none;
+    margin-top: 10px;
+    width: 100%;
+    text-align: center;
+    color: red;
+}
