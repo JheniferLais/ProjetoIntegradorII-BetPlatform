@@ -33,7 +33,7 @@ export namespace betModelData {
     //Função para validar se o email é o mesmo do id
     export async function validaUserAposta(email: string, id: number): Promise<true | null> {
         const connection = await dataBaseutils.ConnectionDB();
-        const result = await connection.execute("SELECT * FROM usuarios WHERE email = :email AND id_usuario = :id AND moderador = 0", [email, id]);
+        const result = await connection.execute("SELECT * FROM usuarios WHERE email = :email AND id_usuario = :id", [email, id]);
         await connection.close();
 
         // Verifica se há algum resultado
