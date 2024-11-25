@@ -149,6 +149,7 @@ html, body {
     gap: 30px;
     width: 100%;
     height: auto;
+    padding-bottom: 30px;
 }
 .search-container{
     width: 100%;
@@ -190,9 +191,12 @@ html, body {
     padding: 15px;
     height: 200px;
     transition: ease 0.5s;
+    background-size: cover;
+    background-position: center;
 }
-.grid-item:hover{
-    background-color: #1a273a;
+.grid-item:hover {
+    background-color: rgba(0, 0, 0, 0.5); /* Escurece levemente no hover para destacar o texto */
+    transform: scale(0.95);
 }
 .grid-item .titulo-categoria{
     position: absolute;

@@ -172,10 +172,14 @@ async function validarLoginParaBotoesHome() {
 
 
 // Função para inserir dinamicamente os eventos na grade...
-function inserirEventosNaGrade(eventosContainer, eventos){
+function inserirEventosNaGrade(eventosContainer, eventos) {
     eventos.forEach(evento => {
         const gradeEvento = document.createElement('div');
         gradeEvento.classList.add('grid-item');
+
+        gradeEvento.style.backgroundImage = `url('./category-imgs/${evento.categoria}.jpg')`;
+        gradeEvento.style.backgroundSize = 'cover';
+        gradeEvento.style.backgroundPosition = 'center';
 
         // Define o conteúdo dinâmico do evento
         gradeEvento.innerHTML = `
