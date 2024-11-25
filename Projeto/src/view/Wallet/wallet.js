@@ -90,6 +90,14 @@ function closeClaim(){
     document.getElementById('formWithdrawFunds').reset();
 }
 
+// Funçao para formatar o valor de 123456.78 para 123.456,78
+function formatarValor(valor) {
+    return new Intl.NumberFormat('pt-BR', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+    }).format(valor);
+}
+
 // Aplica o formato MM-YY para validade do cartao
 function formatMonthYear(input) {
     // Remove caracteres não numéricos
@@ -184,7 +192,8 @@ async function carregarDadosDaWallet() {
     const balanceElement = document.querySelector('.balance-amount');
     const creditListElement = document.querySelector('.credit-list');
     const betListElement = document.querySelector('.bet-list');
-    balanceElement.textContent = result.saldo + ' BRL';
+    const valorFormatado = formatarValor(result.saldo);
+    balanceElement.textContent = valorFormatado + ' BRL';
 
     // Limpa a grade de historico de transações para a proxima grade de informações...
     creditListElement.innerHTML = '';
@@ -194,7 +203,8 @@ async function carregarDadosDaWallet() {
     result.transactions.forEach(transaction => {
         const li = document.createElement('li');
         li.className = transaction.valorTransacao > 0 ? 'credit' : 'debit';
-        li.innerHTML = `${transaction.valorTransacao > 0 ? '+' : ''} R$${transaction.valorTransacao.toFixed(2)} <span>${transaction.tipoTransacao}</span>`;
+        const valorFormatado = formatarValor(transaction.valorTransacao)
+        li.innerHTML = `${transaction.valorTransacao > 0 ? '+' : ''} R$${valorFormatado} <span>${transaction.tipoTransacao}</span>`;
         creditListElement.appendChild(li);
     });
 
@@ -202,7 +212,8 @@ async function carregarDadosDaWallet() {
     result.bets.forEach(bet => {
         const li = document.createElement('li');
         li.className = bet.valorGasto > 0 ? 'credit' : 'debit';
-        li.innerHTML = `${bet.valorGasto > 0 ? '+' : ''} R$${bet.valorGasto.toFixed(2)} <span>${bet.aposta}</span>`;
+        const valorFormatado = formatarValor(bet.valorGasto);
+        li.innerHTML = `${bet.valorGasto > 0 ? '+' : ''} R$${valorFormatado} <span>${bet.aposta}</span>`;
         betListElement.appendChild(li);
     });
 }

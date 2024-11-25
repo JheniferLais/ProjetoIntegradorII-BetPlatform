@@ -123,6 +123,14 @@ function formatDate(input) {
     input.value = value;
 }
 
+// Funçao para formatar o valor de 123456.78 para 123.456,78
+function formatarValor(valor) {
+    return new Intl.NumberFormat('pt-BR', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+    }).format(valor);
+}
+
 // Função para mostrar/bloquear os botoes do home a depender de login...
 async function validarLoginParaBotoesHome() {
 
@@ -158,7 +166,8 @@ async function validarLoginParaBotoesHome() {
 
     // Mostra o valor do saldo do usuario no wallet home...
     const balanceElement = document.getElementById('balance-value');
-    balanceElement.textContent = saldo.saldo + ' BRL';
+    const valorFormatado = formatarValor(saldo.saldo);
+    balanceElement.textContent = valorFormatado + ' BRL';
 }
 
 
