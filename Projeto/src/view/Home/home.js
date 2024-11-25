@@ -138,7 +138,7 @@ async function validarLoginParaBotoesHome() {
     const token = sessionStorage.getItem('sessionToken');
     const idUsuario = sessionStorage.getItem('idUsuario');
 
-    // Caso o usuario nao tenha logado...A home já esta com os botoes ajustados corretamente...
+    // Caso o usuario nao tenha logado...A home já está com os botoes ajustados corretamente...
     if (!token || !idUsuario) {
         return;
     }
@@ -147,8 +147,18 @@ async function validarLoginParaBotoesHome() {
     document.querySelector('.balance').style.display = 'flex';
     document.querySelector('.sidebar-list').style.display = 'flex';
     document.querySelector('.logout-btn').textContent = 'Sair';
+    
 
-    // Consome da API...
+    // Aqui você pode pegar o nome do usuário da sessionStorage, ou fazer uma requisição para pegar esse dado.
+    // Exemplo de pegar o nome do usuário da sessionStorage:
+    const nomeUsuario = sessionStorage.getItem('nomeUsuario'); // Assumindo que você tem o nome armazenado.
+
+    // Atualiza o conteúdo da div #useName com o nome do usuário
+    if (nomeUsuario) {
+        document.getElementById('useName').textContent = nomeUsuario;
+    }
+
+    // Consome da API para obter informações da carteira do usuário...
     const response = await fetch(`${apiBaseUrl}/getAllWalletInformation/${idUsuario}`, {
         method: 'GET',
         headers: {
@@ -168,6 +178,7 @@ async function validarLoginParaBotoesHome() {
     const balanceElement = document.getElementById('balance-value');
     const valorFormatado = formatarValor(saldo.saldo);
     balanceElement.textContent = valorFormatado + ' BRL';
+    
 }
 
 
