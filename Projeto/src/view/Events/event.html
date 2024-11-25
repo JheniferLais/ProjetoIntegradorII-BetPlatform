@@ -9,20 +9,30 @@
     <link rel="stylesheet" href="event.css">
 </head>
 <body>
+    <!-- Header do Site -->
     <header class="header">
+        <!-- Logo Wager -->
         <div class="menu-icon">
-            <span>&#9776;</span>
+            <span>&#9776;</span> <!-- Ícone do menu (hambúrguer) -->
             <div class="logo">
                 <img src="../assets/whitetextlogo.png" alt="Wager Logo" height="30">
             </div>
         </div>
+        <div class="headermiddle">
+            <div id="useName">Bem-vindo! Logue para prosseguir!</div>
+        </div>
+        <!-- Icones da Carteira e Sair -->
         <div class="header-right">
-            <div class="balance">
-                💼 83,50 BRL
-            </div>
-            <button class="logout-btn">Sair</button>
+            <a id="walletLink" style="text-decoration: none;">
+                <div class="balance">
+                    <span class="wallet-icon">💼</span>
+                    <span id="balance-value">...</span>
+                </div>
+            </a>
+            <button id="signUpButton" class="logout-btn">Entrar/Cadastrar</button>
         </div>
     </header>
+
     <main class="container">
         <div class="container-left">
             <div class="evento-titulo">
@@ -48,29 +58,24 @@
             <div class="valor-cota">
                 <p>Valor da Cota: <strong id="valor-cota-valor">R$5,00</strong></p>
             </div>
+            <p class="feedbackApostado"></p>
+            <p class="feedbackNaoApostado"></p>
             <div class="container-cota-aposta">
-                <form>
+                <form id="formAposta">
                     <div class="selecionar-num-cota">
-                        <label for="numcotas">Número de apostas:</label>
-                        <input 
-                            id="numcotas" 
-                            name="numcotas" 
-                            class="form-control" 
-                            type="number" 
-                            min="1" 
-                            step="1" 
-                            placeholder="Digite o número de cotas"
-                            required>
-                            <p style="margin-top: 10px;">Total: R$15,00</p>
+                        <label for="inputNumCotas">Número de apostas:</label>
+                        <input id="inputNumCotas" name="numcotas" class="form-control" type="number" min="1" step="1" placeholder="Digite o número de cotas" required>
+                        <p style="margin-top: 10px;">Total: R$15,00</p>
                     </div>
                     <div class="aposta">
-                        <!--aqui tem dois botões de submit, mas acredito que não haja como atribuir valores diferentes a eles, não sei como vai funcionar no backend, vemos isso depois.-->
-                        <button type="submit" class="btn nao">Não</button>
-                        <button type="submit" class="btn sim">Sim</button>
+                        <button id="btn nao" value="nao" type="submit" class="btn nao">Não</button>
+                        <button id="btn sim" value="sim" type="submit" class="btn sim">Sim</button>
                     </div>
                 </form>
             </div>
         </div>
     </main>
+
+    <script src="event.js"></script>
 </body>
 </html>

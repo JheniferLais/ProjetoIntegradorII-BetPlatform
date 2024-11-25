@@ -111,6 +111,7 @@ export namespace contasHandler {
             response: 'Login efetuado com sucesso!',
             idUsuario: user[0][0],
             nomeUsuario: user[0][1],
+            email: user[0][2],
             token: user[0][5]
         };
 

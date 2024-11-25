@@ -65,9 +65,10 @@ async function handleFormSubmission(event) {
         return;
     }
 
-    // Armazena o token, nome e id do usuario na sessionStorage...
+    // Armazena o token, nome, email e id do usuario na sessionStorage...
     sessionStorage.setItem('nomeUsuario', result.nomeUsuario);
     sessionStorage.setItem('idUsuario', result.idUsuario);
+    sessionStorage.setItem('emailUsuario', result.email);
     sessionStorage.setItem('sessionToken', result.token);
 
     // Caso o login seja bem-sucedido exibe o feedback de sucesso...

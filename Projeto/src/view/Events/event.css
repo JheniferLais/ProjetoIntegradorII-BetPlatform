@@ -53,10 +53,17 @@ body {
 }
 
 .balance {
-    font-weight: 500;
-    background: #1A273A;
-    padding: 8px 12px;
+    display: none;
+    align-items: center;
+    padding: 8px 15px;
+    border: 1px solid #ffffff;
     border-radius: 5px;
+    font-weight: 500;
+    color: #fff;
+}
+.balance:hover{
+    background-color: #ffffff2a;
+    cursor: pointer;
 }
 
 .logout-btn {
@@ -203,4 +210,19 @@ body {
 
 .btn.sim:hover {
     background: #00BFFF;
+}
+
+form .feedbackApostado{
+    display: none;
+    margin-top: 10px;
+    width: 100%;
+    text-align: center;
+    color: green;
+}
+form .feedbackNaoApostado{
+    display: none;
+    margin-top: 10px;
+    width: 100%;
+    text-align: center;
+    color: red;
 }
