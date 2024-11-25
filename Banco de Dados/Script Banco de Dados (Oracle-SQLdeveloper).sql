@@ -7,7 +7,7 @@ CREATE TABLE usuarios (
     data_nascimento VARCHAR2(11)  NOT NULL,
     token           VARCHAR2(32)  NOT NULL,
     moderador       NUMBER(1)     default 0, -- Valor inicial = 0 para usuario comum e 1 para moderador
-    saldo           NUMBER(20, 2) default 0 -- Valor inicial da carteira = 0
+    saldo           NUMBER default 0 -- Valor inicial da carteira = 0
 );
 
 -- Criando sequência para USUARIOS
@@ -20,7 +20,7 @@ CREATE TABLE transacoes_financeiras (
     id_transacao   INT PRIMARY KEY,
     id_usuario     INT NOT NULL, -- FK para a tabela USUARIOS
     tipo_transacao VARCHAR2(20)  NOT NULL CHECK (tipo_transacao IN ('deposito', 'saque', 'aposta', 'ganho_aposta', 'reembolso')),
-    valor          NUMBER(10, 2) NOT NULL,
+    valor          NUMBER NOT NULL,
     data_transacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP -- Hora atual no momento da inserção
 );
 
@@ -35,7 +35,7 @@ CREATE TABLE eventos (
     id_usuario       INT NOT NULL, -- FK para a tabela USUARIOS
     titulo           VARCHAR2(50)  NOT NULL,
     descricao        VARCHAR2(150) NOT NULL,
-    valor_cota       NUMBER(10, 2) NOT NULL, -- (10,2) seria para suportar até 999999999,99
+    valor_cota       NUMBER NOT NULL,
     data_hora_inicio VARCHAR2(22)  NOT NULL,
     data_hora_fim    VARCHAR2(22)  NOT NULL,
     data_evento      VARCHAR2(22)  NOT NULL,
