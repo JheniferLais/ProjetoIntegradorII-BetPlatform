@@ -12,8 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById('loginForm').addEventListener('submit', handleFormSubmission);
 
     // Esconder os feedbacks de sucesso e/ou erro quando o usuário interagir com os campos do formulário..
-    const formFields = document.querySelectorAll('#loginForm input');
-    formFields.forEach(field => {
+    document.querySelectorAll('#loginForm input').forEach(field => {
         field.addEventListener('focus', () => {
             document.querySelector('.feedbackLogado').style.display = 'none';
             document.querySelector('.feedbackNaoLogado').style.display = 'none';

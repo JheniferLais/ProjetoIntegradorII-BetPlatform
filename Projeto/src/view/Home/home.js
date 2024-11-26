@@ -194,10 +194,13 @@ function inserirEventosNaGrade(eventosContainer, eventos) {
             </div>
         `;
 
-        // Adiciona um evento de clique para redirecionar para a pagina do evento
-        gradeEvento.addEventListener('click', () => {
-            window.location.href = `../Events/event.html?idEvento=${evento.id_evento}`;
-        });
+        const token = sessionStorage.getItem('sessionToken');
+        if(token){
+            // Adiciona um evento de clique para redirecionar para a pagina do evento
+            gradeEvento.addEventListener('click', () => {
+                window.location.href = `../Events/event.html?idEvento=${evento.id_evento}`;
+            });
+        }
 
         eventosContainer.appendChild(gradeEvento);
     });

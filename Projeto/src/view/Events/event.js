@@ -118,11 +118,13 @@ function carregarDadosDoEvento(objetoEvento) {
     });
 }
 async function buscarEvento() {
+
     // Valida se o usuario esta logado...
     validarLogin();
 
-    //Caso esteja...
+    // Caso o usuario esteja logado... carrega todos os dados do evento..
 
+    // Captura as informações guardas da URL...
     const params = new URLSearchParams(window.location.search);
     const idEvento = params.get('idEvento');
 
@@ -131,11 +133,13 @@ async function buscarEvento() {
         method: 'GET',
     });
 
+    //Se a pagina do evento não existir...
     if(!response.ok) {
         window.location.href = `../errorPages/404.html`;
         return;
     }
 
+    //Chama a funçao para carregar os dados...
     const result = await response.json();
     carregarDadosDoEvento(result);
 }

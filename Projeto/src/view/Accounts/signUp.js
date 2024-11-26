@@ -12,8 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById('registerForm').addEventListener('submit', handleFormSubmission);
 
     // Esconder os feedbacks de sucesso e/ou erro quando o usuário interagir com os campos do formulário..
-    const formFields = document.querySelectorAll('#registerForm input');
-    formFields.forEach(field => {
+    document.querySelectorAll('#registerForm input').forEach(field => {
         field.addEventListener('focus', () => {
             document.querySelector('.feedbackCadastrado').style.display = 'none';
             document.querySelector('.feedbackNaoCadastrado').style.display = 'none';

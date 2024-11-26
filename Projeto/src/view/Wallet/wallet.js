@@ -2,9 +2,6 @@ const apiBaseUrl = 'http://localhost:3000';
 
 document.addEventListener("DOMContentLoaded",  () => {
 
-    // Adiciona um efeito de fade-in na página ao carregar...
-    document.body.classList.add("fade-in");
-
     // Redireciona para a página de Cadastro ao clicar em "Sair" ou "Entrar/Cadastrar"...
     document.getElementById('signUpButton').addEventListener('click', openSignUpPage);
 
@@ -30,7 +27,7 @@ document.addEventListener("DOMContentLoaded",  () => {
         });
     });
 
-    // Limita o tamnha do cvv para 3...
+    // Limita o tamanho do cvv para 3...
     document.querySelectorAll('#cvv').forEach(input => {
         input.addEventListener('input', () => formatCVV(input));
     });
@@ -38,7 +35,6 @@ document.addEventListener("DOMContentLoaded",  () => {
 
 // Redireciona o usuario para a home.html...
 function openHomePage(){
-    document.body.classList.add("fade-out");
     setTimeout(() => {
         window.location.href = `../Home/home.html`;
     }, 500);
@@ -46,7 +42,6 @@ function openHomePage(){
 // Redireciona o usuario para o signUp.html...
 function openSignUpPage(){
     sessionStorage.clear();
-    document.body.classList.add("fade-out");
     setTimeout(() => {
         window.location.href = `../Accounts/signUp.html`;
     }, 500);
@@ -55,48 +50,53 @@ function openSignUpPage(){
 
 // Funções de fechar o popUp de Saque e Deposito...
 function openDeposit(){
-    const popup = document.querySelector('.deposit-popup');
-    const blur = document.querySelector('.blur');
-    if(popup && blur){
-        popup.style.display = 'flex';
-        blur.style.display = 'block';
-    }
+    document.querySelector('.deposit-popup').style.display = 'flex';
+    document.querySelector('.blur').style.display = 'block';
 }
 function openClaim(){
-    const popup = document.querySelector('.claim-popup');
-    const blur = document.querySelector('.blur');
-    if(popup && blur){
-        popup.style.display = 'flex';
-        blur.style.display = 'block';
-    }
+    document.querySelector('.claim-popup').style.display = 'flex';
+    document.querySelector('.blur').style.display = 'block';
     updateForm();
 }
 
+
 // Funções de abrir o popUp de Saque e Deposito...
 function closeDeposit(){
-    const popup = document.querySelector('.deposit-popup');
-    const blur = document.querySelector('.blur');
-    if(popup && blur){
-        popup.style.display = 'none';
-        blur.style.display = 'none';
-    }
+    document.querySelector('.deposit-popup').style.display = 'none';
+    document.querySelector('.blur').style.display = 'none';
+
     location.reload();
     document.getElementById('formAddFunds').reset();
 }
 function closeClaim(){
-    const popup = document.querySelector('.claim-popup');
-    const blur = document.querySelector('.blur');
-    if(popup && blur){
-        popup.style.display = 'none';
-        blur.style.display = 'none';
-    }
+    document.querySelector('.claim-popup').style.display = 'none';
+    document.querySelector('.blur').style.display = 'none';
+
     location.reload();
     document.getElementById('formWithdrawFunds').reset();
 }
 
 
+// Função para validar se o usuario esta autenticado e pode estar nessa pagina...
+function validarLogin(){
+    // Captura as informações guardadas na sessionStorage...
+    const token = sessionStorage.getItem('sessionToken');
+
+    // Caso o usuario nao tenha logado...
+    if (!token) {
+        window.location.href = `../errorPages/401.html`;
+    }
+
+    // Carrega todos os dados da wallet...
+}
+
 // Função para carregar os dados da wallet(saldo, historio de créditos, histórico de apostas)...
 async function carregarDadosDaWallet() {
+
+    // Valida se o usuario esta logado...
+    validarLogin();
+
+    // Caso o usuario esteja logado... carrega todos os dados da wallet..
 
     // Captura as informações guardas da sessionStorage...
     const idUsuario = sessionStorage.getItem('idUsuario');
@@ -146,22 +146,7 @@ async function carregarDadosDaWallet() {
         betListElement.appendChild(li);
     });
 }
-// Valida se o usuario esta logado e tem acesso a essa pagina...
-async function validarLogin(){
-    // Captura as informações guardadas na sessionStorage...
-    const token = sessionStorage.getItem('sessionToken');
-    const idUsuario = sessionStorage.getItem('idUsuario');
-
-    // Caso o usuario nao tenha logado...
-    if (!token || !idUsuario) {
-        window.location.href = `../errorPages/401.html`;
-        return;
-    }
-
-    // Carrega todos os dados da wallet...
-    await carregarDadosDaWallet();
-}
-window.onload = validarLogin;
+window.onload = await carregarDadosDaWallet();
 
 
 // Funçao para formatar o valor de 123456.78 para 123.456,78...
@@ -171,7 +156,6 @@ function formatarValor(valor) {
         maximumFractionDigits: 2,
     }).format(valor);
 }
-
 // Aplica o formato MM-YY para validade do cartao...
 function formatMonthYear(input) {
     // Remove caracteres não numéricos
@@ -188,7 +172,6 @@ function formatMonthYear(input) {
     // Atualiza o valor do input
     input.value = value;
 }
-
 // Aplica a formatacao de no maximo 3 numeros no cvv...
 function formatCVV(input) {
     // Remove caracteres não numéricos
@@ -200,6 +183,7 @@ function formatCVV(input) {
     // Atualiza o valor do input
     input.value = value;
 }
+
 
 // Atualiza o formulario de saque a depender do método de pagamento...
 function updateForm() {
