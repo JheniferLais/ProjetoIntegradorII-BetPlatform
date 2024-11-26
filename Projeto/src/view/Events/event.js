@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.body.classList.add("fade-in");
 
     // Redireciona para a página de Cadastro ao clicar em "Sair"...
-    document.getElementById('signUpButton').addEventListener('click', openSignUpPage);
+    document.getElementById('backButton').addEventListener('click', openHomePage);
 
     // Redireciona para a página da Carteira ao clicar na seção de saldo...
     document.getElementById('walletLink').addEventListener('click', openWalletPage);
@@ -24,16 +24,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 });
 
-// Redireciona o usuario para o signUp.html...
-function openSignUpPage(){
-    sessionStorage.clear();
+
+// Redireciona o usuario para a home.html...
+function openHomePage(){
     document.body.classList.add("fade-out");
     setTimeout(() => {
-        window.location.href = `../Accounts/signUp.html`;
+        window.location.href = `../Home/home.html`;
     }, 500);
 }
-
-
 // Redireciona o usuario para o wallet.html...
 function openWalletPage(){
     document.body.classList.add("fade-out");
@@ -42,6 +40,8 @@ function openWalletPage(){
     }, 500);
 }
 
+
+// Função para validar se o usuario esta autenticado e pode estar nessa pagina...
 function validarLogin(){
     // Captura as informações guardadas na sessionStorage...
     const token = sessionStorage.getItem('sessionToken');
@@ -51,20 +51,111 @@ function validarLogin(){
     if (!token || !idUsuario) {
         window.location.href = `../errorPages/401.html`;
     }
-
     // Carrega todos os dados do evento...
-
 }
 window.onload = validarLogin;
+
+
+// Função para inserir dinamicamente os eventos na grade...
+function carregarDadosDoEvento(objetoEvento) {
+    const eventoContainerLeft = document.querySelector('.container-left');
+    const infoEventoLeft = document.createElement('div');
+    infoEventoLeft.classList.add('container-left');
+
+    // Define o conteúdo dinâmico do evento...
+    infoEventoLeft.innerHTML = `
+        <div class="evento-titulo">
+            <p id="categoria">${objetoEvento.categoria}</p>
+            <p id="titulo">${objetoEvento.titulo}</p>
+        </div>
+        <div class="descricao">
+            <p id="descricao">
+                ${objetoEvento.descricao}</p>
+        </div>
+        <div class="detalhes">
+            <div class="data">
+                <i class="fa-regular fa-calendar"></i>
+                <p>Data do evento: <strong>${objetoEvento.data_evento}</strong></p>
+            </div>
+            <div class="encerramento">
+                <i class="fa-regular fa-clock"></i>
+                <p>Encerramento das apostas: <strong>${objetoEvento.data_hora_fim}</strong></p>
+            </div>
+        </div>
+    `;
+    eventoContainerLeft.appendChild(infoEventoLeft);
+
+    const eventoContainerRight = document.querySelector('.container-right');
+    const infoEventoRight = document.createElement('div');
+    infoEventoRight.classList.add('container-right');
+
+    infoEventoRight.innerHTML = `
+        <div class="valor-cota">
+            <p>Valor da Cota: <strong id="valor-cota-valor">R$ ${objetoEvento.valor_cota}</strong></p>
+        </div>
+        <p class="feedbackApostado"></p>
+        <p class="feedbackNaoApostado"></p>
+        <div class="container-cota-aposta">
+            <form id="formAposta">
+                <div class="selecionar-num-cota">
+                    <label for="inputNumCotas">Número de apostas:</label>
+                    <input id="inputNumCotas" name="numcotas" class="form-control" type="number" min="1" step="1" placeholder="Digite o número de cotas" required>
+                    <p id="valorTotal" style="margin-top: 10px;">Total: R$ 0,00</p>
+                </div>
+
+                <div class="aposta">
+                    <button id="btn nao" value="nao" type="submit" class="btn nao">Não</button>
+                    <button id="btn sim" value="sim" type="submit" class="btn sim">Sim</button>
+                </div>
+            </form>
+        </div>
+    `;
+    eventoContainerRight.appendChild(infoEventoRight);
+
+    // Seleciona o input e o parágrafo
+    const numCotas = document.getElementById('inputNumCotas');
+    const valorTotal = document.getElementById('valorTotal');
+
+    // Adiciona um evento ao input
+    numCotas.addEventListener('input', () => {
+        // Calcula o total
+        const total = numCotas.value * objetoEvento.valor_cota;
+
+        // Atualiza o texto do parágrafo
+        valorTotal.textContent = `Total: R$ ${total.toFixed(2)}`;
+    });
+}
+
+async function buscarEvento() {
+    const params = new URLSearchParams(window.location.search);
+    const idEvento = params.get('idEvento');
+
+    // Consome da API...
+    const response = await fetch(`${apiBaseUrl}/getAllWalletInformation/${idEvento}`, {
+        method: 'GET',
+    });
+
+    if(!response.ok) {
+        window.location.href = `../errorPages/404.html`;
+        return;
+    }
+
+    const result = await response.json();
+    carregarDadosDoEvento(result);
+}
+window.onload = buscarEvento;
 
 
 async function handleBetFormSubmission(event) {
     event.preventDefault();
 
+    // Captura o parâmetros idEvento da URL atual
+    const params = new URLSearchParams(window.location.search);
+    const idEvento = params.get('idEvento');
+
     // Captura os valores de input do formulario...
     const qtdCotas = document.getElementById('inputNumCotas').value;
-    //const aposta = ????
-    //const idEvento = ????
+
 
     // Captura as informações guardas da sessionStorage...
     const token = sessionStorage.getItem('sessionToken');

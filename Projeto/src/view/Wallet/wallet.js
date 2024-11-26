@@ -36,7 +36,6 @@ document.addEventListener("DOMContentLoaded",  () => {
     });
 });
 
-
 // Redireciona o usuario para a home.html...
 function openHomePage(){
     document.body.classList.add("fade-out");

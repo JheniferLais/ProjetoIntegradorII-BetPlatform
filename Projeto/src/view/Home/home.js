@@ -146,7 +146,6 @@ async function validarLoginParaBotoesHome() {
     document.querySelector('.balance').style.display = 'flex';
     document.querySelector('.sidebar-list').style.display = 'flex';
     document.querySelector('.logout-btn').textContent = 'Sair';
-    
 
     // Aqui você pode pegar o nome do usuário da sessionStorage, ou fazer uma requisição para pegar esse dado.
     // Exemplo de pegar o nome do usuário da sessionStorage:
@@ -183,6 +182,7 @@ async function validarLoginParaBotoesHome() {
 // Função para inserir dinamicamente os eventos na grade...
 function inserirEventosNaGrade(eventosContainer, eventos) {
     eventos.forEach(evento => {
+
         const gradeEvento = document.createElement('div');
         gradeEvento.classList.add('grid-item');
 
@@ -204,9 +204,16 @@ function inserirEventosNaGrade(eventosContainer, eventos) {
                 <div style="font-weight: 300; font-size: 20px;">${evento.descricao.length > 50 ? evento.descricao.substring(0, 50) + "..." : evento.descricao}</div>
             </div>
         `;
+
+        // Adiciona um evento de clique para redirecionar para a pagina do evento
+        gradeEvento.addEventListener('click', () => {
+            window.location.href = `../Events/event.html?idEvento=${evento.id_evento}`;
+        });
+
         eventosContainer.appendChild(gradeEvento);
     });
 }
+
 // Função para limpar a grade e validar a response
 async function limpaGradeValidaResponse(response){
     document.querySelector('.main-content').innerHTML = '';

@@ -265,4 +265,24 @@ export namespace eventosHandler {
         // Response e statusCode de sucesso
         res.status(200).json(eventos);
     }
+
+    export const getAllInformationEvent = async (req: Request, res: Response): Promise<void> => {
+        const idEvento = parseInt(req.params.idEvento); //ID do evento passado como parâmetro na URL
+
+        // Valida se todos os campos foram preenchidos
+        if(!idEvento){
+            res.status(400).send('Campos obrigatórios estão faltando!');
+            return;
+        }
+
+        // Valida se o evento existe
+        const evento = await eventModelData.findEvento(idEvento);
+        if (!evento) {
+            res.status(404).send('Evento não encontrado!');
+            return;
+        }
+
+        // Response e statusCode de sucesso
+        res.status(200).json(evento);
+    }
 }
