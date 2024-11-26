@@ -58,7 +58,6 @@ function openSignUpPage(){
         window.location.href = `../Accounts/signUp.html`;
     }, 500);
 }
-
 // Redireciona o usuario para o wallet.html...
 function openWalletPage(){
     document.body.classList.add("fade-out");
@@ -66,6 +65,7 @@ function openWalletPage(){
         window.location.href = `../Wallet/wallet.html`;
     }, 500);
 }
+
 
 // Abre o popup de cadastro de evento...
 function openPopUpCadastrarEvento(){
@@ -76,7 +76,6 @@ function openPopUpCadastrarEvento(){
         blur.style.display = 'block';
     }
 }
-
 // Fecha o popup de cadastro de evento...
 function closePopUpCadastrarEvento(){
     const popup = document.querySelector('.popup-cadastro-evento');
@@ -87,6 +86,7 @@ function closePopUpCadastrarEvento(){
     }
     document.getElementById('registerEventForm').reset();
 }
+
 
 // Aplica a formatação de data no formulario de cadastro de evento....
 function formatDateTime(input) {
@@ -130,6 +130,7 @@ function formatarValor(valor) {
         maximumFractionDigits: 2,
     }).format(valor);
 }
+
 
 // Função para mostrar/bloquear os botoes do home a depender de login...
 async function validarLoginParaBotoesHome() {
@@ -178,7 +179,6 @@ async function validarLoginParaBotoesHome() {
     const balanceElement = document.getElementById('balance-value');
     const valorFormatado = formatarValor(saldo.saldo);
     balanceElement.textContent = valorFormatado + ' BRL';
-    
 }
 
 

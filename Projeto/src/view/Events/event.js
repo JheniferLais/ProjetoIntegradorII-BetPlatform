@@ -33,6 +33,7 @@ function openSignUpPage(){
     }, 500);
 }
 
+
 // Redireciona o usuario para o wallet.html...
 function openWalletPage(){
     document.body.classList.add("fade-out");
@@ -42,16 +43,16 @@ function openWalletPage(){
 }
 
 function validarLogin(){
-
     // Captura as informações guardadas na sessionStorage...
     const token = sessionStorage.getItem('sessionToken');
     const idUsuario = sessionStorage.getItem('idUsuario');
 
     // Caso o usuario nao tenha logado...
     if (!token || !idUsuario) {
-        //setTimeout(openSignUpPage, 1200);
+        window.location.href = `../errorPages/401.html`;
     }
 
+    // Carrega todos os dados do evento...
 
 }
 window.onload = validarLogin;
@@ -59,7 +60,6 @@ window.onload = validarLogin;
 
 async function handleBetFormSubmission(event) {
     event.preventDefault();
-
 
     // Captura os valores de input do formulario...
     const qtdCotas = document.getElementById('inputNumCotas').value;
