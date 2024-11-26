@@ -2,9 +2,6 @@ const apiBaseUrl = 'http://localhost:3000';
 
 document.addEventListener("DOMContentLoaded", async () => {
 
-    // Adiciona um efeito de fade-in na página ao carregar...
-    document.body.classList.add("fade-in");
-
     // Redireciona para a página de Cadastro ao clicar em "Sair"...
     document.getElementById('signUpButton').addEventListener('click', openSignUpPage);
 
@@ -52,14 +49,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 // Redireciona o usuario para o signUp.html...
 function openSignUpPage(){
     sessionStorage.clear();
-    document.body.classList.add("fade-out");
     setTimeout(() => {
         window.location.href = `../Accounts/signUp.html`;
     }, 500);
 }
 // Redireciona o usuario para o wallet.html...
 function openWalletPage(){
-    document.body.classList.add("fade-out");
     setTimeout(() => {
         window.location.href = `../Wallet/wallet.html`;
     }, 500);
@@ -136,9 +131,10 @@ async function validarLoginParaBotoesHome() {
     // Captura as informações guardadas na sessionStorage...
     const token = sessionStorage.getItem('sessionToken');
     const idUsuario = sessionStorage.getItem('idUsuario');
+    const nomeUsuario = sessionStorage.getItem('nomeUsuario');
 
     // Caso o usuario nao tenha logado...A home já está com os botoes ajustados corretamente...
-    if (!token || !idUsuario) {
+    if (!token || !idUsuario || !nomeUsuario) {
         return;
     }
 
@@ -146,15 +142,7 @@ async function validarLoginParaBotoesHome() {
     document.querySelector('.balance').style.display = 'flex';
     document.querySelector('.sidebar-list').style.display = 'flex';
     document.querySelector('.logout-btn').textContent = 'Sair';
-
-    // Aqui você pode pegar o nome do usuário da sessionStorage, ou fazer uma requisição para pegar esse dado.
-    // Exemplo de pegar o nome do usuário da sessionStorage:
-    const nomeUsuario = sessionStorage.getItem('nomeUsuario'); // Assumindo que você tem o nome armazenado.
-
-    // Atualiza o conteúdo da div #useName com o nome do usuário
-    if (nomeUsuario) {
-        document.getElementById('useName').textContent = nomeUsuario;
-    }
+    document.getElementById('useName').textContent = nomeUsuario;
 
     // Consome da API para obter informações da carteira do usuário...
     const response = await fetch(`${apiBaseUrl}/getAllWalletInformation/${idUsuario}`, {
@@ -166,6 +154,7 @@ async function validarLoginParaBotoesHome() {
 
     // Valida se ocorreu algum erro e retorna...
     if (!response.ok) {
+        alert('Ocorreu um erro ao carregar seus dados!');
         return;
     }
 
@@ -213,7 +202,6 @@ function inserirEventosNaGrade(eventosContainer, eventos) {
         eventosContainer.appendChild(gradeEvento);
     });
 }
-
 // Função para limpar a grade e validar a response
 async function limpaGradeValidaResponse(response){
     document.querySelector('.main-content').innerHTML = '';

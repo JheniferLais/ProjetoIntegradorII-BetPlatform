@@ -1,9 +1,6 @@
 const apiBaseUrl = 'http://localhost:3000';
 
-document.addEventListener("DOMContentLoaded", async () => {
-
-    // Adiciona um efeito de fade-in na página ao carregar...
-    document.body.classList.add("fade-in");
+document.addEventListener("DOMContentLoaded",  () => {
 
     // Redireciona para a página de Cadastro ao clicar em "Sair"...
     document.getElementById('backButton').addEventListener('click', openHomePage);
@@ -27,34 +24,29 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 // Redireciona o usuario para a home.html...
 function openHomePage(){
-    document.body.classList.add("fade-out");
     setTimeout(() => {
         window.location.href = `../Home/home.html`;
     }, 500);
 }
 // Redireciona o usuario para o wallet.html...
 function openWalletPage(){
-    document.body.classList.add("fade-out");
     setTimeout(() => {
         window.location.href = `../Wallet/wallet.html`;
     }, 500);
 }
 
-
 // Função para validar se o usuario esta autenticado e pode estar nessa pagina...
 function validarLogin(){
     // Captura as informações guardadas na sessionStorage...
     const token = sessionStorage.getItem('sessionToken');
-    const idUsuario = sessionStorage.getItem('idUsuario');
 
     // Caso o usuario nao tenha logado...
-    if (!token || !idUsuario) {
+    if (!token) {
         window.location.href = `../errorPages/401.html`;
     }
+
     // Carrega todos os dados do evento...
 }
-window.onload = validarLogin;
-
 
 // Função para inserir dinamicamente os eventos na grade...
 function carregarDadosDoEvento(objetoEvento) {
@@ -125,13 +117,17 @@ function carregarDadosDoEvento(objetoEvento) {
         valorTotal.textContent = `Total: R$ ${total.toFixed(2)}`;
     });
 }
-
 async function buscarEvento() {
+    // Valida se o usuario esta logado...
+    validarLogin();
+
+    //Caso esteja...
+
     const params = new URLSearchParams(window.location.search);
     const idEvento = params.get('idEvento');
 
     // Consome da API...
-    const response = await fetch(`${apiBaseUrl}/getAllWalletInformation/${idEvento}`, {
+    const response = await fetch(`${apiBaseUrl}/getAllInformationEvent/${idEvento}`, {
         method: 'GET',
     });
 
@@ -144,7 +140,6 @@ async function buscarEvento() {
     carregarDadosDoEvento(result);
 }
 window.onload = buscarEvento;
-
 
 async function handleBetFormSubmission(event) {
     event.preventDefault();
