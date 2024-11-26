@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Aplica formatação de data e hora em campos específicos quando o usuário digitar...
     const dateInputs = document.querySelectorAll('#inputDataEvento');
     dateInputs.forEach(input => {
-        input.addEventListener('input', (e) => formatDate(input));
+        input.addEventListener('input', () => formatDate(input));
     });
     const dateTimeInputs = document.querySelectorAll('#inputDataHoraInicio, #inputDataHoraFim');
     dateTimeInputs.forEach(input => {
@@ -47,7 +47,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     await validarLoginParaBotoesHome();
     await carregarGradeEventos();
-
 });
 
 // Redireciona o usuario para o signUp.html...
@@ -107,7 +106,7 @@ function formatDateTime(input) {
     // Atualiza o valor do input
     input.value = value;
 }
-
+// Função para formatar data 10/10/2024...
 function formatDate(input) {
     // Remove caracteres não numéricos
     let value = input.value.replace(/\D/g, '');
@@ -122,7 +121,6 @@ function formatDate(input) {
     // Atualiza o valor do input
     input.value = value;
 }
-
 // Funçao para formatar o valor de 123456.78 para 123.456,78
 function formatarValor(valor) {
     return new Intl.NumberFormat('pt-BR', {
@@ -192,10 +190,10 @@ function inserirEventosNaGrade(eventosContainer, eventos) {
         gradeEvento.style.backgroundSize = 'cover';
         gradeEvento.style.backgroundPosition = 'center';
 
-        // Define o conteúdo dinâmico do evento
+        // Define o conteúdo dinâmico do evento...
         gradeEvento.innerHTML = `
             <div class="titulo-categoria">
-                <div style="font-weight: 700; font-size: 30px;">${evento.titulo}</div>
+                <div style="font-weight: 700; font-size: 30px;">${evento.titulo.length > 20 ? evento.titulo.substring(0, 20) + "..." : evento.titulo}</div>
                 <div style="font-weight: 300; font-size: 30px; margin-top: -10px;">${evento.categoria}</div>
             </div>
             <div class="apostas-data">
@@ -203,13 +201,12 @@ function inserirEventosNaGrade(eventosContainer, eventos) {
                 <div style="font-weight: 500; font-size: 15px;">${evento.data_evento} 📅</div>
             </div>
             <div class="descricao">
-                <div style="font-weight: 300; font-size: 20px;">${evento.descricao}</div>
+                <div style="font-weight: 300; font-size: 20px;">${evento.descricao.length > 50 ? evento.descricao.substring(0, 50) + "..." : evento.descricao}</div>
             </div>
         `;
         eventosContainer.appendChild(gradeEvento);
     });
 }
-
 // Função para limpar a grade e validar a response
 async function limpaGradeValidaResponse(response){
     document.querySelector('.main-content').innerHTML = '';
@@ -227,7 +224,6 @@ async function limpaGradeValidaResponse(response){
     const eventos = await response.json();
     inserirEventosNaGrade(document.querySelector('.main-content'), eventos);
 }
-
 // Função para buscar todos os eventos 'aprovados' para serem inseridos na grade default...
 async function carregarGradeEventos() {
 

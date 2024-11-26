@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { Conta } from '../models/UserModel';
-import { dataBaseutils } from './DataBaseutils';
+import { dataBaseutils } from './connectionDatabaseUtils';
 
 export namespace commonUserUtils {
 

@@ -9,7 +9,7 @@ import {eventModelData} from "../models/EventModel";
 export namespace carteiraHandler {
 
     // Função para a validação do formato do cartão de crédito
-    export function validarCartao(numeroCartao: string, validade: string, cvv: string): boolean {
+    function validarCartao(numeroCartao: string, validade: string, cvv: string): boolean {
         return numeroCartao.length === 19 && validade.length === 5 && cvv.length === 3;
     }
 
@@ -31,7 +31,7 @@ export namespace carteiraHandler {
     }
 
     //Função para calcular o valor do saque apos o imposto
-    export function calcularTaxaDeSaque(valor: number): number {
+    function calcularTaxaDeSaque(valor: number): number {
         let taxa: number;
 
         if (valor <= 100) {
@@ -170,6 +170,7 @@ export namespace carteiraHandler {
         res.status(200).send(response);
     }
 
+    // 'Função' para mostrar todas as informações financeiras do usuario
     export const getAllWalletInformation: RequestHandler = async (req: Request, res: Response): Promise<void> => {
         const idUsuario = parseInt(req.params.id); //ID do usuario passado como parâmetro na URL
 
@@ -181,12 +182,17 @@ export namespace carteiraHandler {
 
         const transacoes: TransacaoFinanceira[] | null = await walletModelData.getAllTransactions(idUsuario);
 
-        const apostas = await walletModelData.getAllBets(idUsuario) ?? [];
+        // 'apostas' recebe todo o historico de apostas do usuario porém o usuario pode nao ter
+        // historico de apostas por isso o [] assim o response sempre recebe alguma informação
+        // para ser mostrada no frontend...
+        const apostas = await walletModelData.getAllBets(idUsuario);
 
         for (const aposta of apostas) {
             const evento = await eventModelData.findEvento(aposta.idEvento);
             if(!evento) return
-            aposta.valorGasto = (evento.valor_cota) * aposta.qtd_cotas; // Calcula o valor gasto
+            // Calcula o valor gasto nessa aposta
+            // baseado em valor da cota do evento * quantidade de cotas compradas pelo usuario
+            aposta.valorGasto = (evento.valor_cota) * aposta.qtd_cotas;
         }
 
         const response = {

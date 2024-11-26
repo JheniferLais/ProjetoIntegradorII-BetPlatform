@@ -1,4 +1,4 @@
-import { dataBaseutils } from "../utils/DataBaseutils";
+import { dataBaseutils } from "../utils/connectionDatabaseUtils";
 import { Aposta } from "./BetModel";
 
 
@@ -80,6 +80,7 @@ export namespace walletModelData {
         await connection.close();
     }
 
+    //Função para retornar todas as Transações do usuario
     export async function getAllTransactions(idUsuario: number): Promise<TransacaoFinanceira[] | null> {
         const connection = await dataBaseutils.ConnectionDB();
         const result = await connection.execute("SELECT * FROM TRANSACOES_FINANCEIRAS WHERE id_usuario = :idUsuario", [idUsuario]);
@@ -101,7 +102,8 @@ export namespace walletModelData {
         return null;  // Retorna null se não encontrar nenhum evento
     }
 
-    export async function getAllBets(idUsuario: number): Promise<Aposta[] | null> {
+    //Função para retornar todas as apostas do usuario
+    export async function getAllBets(idUsuario: number): Promise<Aposta[] | []> {
         const connection = await dataBaseutils.ConnectionDB();
         const result = await connection.execute("SELECT * FROM APOSTAS WHERE id_usuario = :idUsuario", [idUsuario]);
 
@@ -120,8 +122,6 @@ export namespace walletModelData {
             return apostas; // Retorna um array de objetos de transações
         }
         await connection.close();
-        return null;  // Retorna null se não encontrar nenhum evento
+        return [];  // Retorna array vazio se não encontrar nenhuma transação
     }
-
-
 }

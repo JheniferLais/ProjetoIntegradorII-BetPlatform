@@ -1,4 +1,4 @@
-import { dataBaseutils } from "../utils/DataBaseutils";
+import { dataBaseutils } from "../utils/connectionDatabaseUtils";
 
 
 // Tipo apostas
