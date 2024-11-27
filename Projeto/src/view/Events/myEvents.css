@@ -102,3 +102,45 @@ html, body {
     line-height: 1.5; /* Para melhor legibilidade */
     margin-top: -10px; /* Ajuste se precisar aproximar do título */
 }
+
+.feedbackNaoEncontrado {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 20px;
+    font-weight: bold;
+    color: #fff;
+    text-align: center;
+    height: auto;
+    width: auto;
+    margin-left: 0;
+}
+
+.aprovado {
+    background-color: green;
+    color: white;
+}
+
+.reprovado {
+    background-color: red;
+    color: white;
+}
+
+.excluido {
+    background-color: black;
+    color: white;
+}
+
+.pendente {
+    background-color: #979700;
+    color: black;
+}
+
+.finalizado {
+    background-color: #24bed3;
+    color: white;
+}

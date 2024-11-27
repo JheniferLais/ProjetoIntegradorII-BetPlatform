@@ -267,7 +267,7 @@ export namespace eventosHandler {
     }
 
     // 'Função' para buscar todas as informações do evento
-    export const getAllInformationEvent = async (req: Request, res: Response): Promise<void> => {
+    export const getAllInformationEvent: RequestHandler = async (req: Request, res: Response): Promise<void> => {
         const idEvento = parseInt(req.params.idEvento); //ID do evento passado como parâmetro na URL
 
         // Valida se todos os campos foram preenchidos
@@ -300,7 +300,7 @@ export namespace eventosHandler {
     }
 
     // 'Função' para buscar todas os eventos por categoria
-    export const getCategory = async (req: Request, res: Response): Promise<void> => {
+    export const getCategory: RequestHandler = async (req: Request, res: Response): Promise<void> => {
         const categoria = req.params.category; //ID do evento passado como parâmetro na URL
 
         if (!categoria) {
@@ -320,7 +320,7 @@ export namespace eventosHandler {
     }
 
     // 'Função' para buscar todas os eventos que vencem nos proximos 7 dias
-    export const getUpcomingEvents = async (req: Request, res: Response): Promise<void> => {
+    export const getUpcomingEvents: RequestHandler = async (req: Request, res: Response): Promise<void> => {
 
         const hoje = new Date();
         const semanaProx = new Date();
@@ -339,5 +339,26 @@ export namespace eventosHandler {
 
         // Response e statusCode de sucesso
         res.status(200).json(evento);
+    }
+
+    // 'Função' para buscar todos os eventos do usuario
+    export const getAllEventsUser: RequestHandler = async (req: Request, res: Response): Promise<void> => {
+        const idUsuario = parseInt(req.params.id); //ID do evento passado como parâmetro na URL
+
+        // Valida se todos os campos foram preenchidos
+        if(!idUsuario){
+            res.status(400).send('Campos obrigatórios estão faltando!');
+            return;
+        }
+
+        // Valida se o evento existe
+        const eventos = await eventModelData.getAllEventsUser(idUsuario);
+        if(!eventos){
+            res.status(404).send('Sem eventos cadastrados!');
+            return;
+        }
+
+        // Response e statusCode de sucesso
+        res.status(200).json(eventos);
     }
 }

@@ -34,27 +34,7 @@
             <h2 class="mb-3 text-center">Meus Eventos</h2>
             <h6 class="mb-5 subtitle text-center"><span style="color: rgb(191, 44, 44);">* </span>Você consegue excluir apenas os eventos que ainda não foram aprovados(não públicos), ou os que ainda não possuem apostas.</h6>
             <ul class="list-group">
-                <!--
-                aqui os eventos criados pelo id do usuário logado serão adicionados em
-                forma deste padrão de <li> automaticamente, mas é js, num manjo :( 
-
-                resumindo, copia toda essa tag <li> e faz uma função no js que imprima ela pra cada
-                row do BD de eventos que o usuário criou. Assim como está na Home.
-                
-                 -->
-                <li class="list-group-item d-flex justify-content-between align-items-center bg-dark text-white border-secondary">
-                    TÍTULO DO EVENTO
-                    <div class="d-flex align-items-center">
-                        <span class="badge bg-info rounded-pill me-3">DATA DO EVENTO</span>
-                        <!--
-                        essa tag button só aparecerá para aqueles eventos que estão com status não aprovado
-                        OU para aqueles que possuem 0 apostas.
-                        -->
-                        <button class="btn btn-danger btn-sm delete-btn">
-                            <i class="bi bi-trash"></i>
-                        </button>
-                    </div>
-                </li>
+                <!-- Os eventos serão adicionados dinamicamente aqui -->
             </ul>
         </div>
     </div>

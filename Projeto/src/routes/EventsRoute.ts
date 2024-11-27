@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { eventosHandler } from "../controllers/EventsController";
 import { tokenUtils } from "../utils/TokenUtils";
 import { moderadorUtils } from "../utils/ModeratorUtils";
-import {commonUserUtils} from "../utils/commonUserUtils";
+import { commonUserUtils } from "../utils/commonUserUtils";
 
 const route: Router = Router();
 
@@ -16,4 +16,6 @@ route.get('/getAllInformationEvent/:idEvento/:id', tokenUtils.checkToken, common
 route.get('/getMostBetEvents', eventosHandler.getMostBetEvents);
 route.get('/getCategory/:category', eventosHandler.getCategory);
 route.get('/getUpcomingEvents', eventosHandler.getUpcomingEvents);
+route.get('/getAllEventsUser/:id', tokenUtils.checkToken, commonUserUtils.checkCommonUser, eventosHandler.getAllEventsUser);
+
 export default route;
