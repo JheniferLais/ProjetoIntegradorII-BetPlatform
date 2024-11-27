@@ -1,6 +1,6 @@
 const apiBaseUrl = 'http://localhost:3000';
 
-document.addEventListener("DOMContentLoaded",  () => {
+document.addEventListener("DOMContentLoaded",  async () => {
 
     // Redireciona para a página de Cadastro ao clicar em "Sair" ou "Entrar/Cadastrar"...
     document.getElementById('signUpButton').addEventListener('click', openSignUpPage);
@@ -31,7 +31,10 @@ document.addEventListener("DOMContentLoaded",  () => {
     document.querySelectorAll('#cvv').forEach(input => {
         input.addEventListener('input', () => formatCVV(input));
     });
+
+    await carregarDadosDaWallet();
 });
+
 
 // Redireciona o usuario para a home.html...
 function openHomePage(){
@@ -77,30 +80,17 @@ function closeClaim(){
 }
 
 
-// Função para validar se o usuario esta autenticado e pode estar nessa pagina...
-function validarLogin(){
-    // Captura as informações guardadas na sessionStorage...
-    const token = sessionStorage.getItem('sessionToken');
-
-    // Caso o usuario nao tenha logado...
-    if (!token) {
-        window.location.href = `../errorPages/401.html`;
-    }
-
-    // Carrega todos os dados da wallet...
-}
-
 // Função para carregar os dados da wallet(saldo, historio de créditos, histórico de apostas)...
 async function carregarDadosDaWallet() {
-
-    // Valida se o usuario esta logado...
-    validarLogin();
-
-    // Caso o usuario esteja logado... carrega todos os dados da wallet..
 
     // Captura as informações guardas da sessionStorage...
     const idUsuario = sessionStorage.getItem('idUsuario');
     const token = sessionStorage.getItem('sessionToken');
+
+    // Caso o usuario nao tenha logado...Ele é redirecionado para a pagina de nao autenticado...
+    if (!token || !idUsuario) {
+        window.location.href = `../errorPages/401.html`;
+    }
 
     // Consome da API...
     const response = await fetch(`${apiBaseUrl}/getAllWalletInformation/${idUsuario}`, {
@@ -146,7 +136,6 @@ async function carregarDadosDaWallet() {
         betListElement.appendChild(li);
     });
 }
-window.onload = await carregarDadosDaWallet();
 
 
 // Funçao para formatar o valor de 123456.78 para 123.456,78...

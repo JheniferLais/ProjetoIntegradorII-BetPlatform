@@ -1,6 +1,6 @@
 const apiBaseUrl = 'http://localhost:3000';
 
-document.addEventListener("DOMContentLoaded",  () => {
+document.addEventListener("DOMContentLoaded", () => {
 
     // Redireciona para a página de Cadastro ao clicar em "Sair"...
     document.getElementById('backButton').addEventListener('click', openHomePage);
@@ -35,26 +35,14 @@ function openWalletPage(){
     }, 500);
 }
 
-// Função para validar se o usuario esta autenticado e pode estar nessa pagina...
-function validarLogin(){
-    // Captura as informações guardadas na sessionStorage...
-    const token = sessionStorage.getItem('sessionToken');
-
-    // Caso o usuario nao tenha logado...
-    if (!token) {
-        window.location.href = `../errorPages/401.html`;
-    }
-
-    // Carrega todos os dados do evento...
-}
 
 // Função para inserir dinamicamente os eventos na grade...
 function carregarDadosDoEvento(objetoEvento) {
+
+    // Define o conteúdo dinâmico da parte ESQUERDA do container...
     const eventoContainerLeft = document.querySelector('.container-left');
     const infoEventoLeft = document.createElement('div');
     infoEventoLeft.classList.add('container-left');
-
-    // Define o conteúdo dinâmico do evento...
     infoEventoLeft.innerHTML = `
         <div class="evento-titulo">
             <p id="categoria">${objetoEvento.categoria}</p>
@@ -77,10 +65,11 @@ function carregarDadosDoEvento(objetoEvento) {
     `;
     eventoContainerLeft.appendChild(infoEventoLeft);
 
+
+    // Define o conteúdo dinâmico da parte DIREITA do container...
     const eventoContainerRight = document.querySelector('.container-right');
     const infoEventoRight = document.createElement('div');
     infoEventoRight.classList.add('container-right');
-
     infoEventoRight.innerHTML = `
         <div class="valor-cota">
             <p>Valor da Cota: <strong id="valor-cota-valor">R$ ${objetoEvento.valor_cota}</strong></p>
@@ -104,46 +93,49 @@ function carregarDadosDoEvento(objetoEvento) {
     `;
     eventoContainerRight.appendChild(infoEventoRight);
 
-    // Seleciona o input e o parágrafo
-    const numCotas = document.getElementById('inputNumCotas');
-    const valorTotal = document.getElementById('valorTotal');
 
-    // Adiciona um evento ao input
-    numCotas.addEventListener('input', () => {
-        // Calcula o total
-        const total = numCotas.value * objetoEvento.valor_cota;
+    // Adiciona um evento ao input da quantidade de cotas...
+    document.getElementById('inputNumCotas').addEventListener('input', () => {
+        // Calcula o valor total a ser pago...
+        const total = document.getElementById('inputNumCotas').value * objetoEvento.valor_cota;
 
-        // Atualiza o texto do parágrafo
-        valorTotal.textContent = `Total: R$ ${total.toFixed(2)}`;
+        // Atualiza o valor a ser pago...
+        document.getElementById('valorTotal').textContent = `Total: R$ ${total.toFixed(2)}`;
     });
 }
 async function buscarEvento() {
 
-    // Valida se o usuario esta logado...
-    validarLogin();
+    // Captura as informações guardas da sessionStorage...
+    const idUsuario = sessionStorage.getItem('idUsuario');
+    const token = sessionStorage.getItem('sessionToken');
 
-    // Caso o usuario esteja logado... carrega todos os dados do evento..
+    // Caso o usuario nao tenha logado...Ele é redirecionado para a pagina de nao autenticado...
+    if (!token || !idUsuario) {
+        window.location.href = `../errorPages/401.html`;
+    }
 
     // Captura as informações guardas da URL...
     const params = new URLSearchParams(window.location.search);
     const idEvento = params.get('idEvento');
 
     // Consome da API...
-    const response = await fetch(`${apiBaseUrl}/getAllInformationEvent/${idEvento}`, {
+    const response = await fetch(`${apiBaseUrl}/getAllInformationEvent/${idEvento}/${idUsuario}`, {
         method: 'GET',
+        headers: {
+            'authorization': token,
+        },
     });
 
-    //Se a pagina do evento não existir...
+    //Se a pagina do evento não existir...Ele é redirecionado para a pagina de nao encontrado...
     if(!response.ok) {
         window.location.href = `../errorPages/404.html`;
-        return;
     }
 
     //Chama a funçao para carregar os dados...
-    const result = await response.json();
-    carregarDadosDoEvento(result);
+    carregarDadosDoEvento(await response.json());
 }
 window.onload = buscarEvento;
+
 
 async function handleBetFormSubmission(event) {
     event.preventDefault();

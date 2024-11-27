@@ -266,6 +266,7 @@ export namespace eventosHandler {
         res.status(200).json(eventos);
     }
 
+    // 'Função' para buscar todas as informações do evento
     export const getAllInformationEvent = async (req: Request, res: Response): Promise<void> => {
         const idEvento = parseInt(req.params.idEvento); //ID do evento passado como parâmetro na URL
 
