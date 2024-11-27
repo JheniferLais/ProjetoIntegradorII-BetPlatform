@@ -161,7 +161,18 @@
             <div class="filters">
                 <button id="aVencerButton" class="btn btn-outline-success" type="submit">Próximos à Vencer</button>
                 <button id="mostBetButton" class="btn btn-outline-success" type="submit">Mais Apostados</button>
-                <button id="categoriaButton" class="btn btn-outline-success" type="submit">Por Categoria</button>
+                <div class="dropdown">
+                    <button class="btn btn-outline-success dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Por Categoria
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="categoriaButton">
+                        <li><a class="dropdown-item" id="categoriaButton">Esportes</a></li>
+                        <li><a class="dropdown-item" id="categoriaButton">Catástrofes</a></li>
+                        <li><a class="dropdown-item" id="categoriaButton">Eleições</a></li>
+                        <li><a class="dropdown-item" id="categoriaButton">Bolsa de Valores</a></li>
+                        <li><a class="dropdown-item" id="categoriaButton">E-Sports</a></li>
+                    </ul>
+                </div>
             </div>
         </div>
 
@@ -173,5 +184,6 @@
 
     <!-- Linkagem do script (.js) da pagina de home -->
     <script src="home.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
