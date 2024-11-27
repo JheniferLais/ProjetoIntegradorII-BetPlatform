@@ -174,22 +174,32 @@ html, body {
     margin-bottom: 40px;
     float: left;
 }
-.filters{
-    float: right;
+.filters {
+    display: flex; /* Use flexbox para alinhar os botões */
+    justify-content: flex-end; /* Alinha à direita */
+    align-items: center; /* Alinha verticalmente no centro */
 }
-.filters button{
+
+.filters button {
     background-color: #000D1C;
     border: solid 0px;
     color: white;
-    margin-left: 4px;
+    margin-left: 10px;
 }
-.filters button:hover{
+
+.filters button:hover {
     background-color: #009ACD;
 }
-.filters button:active{
+
+.filters button:active {
     background-color: #009ACD !important;
     transform: scale(0.95);
 }
+
+.dropdown-menu {
+    left: 0; /* Alinha o dropdown ao botão */
+}
+
 #search{
     border: none;
 }

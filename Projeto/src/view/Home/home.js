@@ -291,7 +291,6 @@ async function carregarGradeEventosMaisApostados(){
 // Função para buscar os eventos por categoria...
 async function carregarGradeEventosCategoria(){
     // Consome da API...
-    alert('CRIA UMA LISTA P USUARIO ESCOLHER A CATEGORIA INFERNOOOOO BURRO DO CARALHO :) grata')
     const response = await fetch(`${apiBaseUrl}//getCategory/${categoria}`, {
         method: 'GET',
         headers: {
