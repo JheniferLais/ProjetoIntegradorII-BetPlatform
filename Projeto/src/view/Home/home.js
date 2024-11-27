@@ -26,11 +26,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Aplica formatação de data e hora em campos específicos quando o usuário digitar...
     const dateInputs = document.querySelectorAll('#inputDataEvento');
     dateInputs.forEach(input => {
-        input.addEventListener('input', () => formatDate(input));
+        input.addEventListener('input', () => formataDataSimplesInput(input));
     });
     const dateTimeInputs = document.querySelectorAll('#inputDataHoraInicio, #inputDataHoraFim');
     dateTimeInputs.forEach(input => {
-        input.addEventListener('input', () => formatDateTime(input));
+        input.addEventListener('input', () => formataDataHoraInput(input));
     });
 
     // Esconder os feedbacks de sucesso e/ou erro quando o usuário interagir com os campos do formulário..
@@ -82,8 +82,8 @@ function closePopUpCadastrarEvento(){
 }
 
 
-// Aplica a formatação de data no formulario de cadastro de evento....
-function formatDateTime(input) {
+// Aplica a formatação de datas com hora no formulario de cadastro de evento....
+function formataDataHoraInput(input) {
 
     // Remove caracteres não numéricos...
     let value = input.value.replace(/\D/g, '');
@@ -101,8 +101,8 @@ function formatDateTime(input) {
     // Atualiza o valor do input
     input.value = value;
 }
-// Função para formatar data 10/10/2024...
-function formatDate(input) {
+// Aplica a formatação de datas simples no formulario de cadastro de evento....
+function formataDataSimplesInput(input) {
     // Remove caracteres não numéricos
     let value = input.value.replace(/\D/g, '');
 
@@ -116,7 +116,22 @@ function formatDate(input) {
     // Atualiza o valor do input
     input.value = value;
 }
-// Funçao para formatar o valor de 123456.78 para 123.456,78
+
+// Faz a formatação de data simples em formato '2024-02-21' para '21/02/2024'...
+function formataDataSimples(dataSimples) {
+    const dataS = new Date(dataSimples);
+
+    // Extrai os componentes de data
+    const dia = String(dataS.getDate()).padStart(2, '0');
+    const mes = String(dataS.getMonth() + 1).padStart(2, '0'); // Meses começam de 0
+    const ano = dataS.getFullYear();
+
+    // Monta no formato desejado
+    return `${dia}/${mes}/${ano}`;
+}
+
+
+// Faz a formatação de valor de 123456.78 para 123.456,78
 function formatarValor(valor) {
     return new Intl.NumberFormat('pt-BR', {
         minimumFractionDigits: 2,
@@ -187,7 +202,7 @@ function inserirEventosNaGrade(eventosContainer, eventos) {
             </div>
             <div class="apostas-data">
                 <div style="font-weight: 500; font-size: 15px;">${evento.qtd_apostas} Apostas 👥</div>
-                <div style="font-weight: 500; font-size: 15px;">${evento.data_evento} 📅</div>
+                <div style="font-weight: 500; font-size: 15px;">${formataDataSimples(evento.data_evento)} 📅</div>
             </div>
             <div class="descricao">
                 <div style="font-weight: 300; font-size: 20px;">${evento.descricao.length > 50 ? evento.descricao.substring(0, 50) + "..." : evento.descricao}</div>

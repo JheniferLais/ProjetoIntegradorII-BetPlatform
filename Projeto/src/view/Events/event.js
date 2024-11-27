@@ -36,6 +36,36 @@ function openWalletPage(){
 }
 
 
+// Faz a formatação de data com horario em formato '2024-02-21T12:30:00' para '21/02/2024 12:30:00'...
+function formataDataHora(dataHora) {
+    const dataH = new Date(dataHora);
+
+    // Insere os valores individuais de dia, mes, ano, hora, minuto e segundo em variaveis...
+    const dia = String(dataH.getDate()).padStart(2, '0');
+    const mes = String(dataH.getMonth() + 1).padStart(2, '0');
+    const ano = dataH.getFullYear();
+
+    const hora = String(dataH.getHours()).padStart(2, '0');
+    const minuto = String(dataH.getMinutes()).padStart(2, '0');
+    const segundo = String(dataH.getSeconds()).padStart(2, '0');
+
+    // Monta a data no formato dd/mm/yy hh:mm:ss...
+    return `${dia}/${mes}/${ano} ${hora}:${minuto}:${segundo}`;
+}
+// Faz a formatação de data simples em formato '2024-02-21' para '21/02/2024'...
+function formataDataSimples(dataSimples) {
+    const dataS = new Date(dataSimples);
+
+    // Extrai os componentes de data
+    const dia = String(dataS.getDate()).padStart(2, '0');
+    const mes = String(dataS.getMonth() + 1).padStart(2, '0'); // Meses começam de 0
+    const ano = dataS.getFullYear();
+
+    // Monta no formato desejado
+    return `${dia}/${mes}/${ano}`;
+}
+
+
 // Função para inserir dinamicamente os eventos na grade...
 function carregarDadosDoEvento(objetoEvento) {
 
@@ -55,11 +85,11 @@ function carregarDadosDoEvento(objetoEvento) {
         <div class="detalhes">
             <div class="data">
                 <i class="fa-regular fa-calendar"></i>
-                <p>Data do evento: <strong>${objetoEvento.data_evento}</strong></p>
+                <p>Data do evento: <strong>${formataDataSimples(objetoEvento.data_evento)}</strong></p>
             </div>
             <div class="encerramento">
                 <i class="fa-regular fa-clock"></i>
-                <p>Encerramento das apostas: <strong>${objetoEvento.data_hora_fim}</strong></p>
+                <p>Encerramento das apostas: <strong>${formataDataHora(objetoEvento.data_hora_fim)}</strong></p>
             </div>
         </div>
     `;
