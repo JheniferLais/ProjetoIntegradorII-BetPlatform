@@ -8,6 +8,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Redireciona para a página da Carteira ao clicar na seção de saldo...
     document.getElementById('walletLink').addEventListener('click', openWalletPage);
 
+    // Redireciona para a página da Meus Eventos ao clicar na seção de saldo...
+    document.getElementById('myEventsButon').addEventListener('click', openMyEventsPage);
+
     // Exibe o popup de cadastro de evento ao clicar no botão "Criar Evento"...
     document.getElementById('createEventButton').addEventListener('click', openPopUpCadastrarEvento);
 
@@ -60,6 +63,12 @@ function openSignUpPage(){
 function openWalletPage(){
     setTimeout(() => {
         window.location.href = `../Wallet/wallet.html`;
+    }, 500);
+}
+// Redireciona o usuario para o wallet.html...
+function openMyEventsPage(){
+    setTimeout(() => {
+        window.location.href = `../events/myEvents.html`;
     }, 500);
 }
 
