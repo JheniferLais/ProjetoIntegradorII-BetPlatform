@@ -11,6 +11,9 @@ route.get('/getEvent', eventosHandler.getEvent);
 route.delete('/deleteEvent/:idEvento/:id', tokenUtils.checkToken, commonUserUtils.checkCommonUser, eventosHandler.deleteEvent);
 route.post('/evaluateNewEvent/:idEvento/:id', tokenUtils.checkToken, moderadorUtils.checkModerador, eventosHandler.evaluateNewEvent); // Apenas moderadores
 route.get('/searchEvent/:palavraChave', eventosHandler.searchEvent);
-route.get('/getAllInformationEvent/:idEvento/:id', tokenUtils.checkToken, commonUserUtils.checkCommonUser,eventosHandler.getAllInformationEvent);
 
+route.get('/getAllInformationEvent/:idEvento/:id', tokenUtils.checkToken, commonUserUtils.checkCommonUser, eventosHandler.getAllInformationEvent);
+route.get('/getMostBetEvents', eventosHandler.getMostBetEvents);
+route.get('/getCategory/:category', eventosHandler.getCategory);
+route.get('/getUpcomingEvents', eventosHandler.getUpcomingEvents);
 export default route;

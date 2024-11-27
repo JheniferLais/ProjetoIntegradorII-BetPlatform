@@ -20,22 +20,25 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Configura o envio do formulário da searchBar...
     document.getElementById('searchForm').addEventListener('submit', handleSearchFormSubmission);
 
+    // Configura o click do botao de 'mais apostados'
+    document.getElementById('mostBetButton').addEventListener('click', carregarGradeEventosMaisApostados);
+    document.getElementById('aVencerButton').addEventListener('click', carregarGradeEventosAVencer);
+    document.getElementById('categoriaButton').addEventListener('click', carregarGradeEventosCategoria);
+
+
     // Configura o envio do formulário de criação de eventos...
     document.getElementById('registerEventForm').addEventListener('submit', handleRegisterEventFormSubmission);
 
     // Aplica formatação de data e hora em campos específicos quando o usuário digitar...
-    const dateInputs = document.querySelectorAll('#inputDataEvento');
-    dateInputs.forEach(input => {
+    document.querySelectorAll('#inputDataEvento').forEach(input => {
         input.addEventListener('input', () => formataDataSimplesInput(input));
     });
-    const dateTimeInputs = document.querySelectorAll('#inputDataHoraInicio, #inputDataHoraFim');
-    dateTimeInputs.forEach(input => {
+    document.querySelectorAll('#inputDataHoraInicio, #inputDataHoraFim').forEach(input => {
         input.addEventListener('input', () => formataDataHoraInput(input));
     });
 
     // Esconder os feedbacks de sucesso e/ou erro quando o usuário interagir com os campos do formulário..
-    const formFields = document.querySelectorAll('#registerEventForm input');
-    formFields.forEach(field => {
+    document.querySelectorAll('#registerEventForm input').forEach(field => {
         field.addEventListener('focus', () => {
             document.querySelector('.feedbackCriado').style.display = 'none';
             document.querySelector('.feedbackNaoCriado').style.display = 'none';
@@ -237,6 +240,8 @@ async function limpaGradeValidaResponse(response){
     const eventos = await response.json();
     inserirEventosNaGrade(document.querySelector('.main-content'), eventos);
 }
+
+
 // Função para buscar todos os eventos 'aprovados' para serem inseridos na grade default...
 async function carregarGradeEventos() {
 
@@ -246,6 +251,44 @@ async function carregarGradeEventos() {
         headers: {
             'Content-Type': 'application/json',
             'statusEvento': 'aprovado',
+        },
+    });
+
+    await limpaGradeValidaResponse(response);
+}
+// Função para buscar os 6 eventos mais apostados...
+async function carregarGradeEventosMaisApostados(){
+
+    // Consome da API...
+    const response = await fetch(`${apiBaseUrl}/getMostBetEvents`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
+
+    await limpaGradeValidaResponse(response);
+}
+// Função para buscar os eventos por categoria...
+async function carregarGradeEventosCategoria(){
+    // Consome da API...
+    alert('CRIA UMA LISTA P USUARIO ESCOLHER A CATEGORIA INFERNOOOOO BURRO DO CARALHO :) grata')
+    const response = await fetch(`${apiBaseUrl}//getCategory/${categoria}`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
+
+    await limpaGradeValidaResponse(response);
+}
+// Função para buscar os 6 eventos proximos a vencer
+async function carregarGradeEventosAVencer(){
+    // Consome da API...
+    const response = await fetch(`${apiBaseUrl}/getUpcomingEvents`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
         },
     });
 

@@ -286,4 +286,58 @@ export namespace eventosHandler {
         // Response e statusCode de sucesso
         res.status(200).json(evento);
     }
+
+    // 'Função' para buscar as 6 eventos mais apostados
+    export const getMostBetEvents: RequestHandler = async (req: Request, res: Response): Promise<void> => {
+        const eventos = await eventModelData.getMostBetEvents();
+        if (!eventos) {
+            res.status(404).send('Sem eventos mais apostados!');
+            return;
+        }
+
+        // Response e statusCode de sucesso
+        res.status(200).json(eventos);
+    }
+
+    // 'Função' para buscar todas os eventos por categoria
+    export const getCategory = async (req: Request, res: Response): Promise<void> => {
+        const categoria = req.params.category; //ID do evento passado como parâmetro na URL
+
+        if (!categoria) {
+            res.status(400).send('Campos obrigatórios estão faltando!');
+            return;
+        }
+
+        // Valida se o evento existe
+        const evento = await eventModelData.getCategory(categoria);
+        if (!evento) {
+            res.status(404).send('Evento não encontrado!');
+            return;
+        }
+
+        // Response e statusCode de sucesso
+        res.status(200).json(evento);
+    }
+
+    // 'Função' para buscar todas os eventos que vencem nos proximos 7 dias
+    export const getUpcomingEvents = async (req: Request, res: Response): Promise<void> => {
+
+        const hoje = new Date();
+        const semanaProx = new Date();
+        semanaProx.setDate(hoje.getDate() + 7);
+
+        // Formata a data
+        const hojeFormatado = hoje.toISOString().slice(0, 19);
+        const semanaProxFormatado = semanaProx.toISOString().slice(0, 19);
+
+        // Valida se o evento existe
+        const evento = await eventModelData.getUpcomingEvents(hojeFormatado, semanaProxFormatado);
+        if (!evento) {
+            res.status(404).send('Evento não encontrado!');
+            return;
+        }
+
+        // Response e statusCode de sucesso
+        res.status(200).json(evento);
+    }
 }
