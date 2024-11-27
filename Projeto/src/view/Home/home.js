@@ -84,6 +84,9 @@ function openPopUpCadastrarEvento(){
 }
 // Fecha o popup de cadastro de evento...
 function closePopUpCadastrarEvento(){
+    document.querySelector('.feedbackCriado').style.display = 'none';
+    document.querySelector('.feedbackNaoCriado').style.display = 'none';
+
     const popup = document.querySelector('.popup-cadastro-evento');
     const blur = document.querySelector('.blur');
     if(popup && blur){
@@ -101,14 +104,13 @@ function formataDataHoraInput(input) {
     let value = input.value.replace(/\D/g, '');
 
     // Limita a quantidade de caracteres...
-    value = value.slice(0, 14);
+    value = value.slice(0, 12);
 
     // Aplica a formatação para a data e hora...
-    if (value.length > 4) value = value.slice(0, 4) + '-' + value.slice(4); // AAAA-MM
-    if (value.length > 7) value = value.slice(0, 7) + '-' + value.slice(7); // AAAA-MM-DD
-    if (value.length > 10) value = value.slice(0, 10) + 'T' + value.slice(10); // AAAA-MM-DDTHH
-    if (value.length > 13) value = value.slice(0, 13) + ':' + value.slice(13); // AAAA-MM-DDTHH:mm
-    if (value.length > 16) value = value.slice(0, 16) + ':' + value.slice(16); // AAAA-MM-DDTHH:mm:ss
+    if (value.length > 2) value = value.slice(0, 2) + '/' + value.slice(2);
+    if (value.length > 5) value = value.slice(0, 5) + '/' + value.slice(5);
+    if (value.length > 10) value = value.slice(0, 10) + ' ' + value.slice(10);
+    if (value.length > 13) value = value.slice(0, 13) + ':' + value.slice(13);
 
     // Atualiza o valor do input
     input.value = value;
@@ -128,7 +130,6 @@ function formataDataSimplesInput(input) {
     // Atualiza o valor do input
     input.value = value;
 }
-
 // Faz a formatação de data simples em formato '2024-02-21' para '21/02/2024'...
 function formataDataSimples(dataSimples) {
     const dataS = new Date(dataSimples);
@@ -141,7 +142,16 @@ function formataDataSimples(dataSimples) {
     // Monta no formato desejado
     return `${dia}/${mes}/${ano}`;
 }
+// Faz a alteração de data hora de 21/02/2024 12:30 para 2024-02-21T12:30:00
+function transformaDataHora(value) {
+    // Divide o valor em partes com base nos separadores
+    const parts = value.split(/[\/ :]/); // Divide por "/", espaço ou ":"
 
+    const [dia, mes, ano, hora, minuto] = parts;
+
+    // Retorna o valor no formato ISO com segundos = 00
+    return `${ano}-${mes}-${dia}T${hora}:${minuto}:00`;
+}
 
 // Faz a formatação de valor de 123456.78 para 123.456,78
 function formatarValor(valor) {
@@ -336,6 +346,10 @@ async function handleRegisterEventFormSubmission(event){
     const dataHoraFim = document.getElementById('inputDataHoraFim').value;
     const dataEvento = document.getElementById('inputDataEvento').value;
 
+    // Formata o valor para o formato correto
+    const dataFim = transformaDataHora(dataHoraFim);
+    const dataInicio = transformaDataHora(dataHoraInicio);
+
     // Captura as informações guardas da sessionStorage...
     const token = sessionStorage.getItem('sessionToken');
     const idUsuario = sessionStorage.getItem('idUsuario');
@@ -348,8 +362,8 @@ async function handleRegisterEventFormSubmission(event){
             'titulo': titulo,
             'desc': descricao,
             'valorCota': valorCota,
-            'inicioApostas': dataHoraInicio,
-            'fimApostas': dataHoraFim,
+            'inicioApostas': dataInicio,
+            'fimApostas': dataFim,
             'dataEvento': dataEvento,
             'categoria': categoria,
             'authorization': token,

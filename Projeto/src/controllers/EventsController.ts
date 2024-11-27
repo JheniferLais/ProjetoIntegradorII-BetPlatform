@@ -148,7 +148,7 @@ export namespace eventosHandler {
         }
 
         // Valida se o evento pode ser excluído (não deve estar aprovado e não deve ter apostas)
-        if (evento.status_evento === 'aprovado' || evento.status_evento === 'excluido' || (evento.qtd_apostas && evento.qtd_apostas > 0)) {
+        if ((evento.status_evento !== 'pendente' && evento.status_evento !== 'aprovado') && evento.qtd_apostas > 0){
             res.status(409).send('Este evento não pode ser excluído pois ele já foi excluído, aprovado ou possui apostas!');
             return;
         }
