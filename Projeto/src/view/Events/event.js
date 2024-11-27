@@ -66,6 +66,15 @@ function formataDataSimples(dataSimples) {
 }
 
 
+// Faz a formatação de valor de 123456.78 para 123.456,78
+function formatarValor(valor) {
+    return new Intl.NumberFormat('pt-BR', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+    }).format(valor);
+}
+
+
 // Função para inserir dinamicamente os eventos na grade...
 function carregarDadosDoEvento(objetoEvento) {
 
@@ -102,14 +111,14 @@ function carregarDadosDoEvento(objetoEvento) {
     infoEventoRight.classList.add('container-right');
     infoEventoRight.innerHTML = `
         <div class="valor-cota">
-            <p>Valor da Cota: <strong id="valor-cota-valor">R$ ${objetoEvento.valor_cota}</strong></p>
+            <p>Valor da Cota: <strong id="valor-cota-valor">R$ ${formatarValor(objetoEvento.valor_cota)}</strong></p>
         </div>
         <p class="feedbackApostado"></p>
         <p class="feedbackNaoApostado"></p>
         <div class="container-cota-aposta">
             <form id="formAposta">
                 <div class="selecionar-num-cota">
-                    <label for="inputNumCotas">Número de apostas:</label>
+                    <label for="inputNumCotas">Quantidade de Cotas:</label>
                     <input id="inputNumCotas" name="numcotas" class="form-control" type="number" min="1" step="1" placeholder="Digite o número de cotas" required>
                     <p id="valorTotal" style="margin-top: 10px;">Total: R$ 0,00</p>
                 </div>
@@ -130,7 +139,7 @@ function carregarDadosDoEvento(objetoEvento) {
         const total = document.getElementById('inputNumCotas').value * objetoEvento.valor_cota;
 
         // Atualiza o valor a ser pago...
-        document.getElementById('valorTotal').textContent = `Total: R$ ${total.toFixed(2)}`;
+        document.getElementById('valorTotal').textContent = `Total: R$ ${formatarValor(total)}`;
     });
 }
 async function buscarEvento() {
@@ -138,11 +147,15 @@ async function buscarEvento() {
     // Captura as informações guardas da sessionStorage...
     const idUsuario = sessionStorage.getItem('idUsuario');
     const token = sessionStorage.getItem('sessionToken');
+    const nomeUsuario = sessionStorage.getItem('nomeUsuario');
 
     // Caso o usuario nao tenha logado...Ele é redirecionado para a pagina de nao autenticado...
-    if (!token || !idUsuario) {
+    if (!token || !idUsuario || !nomeUsuario) {
         window.location.href = `../errorPages/401.html`;
     }
+
+    // Insere o nome do usuario no header
+    document.getElementById('useName').textContent = nomeUsuario;
 
     // Captura as informações guardas da URL...
     const params = new URLSearchParams(window.location.search);
