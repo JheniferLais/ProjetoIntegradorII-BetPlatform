@@ -189,9 +189,15 @@ async function validarLoginParaBotoesHome() {
     const token = sessionStorage.getItem('sessionToken');
     const idUsuario = sessionStorage.getItem('idUsuario');
     const nomeUsuario = sessionStorage.getItem('nomeUsuario');
+    const moderador = sessionStorage.getItem('moderador');
 
     // Caso o usuario nao tenha logado...A home já está com os botoes ajustados corretamente...
-    if (!token || !idUsuario || !nomeUsuario) {
+    if (!token || !idUsuario || !nomeUsuario || !moderador) {
+        return;
+    }
+    if(Number(moderador) === 1){
+        document.querySelector('.logout-btn').textContent = 'Sair';
+        document.getElementById('useName').textContent = nomeUsuario;
         return;
     }
 
@@ -217,6 +223,9 @@ async function validarLoginParaBotoesHome() {
 
     // Saldo recebe a response do backend...
     const saldo = await response.json();
+    if(saldo === 0){
+        document.querySelector('.wallet-alert').style.display = 'block';
+    }
 
     // Mostra o valor do saldo do usuario no wallet home...
     const balanceElement = document.getElementById('balance-value');
@@ -252,7 +261,8 @@ function inserirEventosNaGrade(eventosContainer, eventos) {
         `;
 
         const token = sessionStorage.getItem('sessionToken');
-        if(token){
+        const moderador = sessionStorage.getItem('moderador');
+        if(token && Number(moderador) === 0){
             // Adiciona um evento de clique para redirecionar para a pagina do evento
             gradeEvento.addEventListener('click', () => {
                 window.location.href = `../Events/event.html?idEvento=${evento.id_evento}`;

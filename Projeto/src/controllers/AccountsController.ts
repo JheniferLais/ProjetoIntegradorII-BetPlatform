@@ -98,8 +98,8 @@ export namespace contasHandler {
         }
 
         // Valida se o usuario esta cadastrado
-        const user: Conta[][] = await userModelData.findUser(email, senha);
-        if (!user || user.length === 0) {
+        const user: Conta | null = await userModelData.findUser(email, senha);
+        if (!user) {
             res.status(401).json('Login ou senha inválidos!');
             return;
         }
@@ -109,10 +109,11 @@ export namespace contasHandler {
         // Response
         const response = {
             response: 'Login efetuado com sucesso!',
-            idUsuario: user[0][0],
-            nomeUsuario: user[0][1],
-            email: user[0][2],
-            token: user[0][5]
+            idUsuario: user.id,
+            nomeUsuario: user.nome,
+            email: user.email,
+            token: user.token,
+            moderador: user.moderador,
         };
 
         // Response e statusCode de sucesso

@@ -10,17 +10,35 @@ export type Conta = {
     nascimento?: string;
     token?: string;
     moderador?: number;
+    saldo?: number;
 };
 
 
 export namespace userModelData {
 
     //Função para encontrar o usuario no banco de dados
-    export async function findUser(email: string, password: string): Promise<Conta[][]> {
+    export async function findUser(email: string, password: string): Promise<Conta | null> {
         const connection = await dataBaseutils.ConnectionDB();
-        const result = await connection.execute("SELECT * FROM usuarios WHERE email = :email AND senha = :password", [email, password]);
+        const result = await connection.execute(`SELECT * FROM usuarios WHERE email = :email AND senha = :password`, [email, password]);
+
+        if(result.rows && result.rows.length > 0) {
+            const row = result.rows[0] as any;
+
+            const conta: Conta = {
+                id: row[0] as number,
+                nome: row[1] as string,
+                email: row[2] as string,
+                senha: row[3] as string,
+                nascimento: row[4] as string,
+                token: row[5] as string,
+                moderador: row[6] as number,
+                saldo: row[7] as number
+            };
+            await connection.close();
+            return conta;
+        }
         await connection.close();
-        return result.rows as Conta[][];
+        return null;
     }
 
     //Função para validar o email no banco de dados

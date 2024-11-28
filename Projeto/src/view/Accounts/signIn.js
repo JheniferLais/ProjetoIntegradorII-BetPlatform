@@ -69,6 +69,7 @@ async function handleFormSubmission(event) {
     sessionStorage.setItem('idUsuario', result.idUsuario);
     sessionStorage.setItem('emailUsuario', result.email);
     sessionStorage.setItem('sessionToken', result.token);
+    sessionStorage.setItem('moderador', result.moderador);
 
     // Caso o login seja bem-sucedido exibe o feedback de sucesso...
     document.querySelector('.feedbackLogado').textContent = result.response;
