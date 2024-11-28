@@ -114,10 +114,9 @@ export namespace eventosHandler {
         let filteredEvents: Evento[] | null
 
         if(statusEvento === 'aprovado') {
-            const hoje = new Date().toISOString();
-            const formattedHoje = hoje.split('.')[0]; // Exemplo: '2024-11-28T10:30:00'
+            const hoje = new Date().toISOString().slice(0, 19);
             // Obtém eventos filtrados
-            filteredEvents= await eventModelData.getFilteredEventsDate(statusEvento, formattedHoje);
+            filteredEvents= await eventModelData.getFilteredEventsDate(statusEvento, hoje);
         } else {
             // Obtém eventos filtrados
             filteredEvents = await eventModelData.getFilteredEvents(statusEvento);
@@ -264,7 +263,8 @@ export namespace eventosHandler {
         }
 
         // Valida se existe algum evento com a palavra fornecida
-        const eventos: Evento[] | null = await eventModelData.searchEvent(palavraChave);
+        const hoje = new Date().toISOString().slice(0, 19);
+        const eventos: Evento[] | null = await eventModelData.searchEvent(palavraChave, hoje);
         if (!eventos) {
             res.status(404).send('Sem eventos com essa palavra chave!');
             return;
@@ -299,7 +299,9 @@ export namespace eventosHandler {
 
     // 'Função' para buscar as 6 eventos mais apostados
     export const getMostBetEvents: RequestHandler = async (req: Request, res: Response): Promise<void> => {
-        const eventos = await eventModelData.getMostBetEvents();
+
+        const hoje = new Date().toISOString().slice(0, 19);
+        const eventos = await eventModelData.getMostBetEvents(hoje);
         if (!eventos) {
             res.status(404).send('Sem eventos mais apostados!');
             return;
@@ -319,7 +321,8 @@ export namespace eventosHandler {
         }
 
         // Valida se o evento existe
-        const evento = await eventModelData.getCategory(categoria);
+        const hoje = new Date().toISOString().slice(0, 19);
+        const evento = await eventModelData.getCategory(categoria, hoje);
         if (!evento) {
             res.status(404).send('Evento não encontrado!');
             return;

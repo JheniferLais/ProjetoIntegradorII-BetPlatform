@@ -78,7 +78,7 @@ export namespace eventModelData {
         const result = await connection.execute(`SELECT * 
             FROM eventos 
             WHERE status_evento = :statusEvento
-            AND TO_DATE(DATA_HORA_FIM, 'YYYY-MM-DD"T"HH24:MI:SS') <= TO_DATE(:hoje, 'YYYY-MM-DD"T"HH24:MI:SS')`, [statusEvento, hoje]);
+            AND TO_DATE(DATA_HORA_FIM, 'YYYY-MM-DD"T"HH24:MI:SS') >= TO_DATE(:hoje, 'YYYY-MM-DD"T"HH24:MI:SS')`, [statusEvento, hoje]);
 
         // Verifica se há algum resultado
         if (result.rows && result.rows.length > 0) {
@@ -166,15 +166,16 @@ export namespace eventModelData {
     }
 
     //Função para encontrar eventos de acordo com o titulo
-    export async function searchEvent(palavraChave: string): Promise<Evento[] | null> {
+    export async function searchEvent(palavraChave: string, hoje: string): Promise<Evento[] | null> {
         const connection = await dataBaseutils.ConnectionDB();
         const result = await connection.execute(`
             SELECT * FROM eventos
             WHERE status_evento = 'aprovado'
             AND resultado = 'pendente'
+            AND TO_DATE(DATA_HORA_FIM, 'YYYY-MM-DD"T"HH24:MI:SS') >= TO_DATE(:hoje, 'YYYY-MM-DD"T"HH24:MI:SS')
             AND (LOWER(titulo) LIKE :palavraChave
             OR LOWER(descricao) LIKE :palavraChave)`,
-            [`%${palavraChave.toLowerCase()}%`, `%${palavraChave.toLowerCase()}%`]);
+            [hoje, `%${palavraChave.toLowerCase()}%`, `%${palavraChave.toLowerCase()}%`]);
 
         // Verifica se há algum resultado
         if (result.rows && result.rows.length > 0) {
@@ -201,14 +202,15 @@ export namespace eventModelData {
     }
 
     //Função para encontrar no maximo os 6 eventos mais apostados
-    export async function getMostBetEvents(): Promise<Evento[] | null> {
+    export async function getMostBetEvents(hoje: string): Promise<Evento[] | null> {
         const connection = await dataBaseutils.ConnectionDB();
         const result = await connection.execute(`
             SELECT * FROM eventos
             WHERE status_evento = 'aprovado'
             AND resultado = 'pendente'
-            AND qtd_apostas > 0
-            ORDER BY qtd_apostas DESC FETCH FIRST 6 ROWS ONLY`);
+              AND TO_DATE(DATA_HORA_FIM, 'YYYY-MM-DD"T"HH24:MI:SS') >= TO_DATE(:hoje, 'YYYY-MM-DD"T"HH24:MI:SS')
+              AND qtd_apostas > 0
+            ORDER BY qtd_apostas DESC FETCH FIRST 6 ROWS ONLY`, [hoje]);
 
         // Verifica se há algum resultado
         if (result.rows && result.rows.length > 0) {
@@ -235,14 +237,15 @@ export namespace eventModelData {
     }
 
     //Função para encontrar no maximo os 6 eventos mais apostados
-    export async function getCategory(categoria: string): Promise<Evento[] | null> {
+    export async function getCategory(categoria: string, hoje: string): Promise<Evento[] | null> {
         const connection = await dataBaseutils.ConnectionDB();
         const result = await connection.execute(`
             SELECT * FROM eventos
             WHERE status_evento = 'aprovado'
             AND resultado = 'pendente'
+            AND TO_DATE(DATA_HORA_FIM, 'YYYY-MM-DD"T"HH24:MI:SS') >= TO_DATE(:hoje, 'YYYY-MM-DD"T"HH24:MI:SS')
             AND CATEGORIA = :categoria`,
-            [categoria]);
+            [hoje, categoria]);
 
         // Verifica se há algum resultado
         if (result.rows && result.rows.length > 0) {
