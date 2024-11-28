@@ -30,6 +30,13 @@ export namespace carteiraHandler {
         );
     }
 
+    function validarAgenciaConta(agencia: string, conta: string): boolean {
+        const regexAgencia = /^\d{4}$/; // Valida que a agência tem exatamente 4 dígitos
+        const regexConta = /^\d{6,12}$/; // Valida que a conta tem de 6 a 12 dígitos
+
+        return regexAgencia.test(agencia) && regexConta.test(conta);
+    }
+
     //Função para calcular o valor do saque apos o imposto
     function calcularTaxaDeSaque(valor: number): number {
         let taxa: number;
@@ -105,12 +112,27 @@ export namespace carteiraHandler {
         const valor = parseFloat(req.get('valor') || '');
 
         const pix = req.get('pix');
-
         const agencia = req.get('agencia');
-        const numeroCartao = req.get('numeroCartao');
+        const conta = req.get('conta');
 
         // Valida se todos os campos foram preenchidos
-        if(!idUsuario || !valor || !pix){
+        if(!idUsuario || !valor){
+            res.status(400).send('Campos obrigatórios estão faltando!');
+            return;
+        }
+
+        if(pix){
+            const chaveValida: boolean = validarChavePix(pix);
+            if(!chaveValida) {
+                res.status(400).send('Informação da Chave pix inválidas. Verifique os campos e tente novamente!');
+                return;
+            }
+        } else if (agencia && conta){
+            if(!validarAgenciaConta(agencia, conta)) {
+                res.status(400).send('Informação de agencia e conta inválidas. Verifique os campos e tente novamente!');
+                return;
+            }
+        } else{
             res.status(400).send('Campos obrigatórios estão faltando!');
             return;
         }
@@ -119,12 +141,6 @@ export namespace carteiraHandler {
         if (valor <= 0) {
            res.status(400).send('A quantia para saque deve ser maior que zero!');
            return;
-        }
-
-        const chaveValida: boolean = validarChavePix(pix);
-        if(!chaveValida) {
-            res.status(400).send('Informação da Chave pix inválidas. Verifique os campos e tente novamente!');
-            return;
         }
 
         // Valida se a carteira do usuario existe
