@@ -101,7 +101,7 @@
                     <!-- Input do Valor da Cota do Evento -->
                     <div class="form-group-item">
                         <label for="inputValorCota">Valor da Cota:</label>
-                        <input id="inputValorCota" type="number" wrap="hard" class="form-control" placeholder="R$1,00">
+                        <input id="inputValorCota" type="number" min="1" wrap="hard" class="form-control" placeholder="R$1,00">
                         <small style="color:#ffffffa8; font-size: 12px;">Apenas valores maiores ou iguais a R$1,00</small>
                     </div>
                 </div>
@@ -166,11 +166,11 @@
                         Por Categoria
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="categoriaButton">
-                        <li><a class="dropdown-item" id="categoriaButton">Esportes</a></li>
-                        <li><a class="dropdown-item" id="categoriaButton">Catástrofes</a></li>
-                        <li><a class="dropdown-item" id="categoriaButton">Eleições</a></li>
-                        <li><a class="dropdown-item" id="categoriaButton">Bolsa de Valores</a></li>
-                        <li><a class="dropdown-item" id="categoriaButton">E-Sports</a></li>
+                        <li><a class="dropdown-item" id="esportes" data-value="esportes">Esportes</a></li>
+                        <li><a class="dropdown-item" id="catastrofes" data-value="catastrofes">Catástrofes</a></li>
+                        <li><a class="dropdown-item" id="eleicoes" data-value="eleicoes">Eleições</a></li>
+                        <li><a class="dropdown-item" id="bolsa-de-valores" data-value="bolsa de valores">Bolsa de Valores</a></li>
+                        <li><a class="dropdown-item" id="e-sports" data-value="e-sports">E-Sports</a></li>
                     </ul>
                 </div>
             </div>

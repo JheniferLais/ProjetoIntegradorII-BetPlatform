@@ -69,7 +69,7 @@
 
             <div class="mb-3">
                 <label for="depositAmount" class="form-label">Valor de Depósito (R$)</label>
-                <input id="depositAmount" type="number" class="form-control" placeholder="Ex: 100.00">
+                <input id="depositAmount" min="1" type="number" class="form-control" placeholder="Ex: 100.00">
             </div>
             <button id="addFundsButton" type="submit" class="btn btn-primary w-100">Realizar Depósito</button>
             <p class="feedbackAdicionado"></p>
@@ -116,7 +116,7 @@
         <!-- Valor de saque -->
         <div class="form-group mb-3">
             <label for="withdrawAmount" class="text-white">Valor do Saque (R$)</label>
-            <input type="number" id="withdrawAmount" name="withdrawAmount" class="form-control" placeholder="Digite o valor do saque" required>
+            <input type="number" id="withdrawAmount" min="1" name="withdrawAmount" class="form-control" placeholder="Digite o valor do saque" required>
         </div>
 
         <!-- Botão para realizar saque -->

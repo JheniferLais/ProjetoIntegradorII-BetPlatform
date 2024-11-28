@@ -119,7 +119,7 @@ function carregarDadosDoEvento(objetoEvento) {
             <form id="formAposta">
                 <div class="selecionar-num-cota">
                     <label for="inputNumCotas">Quantidade de Cotas:</label>
-                    <input id="inputNumCotas" name="numcotas" class="form-control" type="number" min="1" step="1" placeholder="Digite o número de cotas" required>
+                    <input id="inputNumCotas" min="0" name="numcotas" class="form-control" type="number" min="1" step="1" placeholder="Digite o número de cotas" required>
                     <p id="valorTotal" style="margin-top: 10px;">Total: R$ 0,00</p>
                 </div>
 

@@ -26,11 +26,19 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Configura o click do botao de 'mais apostados'
     document.getElementById('mostBetButton').addEventListener('click', carregarGradeEventosMaisApostados);
     document.getElementById('aVencerButton').addEventListener('click', carregarGradeEventosAVencer);
-    document.getElementById('categoriaButton').addEventListener('click', carregarGradeEventosCategoria);
-
 
     // Configura o envio do formulário de criação de eventos...
     document.getElementById('registerEventForm').addEventListener('submit', handleRegisterEventFormSubmission);
+
+    // Adicione um evento de clique a cada item da categoria
+    document.querySelectorAll('.dropdown-item').forEach(item => {
+        item.addEventListener('click', function() {
+
+            const selectedValue = this.getAttribute('data-value');
+            carregarGradeEventosCategoria(selectedValue);
+        });
+    });
+
 
     // Aplica formatação de data e hora em campos específicos quando o usuário digitar...
     document.querySelectorAll('#inputDataEvento').forEach(input => {
@@ -289,13 +297,10 @@ async function carregarGradeEventosMaisApostados(){
     await limpaGradeValidaResponse(response);
 }
 // Função para buscar os eventos por categoria...
-async function carregarGradeEventosCategoria(){
+async function carregarGradeEventosCategoria(categoria){
     // Consome da API...
-    const response = await fetch(`${apiBaseUrl}//getCategory/${categoria}`, {
+    const response = await fetch(`${apiBaseUrl}/getCategory/${categoria}`, {
         method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-        },
     });
 
     await limpaGradeValidaResponse(response);
