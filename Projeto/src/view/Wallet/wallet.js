@@ -184,11 +184,11 @@ function updateForm() {
         formContent = `
             <div class="form-group mb-3">
                 <label for="agency" class="text-white">Agência</label>
-                <input id="agency" type="text" name="agency" class="form-control" placeholder="Digite o número da agência" required>
+                <input id="agency" type="text" name="agency" class="form-control" placeholder="EX: 1234" required>
             </div>
             <div class="form-group mb-3">
                 <label for="accountNumber" class="text-white">Número da Conta Corrente</label>
-                <input id="accountNumber" type="text" name="accountNumber" class="form-control" placeholder="Digite o número da conta" required>
+                <input id="accountNumber" type="text" name="accountNumber" class="form-control" placeholder="EX: 1234567890" required>
             </div>`;
 
 
@@ -250,29 +250,38 @@ async function handleAddFundsFormSubmission(event){
 async function handleWithDrawFundsFormSubmission(event){
     event.preventDefault();
 
-    const valorDeSaque = document.getElementById('withdrawAmount').value;
-    const chavePix = document.getElementById('pixKey').value;
-
-    //const agencia = document.getElementById('agency').value;
-    //const conta = document.getElementById('accountNumber').value;
-
     const token = sessionStorage.getItem('sessionToken');
     const idUsuario = sessionStorage.getItem('idUsuario');
 
+    const valorDeSaque = document.getElementById('withdrawAmount').value;
+    const agencia = document.getElementById('agency')?.value;
+    const conta = document.getElementById('accountNumber')?.value;
+    const chavePix = document.getElementById('pixKey')?.value;
+
+    const headers = {
+        'Content-Type': 'application/json',
+        'valor': valorDeSaque,
+        'authorization': token,
+    };
+
+    //Se nao receber a informacao de agencia e conta faz por pix...
+    if(chavePix){
+        headers.pix = chavePix;
+    } else if(agencia && conta){
+        headers.agencia = agencia;
+        headers.conta = conta;
+    }
+    else return;
+    alert('ta aqui')
     // Consome da API...
     const response = await fetch(`${apiBaseUrl}/withdrawFunds/${idUsuario}`, {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'valor': valorDeSaque,
-            'pix': chavePix,
-            'authorization': token,
-        },
+        headers: headers,
     });
 
     // Result recebe a response do backend...
     const result = await response.text();
-
+    alert(result);
     // Valida se ocorreu algum erro e exibe o feedback de erro...
     if(!response.ok){
         document.querySelector('.feedbackNaoSacado').textContent = result;
