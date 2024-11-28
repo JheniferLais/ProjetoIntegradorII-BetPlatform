@@ -39,6 +39,12 @@ export namespace apostasHandler {
             return;
         }
 
+        // Valida a quantidade de cotas
+        if(qtd_cotas < 1 || !Number.isInteger(qtd_cotas) || isNaN(qtd_cotas)) {
+            res.status(400).send('Valor inválido para quantidade de cotas!');
+            return;
+        }
+
         // Valida se a carteira do usuario existe
         const carteira: Carteira | null = await walletModelData.findCarteira(idUsuario);
         if (!carteira) {

@@ -2,10 +2,7 @@ const apiBaseUrl = 'http://localhost:3000';
 
 document.addEventListener("DOMContentLoaded",  async () => {
 
-    // Redireciona para a página de Cadastro ao clicar em "Sair" ou "Entrar/Cadastrar"...
-    document.getElementById('signUpButton').addEventListener('click', openSignUpPage);
-
-    // Redireciona para a página da Carteira ao clicar na seção de saldo...
+    // Redireciona para a página de Home ao clicar em "Voltar"...
     document.getElementById('homeLink').addEventListener('click', openHomePage);
 
     // Configura o envio do formulário de addFunds...
@@ -27,6 +24,14 @@ document.addEventListener("DOMContentLoaded",  async () => {
         });
     });
 
+    // Esconder os feedbacks de sucesso e/ou erro quando o usuário interagir com os campos do formulário...
+    document.querySelectorAll('#formWithdrawFunds input').forEach(field => {
+        field.addEventListener('focus', () => {
+            document.querySelector('.feedbackAdicionado').style.display = 'none';
+            document.querySelector('.feedbackNaoAdicionado').style.display = 'none';
+        });
+    });
+
     // Limita o tamanho do cvv para 3...
     document.querySelectorAll('#cvv').forEach(input => {
         input.addEventListener('input', () => formatCVV(input));
@@ -42,14 +47,6 @@ function openHomePage(){
         window.location.href = `../Home/home.html`;
     }, 500);
 }
-// Redireciona o usuario para o signUp.html...
-function openSignUpPage(){
-    sessionStorage.clear();
-    setTimeout(() => {
-        window.location.href = `../Accounts/signUp.html`;
-    }, 500);
-}
-
 
 // Funções de fechar o popUp de Saque e Deposito...
 function openDeposit(){
@@ -272,7 +269,7 @@ async function handleWithDrawFundsFormSubmission(event){
         headers.conta = conta;
     }
     else return;
-    alert('ta aqui')
+
     // Consome da API...
     const response = await fetch(`${apiBaseUrl}/withdrawFunds/${idUsuario}`, {
         method: 'POST',
@@ -281,16 +278,20 @@ async function handleWithDrawFundsFormSubmission(event){
 
     // Result recebe a response do backend...
     const result = await response.text();
-    alert(result);
+
     // Valida se ocorreu algum erro e exibe o feedback de erro...
     if(!response.ok){
+        const feed = document.querySelector('.feedbackNaoAdicionado').textContent
+        if(!feed){
+            alert('deu merda')
+        }
         document.querySelector('.feedbackNaoSacado').textContent = result;
         document.querySelector('.feedbackNaoSacado').style.display = 'block';
         return;
     }
 
     // Caso a adição de fundos seja bem-sucedido exibe o feedback de sucesso...
-    document.querySelector('.feedbackSacado').textContent = result;
+    document.querySelector('.feedbackSacado').textContent = 'Saldo adicionado com sucesso!';
     document.querySelector('.feedbackSacado').style.display = 'block';
 
     // Fecha o popUp e Limpa o formulario...

@@ -73,22 +73,6 @@ html, body {
 .wallet-icon {
     margin-right: 5px;
 }
-
-.logout-btn {
-    padding: 8px 20px;
-    background-color: #00BFFF;
-    border: none;
-    border-radius: 5px;
-    color: #ffffff;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.logout-btn:hover {
-    background-color: #009ACD;
-}
-
 #banner {
     position: relative;
     width: 100%;
@@ -376,19 +360,3 @@ form .feedbackNaoAdicionado{
     text-align: center;
     color: red;
 }
-
-form .feedbackNaoSacado{
-    display: none;
-    margin-top: 10px;
-    width: 100%;
-    text-align: center;
-    color: green;
-}
-form .feedbackSacado{
-    display: none;
-    margin-top: 10px;
-    width: 100%;
-    text-align: center;
-    color: red;
-}
-

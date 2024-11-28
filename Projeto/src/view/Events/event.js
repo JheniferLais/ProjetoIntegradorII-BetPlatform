@@ -1,19 +1,15 @@
 const apiBaseUrl = 'http://localhost:3000';
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded",  () => {
 
-    // Redireciona para a página de Cadastro ao clicar em "Sair"...
-    document.getElementById('backButton').addEventListener('click', openHomePage);
+    // Redireciona para a página de Home ao clicar em "Voltar"...
+    document.getElementById('homeLink').addEventListener('click', openHomePage);
 
     // Redireciona para a página da Carteira ao clicar na seção de saldo...
     document.getElementById('walletLink').addEventListener('click', openWalletPage);
 
-     // Configura o envio do formulário de criação de apostas...
-    document.getElementById('formAposta').addEventListener('submit', handleBetFormSubmission);
-
     // Esconder os feedbacks de sucesso e/ou erro quando o usuário interagir com os campos do formulário..
-    const formFields = document.querySelectorAll('#formAposta input');
-    formFields.forEach(field => {
+    document.querySelectorAll('#formAposta input').forEach(field => {
         field.addEventListener('focus', () => {
             document.querySelector('.feedbackApostado').style.display = 'none';
             document.querySelector('.feedbackNaoApostado').style.display = 'none';
@@ -113,20 +109,28 @@ function carregarDadosDoEvento(objetoEvento) {
         <div class="valor-cota">
             <p>Valor da Cota: <strong id="valor-cota-valor">R$ ${formatarValor(objetoEvento.valor_cota)}</strong></p>
         </div>
-        <p class="feedbackApostado"></p>
-        <p class="feedbackNaoApostado"></p>
         <div class="container-cota-aposta">
-            <form id="formAposta">
+            <form id="formAposta" method="POST">
                 <div class="selecionar-num-cota">
                     <label for="inputNumCotas">Quantidade de Cotas:</label>
-                    <input id="inputNumCotas" min="0" name="numcotas" class="form-control" type="number" min="1" step="1" placeholder="Digite o número de cotas" required>
+                    <input id="inputNumCotas" name="numcotas" class="form-control" 
+                           type="number" min="1" step="1" placeholder="Digite o número de cotas" required>
                     <p id="valorTotal" style="margin-top: 10px;">Total: R$ 0,00</p>
                 </div>
 
                 <div class="aposta">
-                    <button id="btn nao" value="nao" type="submit" class="btn nao">Não</button>
-                    <button id="btn sim" value="sim" type="submit" class="btn sim">Sim</button>
+                    <input name="simounao" type="radio" id="btnNao" value="nao" class="btnRadio">
+                    <label for="btnNao" class="btn-label nao">Não</label>
+                    
+                    <input name="simounao" type="radio" id="btnSim" value="sim" class="btnRadio">
+                    <label for="btnSim" class="btn-label sim">Sim</label>
                 </div>
+
+                <div class="container-btn-apostar">
+                    <input id="apostar" type="submit" class="btn-apostar" value="Apostar" onclick="handleBetFormSubmission(event)">
+                </div>
+                <p class="feedbackApostado"></p>
+                <p class="feedbackNaoApostado"></p>
             </form>
         </div>
     `;
@@ -155,7 +159,32 @@ async function buscarEvento() {
     }
 
     // Insere o nome do usuario no header
+    document.querySelector('.balance').style.display = 'flex';
     document.getElementById('useName').textContent = nomeUsuario;
+
+    // Consome da API para obter informações da carteira do usuário...
+    const response1 = await fetch(`${apiBaseUrl}/getAllWalletInformation/${idUsuario}`, {
+        method: 'GET',
+        headers: {
+            'authorization': token,
+        },
+    });
+
+    // Valida se ocorreu algum erro e retorna...
+    if (!response1.ok) {
+        alert('Ocorreu um erro ao carregar seus dados!');
+        return;
+    }
+
+    // Saldo recebe a response do backend...
+    const saldo = await response1.json();
+
+    // Mostra o valor do saldo do usuario no wallet home...
+    const balanceElement = document.getElementById('balance-value');
+    const valorFormatado = formatarValor(saldo.saldo);
+    balanceElement.textContent = valorFormatado + ' BRL';
+
+
 
     // Captura as informações guardas da URL...
     const params = new URLSearchParams(window.location.search);
@@ -171,6 +200,8 @@ async function buscarEvento() {
 
     //Se a pagina do evento não existir...Ele é redirecionado para a pagina de nao encontrado...
     if(!response.ok) {
+        const result = await response.text();
+        alert(result);
         window.location.href = `../errorPages/404.html`;
     }
 
@@ -179,38 +210,51 @@ async function buscarEvento() {
 }
 window.onload = buscarEvento;
 
-
 async function handleBetFormSubmission(event) {
     event.preventDefault();
+
 
     // Captura o parâmetros idEvento da URL atual
     const params = new URLSearchParams(window.location.search);
     const idEvento = params.get('idEvento');
-
-    // Captura os valores de input do formulario...
-    const qtdCotas = document.getElementById('inputNumCotas').value;
-
 
     // Captura as informações guardas da sessionStorage...
     const token = sessionStorage.getItem('sessionToken');
     const idUsuario = sessionStorage.getItem('idUsuario');
     const emailUsuario = sessionStorage.getItem('emailUsuario');
 
+    // Captura os valores de input do formulario...
+    const qtdCotas = document.getElementById('inputNumCotas').value;
+    const aNao = document.getElementById('btnNao').checked;
+    const aSim = document.getElementById('btnSim').checked;
+
+    const headers = {
+        'Content-Type': 'application/json',
+        'email': emailUsuario,
+        'qtd_cotas': qtdCotas,
+        'authorization': token,
+    };
+
+    if(aNao){
+        headers.aposta = 'nao';
+    } else if (aSim) {
+        headers.aposta = 'sim';
+    } else if (!aNao && !aSim) {
+        alert('Escolha uma opção')
+        return;
+    } else{
+        alert('Apenas um valor de cada vez...')
+        return;
+    }
+
     // Consome da API...
     const response = await fetch(`${apiBaseUrl}/betOnEvent/${idEvento}/${idUsuario}`, {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'email': emailUsuario,
-            'qtd_cotas': qtdCotas,
-            'aposta': aposta,
-            'authorization': token,
-        },
+        headers: headers,
     });
 
     // Result recebe a response do backend...
     const result = await response.text();
-
     // Valida se ocorreu algum erro e exibe o feedback de erro...
     if (!response.ok) {
         document.querySelector('.feedbackNaoApostado').textContent = result;
@@ -221,4 +265,6 @@ async function handleBetFormSubmission(event) {
     // Caso a aposta seja bem-sucedida exibe o feedback de sucesso...
     document.querySelector('.feedbackApostado').textContent = result;
     document.querySelector('.feedbackApostado').style.display = 'block';
-}
+    setTimeout(() => {
+        location.reload();
+    }, 1200);}

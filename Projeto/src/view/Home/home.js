@@ -227,7 +227,7 @@ function inserirEventosNaGrade(eventosContainer, eventos) {
         // Define o conteúdo dinâmico do evento...
         gradeEvento.innerHTML = `
             <div class="titulo-categoria">
-                <div style="font-weight: 700; font-size: 30px;">${evento.titulo.length > 20 ? evento.titulo.substring(0, 20) + "..." : evento.titulo}</div>
+                <div style="font-weight: 700; font-size: 30px;">${evento.titulo.length > 15 ? evento.titulo.substring(0, 15) + "..." : evento.titulo}</div>
                 <div style="font-weight: 300; font-size: 30px; margin-top: -10px;">${evento.categoria}</div>
             </div>
             <div class="apostas-data">
@@ -235,7 +235,7 @@ function inserirEventosNaGrade(eventosContainer, eventos) {
                 <div style="font-weight: 500; font-size: 15px;">${formataDataSimples(evento.data_evento)} 📅</div>
             </div>
             <div class="descricao">
-                <div style="font-weight: 300; font-size: 20px;">${evento.descricao.length > 50 ? evento.descricao.substring(0, 50) + "..." : evento.descricao}</div>
+                <div style="font-weight: 300; font-size: 20px;">${evento.descricao.length > 35 ? evento.descricao.substring(0, 35) + "..." : evento.descricao}</div>
             </div>
         `;
 

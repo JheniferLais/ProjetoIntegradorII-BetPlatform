@@ -108,10 +108,20 @@ export namespace eventosHandler {
             res.status(400).send('Valor inválido para a busca! Deve ser "aprovado", "reprovado", "excluido", "pendente", "finalizado".');
             return;
         }
+
         //-------------------------------------------------------------------------
 
-        // Obtém eventos filtrados
-        const filteredEvents: Evento[] | null = await eventModelData.getFilteredEvents(statusEvento);
+        let filteredEvents: Evento[] | null
+
+        if(statusEvento === 'aprovado') {
+            const hoje = new Date().toISOString();
+            const formattedHoje = hoje.split('.')[0]; // Exemplo: '2024-11-28T10:30:00'
+            // Obtém eventos filtrados
+            filteredEvents= await eventModelData.getFilteredEventsDate(statusEvento, formattedHoje);
+        } else {
+            // Obtém eventos filtrados
+            filteredEvents = await eventModelData.getFilteredEvents(statusEvento);
+        }
 
         // Valida se existe algum evento com esse status
         if (!filteredEvents) {

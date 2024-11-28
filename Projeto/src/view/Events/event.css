@@ -53,7 +53,7 @@ body {
 }
 
 .balance {
-    display: none;
+    display: flex;
     align-items: center;
     padding: 8px 15px;
     border: 1px solid #ffffff;
@@ -61,11 +61,11 @@ body {
     font-weight: 500;
     color: #fff;
 }
-.balance:hover{
+
+.balance:hover {
     background-color: #ffffff2a;
     cursor: pointer;
 }
-
 .logout-btn {
     padding: 8px 20px;
     background: #00BFFF;
@@ -140,7 +140,7 @@ body {
 .valor-cota{
     width: 100%;
     display: flex;
-    height: 56%;
+    height: 42%;
     font-family: 'Montserrat', sans-serif;
 }
 #valor-cota-valor{
@@ -181,6 +181,7 @@ body {
     margin-top: 23px;
     display: flex;
     gap: 20px;
+    margin-bottom: 23px;
 }
 
 .btn {
@@ -191,15 +192,22 @@ body {
     cursor: pointer;
     transition: background 0.3s ease;
 }
-
-.btn.nao {
-    border: solid 2px #FF5C5C;
-    background-color: #000D1C;
-    color: #ffffff;
+.container-btn-apostar{
+    width: 287px;
 }
-
-.btn.nao:hover {
-    background: #E54A4A;
+.btn-apostar{
+    border: none;
+    border-radius: 6px;
+    width: 100%;
+    padding: 12px 0 12px 0;
+    background-color: #00BFFF;
+    color: #ffffff;
+    cursor: pointer;
+    transition: 200ms;
+}
+.btn-apostar:hover{
+    background-color: #47d7ec;
+    transform: scale(0.97);
 }
 
 .btn.sim {
@@ -225,4 +233,47 @@ form .feedbackNaoApostado{
     width: 100%;
     text-align: center;
     color: red;
+}
+/* Esconde os inputs de rádio */
+.aposta .btnRadio {
+    display: none;
+}
+
+/* Estilo base para os labels como botões */
+.aposta .btn-label {
+    display: inline-block;
+    padding: 15px 40px;
+    border: 1px solid;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    margin: 5px;
+}
+
+/* Estilo para o botão "Não" */
+.aposta .btn-label.nao {
+    border-color: red;
+    color: red;
+    background-color: transparent;
+}
+
+/* Estilo para o botão "Sim" */
+.aposta .btn-label.sim {
+    border-color: green;
+    color: green;
+    background-color: transparent;
+}
+
+/* Estilo quando o input "Não" estiver selecionado */
+.aposta .btnRadio:checked + .btn-label.nao {
+    background-color: red;
+    color: white;
+}
+
+/* Estilo quando o input "Sim" estiver selecionado */
+.aposta .btnRadio:checked + .btn-label.sim {
+    background-color: green;
+    color: white;
 }
