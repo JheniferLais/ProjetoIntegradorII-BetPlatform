@@ -226,3 +226,33 @@ form .feedbackNaoApostado{
     text-align: center;
     color: red;
 }
+.wallet-alert{
+    margin: 0 auto; 
+    background: #7e57c2;
+    font-family: 'open sans';
+    font-size: 0.85em;
+    line-height: 1.6em;  
+    border-radius: 15px;
+    width: 300px;
+    height: auto;
+    color: #fff;
+    padding: 20px;
+    margin-top: 30px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 100;
+}
+.wallet-alert:after{ /*Triangulo*/
+    content: "";
+    width: 0;
+    height: 0;
+    position: absolute;
+    border-left: 20px solid transparent;
+    border-right: 20px solid transparent;
+    /*Faz seta "apontar para baixo. Definir o valor como 'top' fará ela "apontar para cima" */
+    /*Aqui entra a cor da "aba" do balão */
+    border-bottom: 20px solid #7e57c2;
+    top: -20px; /*localização. Experimente alterar para 'bottom'*/
+    left: 20%;
+}

@@ -27,16 +27,22 @@
         </div>
         <!-- Icones da Carteira e Sair -->
         <div class="header-right">
-            <a id="walletLink" style="text-decoration: none;">
+            <a id="walletLink" style="text-decoration: none; position: relative;">
                 <div class="balance">
                     <span class="wallet-icon">💼</span>
                     <span id="balance-value">...</span>
                 </div>
             </a>
+            <div class="wallet-alert" id="wallet-alert">
+                <p>
+                Bem vindo à Wager! 
+                Que tal começar com alguns créditos? 🤑
+                </p>
+                <buttom id="close-wallet-alert" class="close-wallet-alert"> ❌ Por enquanto não...</buttom>
+            </div>
             <button id="signUpButton" class="logout-btn">Entrar/Cadastrar</button>
         </div>
     </header>
-
     <!-- Sidebar lateral -->
     <div class="sidebar">
         <ul class="sidebar-list">

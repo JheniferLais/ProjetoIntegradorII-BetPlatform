@@ -5,6 +5,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Redireciona para a página de Cadastro ao clicar em "Sair"...
     document.getElementById('signUpButton').addEventListener('click', openSignUpPage);
 
+    // Fecha o popup de alerta da carteira
+    document.getElementById('close-wallet-alert').addEventListener('click', closeWalletAlert);
+
     // Redireciona para a página da Carteira ao clicar na seção de saldo...
     document.getElementById('walletLink').addEventListener('click', openWalletPage);
 
@@ -102,6 +105,15 @@ function closePopUpCadastrarEvento(){
         blur.style.display = 'none';
     }
     document.getElementById('registerEventForm').reset();
+}
+
+function closeWalletAlert(){
+    document.querySelector('.wallet-alert').style.display = 'none';
+
+    const walletAlert = document.querySelector('.waalletAlert');
+    if(walletAlert){
+        walletAlert.style.display = 'none';
+    }
 }
 
 
