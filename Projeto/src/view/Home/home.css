@@ -354,3 +354,46 @@ form .feedbackNaoCriado{
     text-align: center;
     color: red;
 }
+.wallet-alert{
+    margin: 0 auto; 
+    background: #00BFFF;
+    font-family: 'open sans';
+    font-size: 1em;
+    line-height: 1.6em;  
+    border-radius: 15px;
+    width: 320px;
+    height: auto;
+    color: #fff;
+    padding: 20px;
+    margin-top: 30px;
+    position: absolute;
+    top: 29px;
+    right: 60px;
+    z-index: 100;
+}
+.wallet-alert:after{ /*Triangulo*/
+    content: "";
+    width: 0;
+    height: 0;
+    position: absolute;
+    border-left: 20px solid transparent;
+    border-right: 20px solid transparent;
+    border-bottom: 20px solid #00BFFF;
+    top: -20px;
+    left: 60%;
+}
+.close-wallet-alert{
+    background-color: #fff;
+    color: #00050B;
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 5px;
+    margin-left: 0px;
+    width: 280px;
+    transition: background-position 800ms ease-out .001s;
+}
+.close-wallet-alert:hover{
+    transform: scale(0.95);
+    background-color: #f44848;
+    color: #fff;
+}
