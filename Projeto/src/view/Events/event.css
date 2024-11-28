@@ -53,7 +53,7 @@ body {
 }
 
 .balance {
-    display: none;
+    display: flex;
     align-items: center;
     padding: 8px 15px;
     border: 1px solid #ffffff;
@@ -61,11 +61,11 @@ body {
     font-weight: 500;
     color: #fff;
 }
-.balance:hover{
+
+.balance:hover {
     background-color: #ffffff2a;
     cursor: pointer;
 }
-
 .logout-btn {
     padding: 8px 20px;
     background: #00BFFF;
