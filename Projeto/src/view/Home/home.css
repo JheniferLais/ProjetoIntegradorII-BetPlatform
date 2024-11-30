@@ -355,12 +355,11 @@ form .feedbackNaoCriado{
     color: red;
 }
 .wallet-alert{
-    display: none;
-    margin: 0 auto; 
+    margin: 0 auto;
     background: #00BFFF;
     font-family: 'open sans';
     font-size: 1em;
-    line-height: 1.6em;  
+    line-height: 1.6em;
     border-radius: 15px;
     width: 320px;
     height: auto;
@@ -371,6 +370,9 @@ form .feedbackNaoCriado{
     top: 29px;
     right: 60px;
     z-index: 100;
+}
+.wallet-alert.hidden {
+    display: none;
 }
 .wallet-alert:after{
     content: "";

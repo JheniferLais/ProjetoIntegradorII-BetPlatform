@@ -175,15 +175,8 @@ export namespace carteiraHandler {
         }
         await walletModelData.insertTransacao(transacao);
 
-        // Response
-        const response = {
-            status: 'Saldo sacado com sucesso!',
-            saque: `Valor retirado da conta: ${valor}`,
-            deposito: `Valor depositado após a taxa: ${valorDescontado}`
-        };
-
         // Response e statusCode de sucesso
-        res.status(200).send(response);
+        res.status(200).send(`Saldo sacado com sucesso! Saque: ${valor}, Depósito: ${valorDescontado}.`);
     }
 
     // 'Função' para mostrar todas as informações financeiras do usuario

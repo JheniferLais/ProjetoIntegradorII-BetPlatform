@@ -72,38 +72,6 @@ export namespace eventModelData {
         return null;  // Retorna null se não encontrar nenhum evento
     }
 
-    //Função para retornar todos os eventos baseado no status fornecido e data
-    export async function getFilteredEventsDate(statusEvento: string, hoje: string): Promise<Evento[] | null> {
-        const connection = await dataBaseutils.ConnectionDB();
-        const result = await connection.execute(`SELECT * 
-            FROM eventos 
-            WHERE status_evento = :statusEvento
-            AND TO_DATE(DATA_HORA_FIM, 'YYYY-MM-DD"T"HH24:MI:SS') >= TO_DATE(:hoje, 'YYYY-MM-DD"T"HH24:MI:SS')`, [statusEvento, hoje]);
-
-        // Verifica se há algum resultado
-        if (result.rows && result.rows.length > 0) {
-            const rows = result.rows as any[][];
-            const eventos = rows.map(row => ({
-                id_evento: row[0] as number,
-                id_usuario: row[1] as number,
-                titulo: row[2] as string,
-                descricao: row[3] as string,
-                valor_cota: row[4] as number,
-                data_hora_inicio: row[5] as string,
-                data_hora_fim: row[6] as string,
-                data_evento: row[7] as string,
-                qtd_apostas: row[8] as number,
-                resultado: row[9] as string,
-                status_evento: row[10] as string,
-                categoria: row[11] as string
-            }));
-            await connection.close();
-            return eventos; // Retorna um array de objetos de eventos
-        }
-        await connection.close();
-        return null;  // Retorna null se não encontrar nenhum evento
-    }
-
     //Função para encontrar o evento baseado no id
     export async function findEvento(idEvento: number): Promise<Evento | null> {
         const connection = await dataBaseutils.ConnectionDB();

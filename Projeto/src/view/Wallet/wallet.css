@@ -360,3 +360,18 @@ form .feedbackNaoAdicionado{
     text-align: center;
     color: red;
 }
+
+form .feedbackSacado{
+    display: none;
+    margin-top: 10px;
+    width: 100%;
+    text-align: center;
+    color: green;
+}
+form .feedbackNaoSacado{
+    display: none;
+    margin-top: 10px;
+    width: 100%;
+    text-align: center;
+    color: red;
+}

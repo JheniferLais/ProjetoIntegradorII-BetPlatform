@@ -267,3 +267,28 @@ form .feedbackNaoLogado{
 input[type="text"], input[type="password"] {
   color: white;
 }
+.mini-link {
+  display: inline-block;
+  font-size: 14px;
+  font-weight: 500;
+  color: #00BFFF;
+  text-decoration: none;
+  border: 1px solid #00BFFF;
+  padding: 5px 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: -50px;
+}
+
+.mini-link:hover {
+  background-color: #00BFFF;
+  color: white;
+}
+
+.link-home {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}

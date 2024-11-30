@@ -116,7 +116,7 @@ export namespace walletModelData {
                 idUsuario: row[2] as number,
                 qtd_cotas: row[3] as number,
                 aposta: row[4] as string,
-                dataAposta: row[0] as string,
+                dataAposta: row[5] as string,
             }));
             await connection.close();
             return apostas; // Retorna um array de objetos de transações

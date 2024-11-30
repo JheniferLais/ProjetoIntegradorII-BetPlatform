@@ -56,7 +56,7 @@ function openDeposit(){
 function openClaim(){
     document.querySelector('.claim-popup').style.display = 'flex';
     document.querySelector('.blur').style.display = 'block';
-    updateForm();
+    updateDynamicForms();
 }
 
 
@@ -76,6 +76,22 @@ function closeClaim(){
     document.getElementById('formWithdrawFunds').reset();
 }
 
+// Faz a formatação de data com horario em formato '2024-02-21T12:30:00' para '21/02/2024 12:30:00'...
+function formataDataHora(dataHora) {
+    const dataH = new Date(dataHora);
+
+    // Insere os valores individuais de dia, mes, ano, hora, minuto e segundo em variaveis...
+    const dia = String(dataH.getDate()).padStart(2, '0');
+    const mes = String(dataH.getMonth() + 1).padStart(2, '0');
+    const ano = dataH.getFullYear();
+
+    const hora = String(dataH.getHours()).padStart(2, '0');
+    const minuto = String(dataH.getMinutes()).padStart(2, '0');
+    const segundo = String(dataH.getSeconds()).padStart(2, '0');
+
+    // Monta a data no formato dd/mm/yy hh:mm:ss...
+    return `${dia}/${mes}/${ano} ${hora}:${minuto}:${segundo}`;
+}
 
 // Função para carregar os dados da wallet(saldo, historio de créditos, histórico de apostas)...
 async function carregarDadosDaWallet() {
@@ -102,34 +118,32 @@ async function carregarDadosDaWallet() {
 
     // Mostra o valor do saldo do usuario na wallet...
     const balanceElement = document.querySelector('.balance-amount');
-    const creditListElement = document.querySelector('.credit-list');
-    const betListElement = document.querySelector('.bet-list');
     const valorFormatado = formatarValor(result.saldo);
     balanceElement.textContent = valorFormatado + ' BRL';
 
-    // Limpa a grade de historico de transações para a proxima grade de informações...
-    creditListElement.innerHTML = '';
-    betListElement.innerHTML = '';
-
     // Adiciona dinamicamente o historico de transações...
+    const creditListElement = document.querySelector('.credit-list');
+    creditListElement.innerHTML = '';
     result.transactions.forEach(transaction => {
         const li = document.createElement('li');
-        li.className = transaction.tipoTransacao === 'deposito' ? 'credit' : 'debit';
-
-        const valorFormatado = formatarValor(transaction.valorTransacao)
-        li.innerHTML = `R$${valorFormatado} <span>${transaction.tipoTransacao}</span>`;
-
+        li.innerHTML = `
+            R$${formatarValor(transaction.valorTransacao)} 
+            <span>${formataDataHora(transaction.dataTransacao)}</span>
+            <span>${transaction.tipoTransacao}</span>
+        `;
         creditListElement.appendChild(li);
     });
 
     // Adiciona dinamicamente o historico de apostas...
+    const betListElement = document.querySelector('.bet-list');
+    betListElement.innerHTML = '';
     result.bets.forEach(bet => {
         const li = document.createElement('li');
-        li.className = bet.valorGasto > 0 ? 'credit' : 'debit';
-
-        const valorFormatado = formatarValor(bet.valorGasto);
-        li.innerHTML = `R$${valorFormatado} <span>${bet.aposta}</span>`;
-
+        li.innerHTML = `
+            R$${formatarValor(bet.valorGasto)}
+            <span>${formataDataHora(bet.dataAposta)} </span>
+            <span>${bet.aposta === 'nao' ? 'Não' : 'Sim'}</span>
+        `;
         betListElement.appendChild(li);
     });
 }
@@ -172,7 +186,7 @@ function formatCVV(input) {
 
 
 // Atualiza o formulario de saque a depender do método de pagamento...
-function updateForm() {
+function updateDynamicForms() {
     const dynamicForm = document.getElementById("dynamicForm");
     const selectedOption = document.querySelector('input[name="withdrawOption"]:checked').value;
 
@@ -187,7 +201,6 @@ function updateForm() {
                 <label for="accountNumber" class="text-white">Número da Conta Corrente</label>
                 <input id="accountNumber" type="text" name="accountNumber" class="form-control" placeholder="EX: 1234567890" required>
             </div>`;
-
 
     } else if (selectedOption === "pix") {
         formContent = `
@@ -239,9 +252,6 @@ async function handleAddFundsFormSubmission(event){
     // Caso a adição de fundos seja bem-sucedido exibe o feedback de sucesso...
     document.querySelector('.feedbackAdicionado').textContent = result;
     document.querySelector('.feedbackAdicionado').style.display = 'block';
-
-    // Fecha o popUp e Limpa o formulario...
-    setTimeout(closeDeposit, 1200);
 }
 
 async function handleWithDrawFundsFormSubmission(event){
@@ -281,19 +291,12 @@ async function handleWithDrawFundsFormSubmission(event){
 
     // Valida se ocorreu algum erro e exibe o feedback de erro...
     if(!response.ok){
-        const feed = document.querySelector('.feedbackNaoAdicionado').textContent
-        if(!feed){
-            alert('deu merda')
-        }
         document.querySelector('.feedbackNaoSacado').textContent = result;
         document.querySelector('.feedbackNaoSacado').style.display = 'block';
         return;
     }
 
-    // Caso a adição de fundos seja bem-sucedido exibe o feedback de sucesso...
-    document.querySelector('.feedbackSacado').textContent = 'Saldo adicionado com sucesso!';
+    // Caso o saque de fundos seja bem-sucedido exibe o feedback de sucesso...
+    document.querySelector('.feedbackSacado').textContent = result;
     document.querySelector('.feedbackSacado').style.display = 'block';
-
-    // Fecha o popUp e Limpa o formulario...
-    setTimeout(closeClaim, 1200);
 }

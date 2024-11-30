@@ -93,11 +93,11 @@
             <label class="text-white">Selecione o método:</label>
             <div>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="withdrawOption" id="optionAccount" value="account" onchange="updateForm()">
+                    <input class="form-check-input" type="radio" name="withdrawOption" id="optionAccount" value="account" onchange="updateDynamicForms()">
                     <label class="form-check-label text-white" for="optionAccount">Ag./Conta Corrente</label>
                 </div>
                 <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="withdrawOption" id="optionPix" value="pix" onchange="updateForm()" checked>
+                    <input class="form-check-input" type="radio" name="withdrawOption" id="optionPix" value="pix" onchange="updateDynamicForms()" checked>
                     <label class="form-check-label text-white" for="optionPix">Chave PIX</label>
                 </div>
             </div>
@@ -117,8 +117,8 @@
         <!-- Botão para realizar saque -->
         <button type="submit" class="btn btn-primary w-100">Realizar Saque</button>
 
-        <p class="feedbackAdicionado"></p>
-        <p class="feedbackNaoAdicionado"></p>
+        <p class="feedbackNaoSacado"></p>
+        <p class="feedbackSacado"></p>
     </form>
 </div>
 

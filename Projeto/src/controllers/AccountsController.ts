@@ -31,7 +31,7 @@ export namespace contasHandler {
     // 'Função' para signUp
     export const signUpHandler: RequestHandler = async (req: Request, res: Response): Promise<void> => {
         const nome = req.get('nome');
-        const email = req.get('email');
+        let email = req.get('email');
         const senha = req.get('senha');
         const nascimento = req.get('nascimento');
 
@@ -40,6 +40,8 @@ export namespace contasHandler {
             res.status(400).send('Campos obrigatórios estão faltando!');
             return;
         }
+
+        email = email.toLowerCase();
 
         // Valida o formato do e-mail
         const validEmail = validarEmail(email);
@@ -88,7 +90,7 @@ export namespace contasHandler {
 
     // 'Função' para login
     export const signInHandler: RequestHandler = async (req: Request, res: Response): Promise<void> => {
-        const email = req.get('email');
+        let email = req.get('email');
         const senha = req.get('senha');
 
         // Valida se todos os campos foram preenchidos
@@ -96,6 +98,8 @@ export namespace contasHandler {
             res.status(400).json('Campos obrigatórios estão faltando!');
             return;
         }
+
+        email = email.toLowerCase();
 
         // Valida se o usuario esta cadastrado
         const user: Conta | null = await userModelData.findUser(email, senha);

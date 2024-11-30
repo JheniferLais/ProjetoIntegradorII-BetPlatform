@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.getElementById('signUpButton').addEventListener('click', openSignUpPage);
 
     // Fecha o popup de alerta da carteira
-    document.getElementById('close-wallet-alert').addEventListener('click', closeWalletAlert);
+    document.getElementById('close-wallet-alert').addEventListener('click', closeAlert);
 
     // Redireciona para a página da Carteira ao clicar na seção de saldo...
     document.getElementById('walletLink').addEventListener('click', openWalletPage);
@@ -41,7 +41,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             carregarGradeEventosCategoria(selectedValue);
         });
     });
-
 
     // Aplica formatação de data e hora em campos específicos quando o usuário digitar...
     document.querySelectorAll('#inputDataEvento').forEach(input => {
@@ -107,13 +106,18 @@ function closePopUpCadastrarEvento(){
     document.getElementById('registerEventForm').reset();
 }
 
-function closeWalletAlert(){
-    document.querySelector('.wallet-alert').style.display = 'none';
 
-    const walletAlert = document.querySelector('.waalletAlert');
-    if(walletAlert){
-        walletAlert.style.display = 'none';
-    }
+function showAlert() {
+    const alert = document.getElementById('walletAlert');
+    alert.classList.remove('hidden');
+}
+function autoShowAlert() {
+    showAlert(); // Mostra o alerta
+    setTimeout(closeAlert, 3500);
+}
+function closeAlert() {
+    const alert = document.getElementById('walletAlert');
+    alert.classList.add('hidden');
 }
 
 
@@ -172,7 +176,6 @@ function transformaDataHora(value) {
     // Retorna o valor no formato ISO com segundos = 00
     return `${ano}-${mes}-${dia}T${hora}:${minuto}:00`;
 }
-
 // Faz a formatação de valor de 123456.78 para 123.456,78
 function formatarValor(valor) {
     return new Intl.NumberFormat('pt-BR', {
@@ -223,8 +226,8 @@ async function validarLoginParaBotoesHome() {
 
     // Saldo recebe a response do backend...
     const saldo = await response.json();
-    if(saldo === 0){
-        document.querySelector('.wallet-alert').style.display = 'block';
+    if(saldo.saldo === 0){
+        autoShowAlert();
     }
 
     // Mostra o valor do saldo do usuario no wallet home...
@@ -237,6 +240,30 @@ async function validarLoginParaBotoesHome() {
 // Função para inserir dinamicamente os eventos na grade...
 function inserirEventosNaGrade(eventosContainer, eventos) {
     eventos.forEach(evento => {
+
+        // valida o status do evento = se ja iniciou o periodo de apostas
+        const agora = new Date();
+        const inicioAposta = new Date(evento.data_hora_inicio);
+        const fimAposta = new Date(evento.data_hora_fim);
+
+        let cor;
+        let status;
+
+        // Caso o período de apostas ainda não tenha começado
+        if (inicioAposta > agora) {
+            status = 'Em breve...';
+            cor = 'yellow';
+        }
+        // Caso o período de apostas já tenha encerrado
+        else if (fimAposta < agora) {
+            status = 'Encerrado...';
+            cor = 'red';
+        }
+        // Caso o evento esteja ativo e aceitando apostas
+        else {
+            status = 'Ativo...';
+            cor = 'green';
+        }
 
         const gradeEvento = document.createElement('div');
         gradeEvento.classList.add('grid-item');
@@ -254,6 +281,7 @@ function inserirEventosNaGrade(eventosContainer, eventos) {
             <div class="apostas-data">
                 <div style="font-weight: 500; font-size: 15px;">${evento.qtd_apostas} Apostas 👥</div>
                 <div style="font-weight: 500; font-size: 15px;">${formataDataSimples(evento.data_evento)} 📅</div>
+               <div style="font-weight: 500; font-size: 15px; color: ${cor};">${status} ⏳</div>
             </div>
             <div class="descricao">
                 <div style="font-weight: 300; font-size: 20px;">${evento.descricao.length > 35 ? evento.descricao.substring(0, 35) + "..." : evento.descricao}</div>
@@ -262,7 +290,7 @@ function inserirEventosNaGrade(eventosContainer, eventos) {
 
         const token = sessionStorage.getItem('sessionToken');
         const moderador = sessionStorage.getItem('moderador');
-        if(token && Number(moderador) === 0){
+        if(token && Number(moderador) === 0 && status === 'Ativo...'){
             // Adiciona um evento de clique para redirecionar para a pagina do evento
             gradeEvento.addEventListener('click', () => {
                 window.location.href = `../Events/event.html?idEvento=${evento.id_evento}`;
@@ -289,7 +317,6 @@ async function limpaGradeValidaResponse(response){
     const eventos = await response.json();
     inserirEventosNaGrade(document.querySelector('.main-content'), eventos);
 }
-
 
 // Função para buscar todos os eventos 'aprovados' para serem inseridos na grade default...
 async function carregarGradeEventos() {

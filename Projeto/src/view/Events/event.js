@@ -94,6 +94,10 @@ function carregarDadosDoEvento(objetoEvento) {
             </div>
             <div class="encerramento">
                 <i class="fa-regular fa-clock"></i>
+                <p>Inicio das apostas: <strong>${formataDataHora(objetoEvento.data_hora_inicio)}</strong></p>
+            </div>
+            <div class="encerramento">
+                <i class="fa-regular fa-clock"></i>
                 <p>Encerramento das apostas: <strong>${formataDataHora(objetoEvento.data_hora_fim)}</strong></p>
             </div>
         </div>
@@ -151,16 +155,14 @@ async function buscarEvento() {
     // Captura as informações guardas da sessionStorage...
     const idUsuario = sessionStorage.getItem('idUsuario');
     const token = sessionStorage.getItem('sessionToken');
-    const nomeUsuario = sessionStorage.getItem('nomeUsuario');
 
     // Caso o usuario nao tenha logado...Ele é redirecionado para a pagina de nao autenticado...
-    if (!token || !idUsuario || !nomeUsuario) {
+    if (!token || !idUsuario) {
         window.location.href = `../errorPages/401.html`;
     }
 
     // Insere o nome do usuario no header
     document.querySelector('.balance').style.display = 'flex';
-    document.getElementById('useName').textContent = nomeUsuario;
 
     // Consome da API para obter informações da carteira do usuário...
     const response1 = await fetch(`${apiBaseUrl}/getAllWalletInformation/${idUsuario}`, {
@@ -184,8 +186,6 @@ async function buscarEvento() {
     const valorFormatado = formatarValor(saldo.saldo);
     balanceElement.textContent = valorFormatado + ' BRL';
 
-
-
     // Captura as informações guardas da URL...
     const params = new URLSearchParams(window.location.search);
     const idEvento = params.get('idEvento');
@@ -200,8 +200,6 @@ async function buscarEvento() {
 
     //Se a pagina do evento não existir...Ele é redirecionado para a pagina de nao encontrado...
     if(!response.ok) {
-        const result = await response.text();
-        alert(result);
         window.location.href = `../errorPages/404.html`;
     }
 
@@ -212,7 +210,6 @@ window.onload = buscarEvento;
 
 async function handleBetFormSubmission(event) {
     event.preventDefault();
-
 
     // Captura o parâmetros idEvento da URL atual
     const params = new URLSearchParams(window.location.search);
@@ -267,4 +264,5 @@ async function handleBetFormSubmission(event) {
     document.querySelector('.feedbackApostado').style.display = 'block';
     setTimeout(() => {
         location.reload();
-    }, 1200);}
+    }, 1200);
+}

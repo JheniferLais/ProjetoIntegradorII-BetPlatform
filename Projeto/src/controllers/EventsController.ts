@@ -56,6 +56,12 @@ export namespace eventosHandler {
             return;
         }
 
+        // Valida se a data de inicio é dps de hoje
+        if(new Date(dataHoraInicioApostas) < new Date()){
+            res.status(400).send('A data de início deve ser posterior a hoje!');
+            return;
+        }
+
         // Valida se a data de início é anterior à data de fim
         if (new Date(dataHoraInicioApostas) > new Date(dataHoraFimApostas)) {
             res.status(400).send('A data de início deve ser anterior à data de fim!');
@@ -111,16 +117,9 @@ export namespace eventosHandler {
 
         //-------------------------------------------------------------------------
 
-        let filteredEvents: Evento[] | null
+        // Obtém eventos filtrados
+        const filteredEvents = await eventModelData.getFilteredEvents(statusEvento);
 
-        if(statusEvento === 'aprovado') {
-            const hoje = new Date().toISOString().slice(0, 19);
-            // Obtém eventos filtrados
-            filteredEvents= await eventModelData.getFilteredEventsDate(statusEvento, hoje);
-        } else {
-            // Obtém eventos filtrados
-            filteredEvents = await eventModelData.getFilteredEvents(statusEvento);
-        }
 
         // Valida se existe algum evento com esse status
         if (!filteredEvents) {

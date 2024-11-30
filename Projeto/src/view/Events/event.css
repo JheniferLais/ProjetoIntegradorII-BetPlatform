@@ -83,9 +83,7 @@ body {
 
 .container {
     display: flex;
-    padding: 30px;
     background: #000D1C;
-    margin: 10px;
     border-radius: 10px;
     padding: 20px;
     height: 500px;
@@ -98,6 +96,10 @@ body {
     height: 100%;
 }
 .container-right{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 10px;
     width: 44%;
     height: 100%;
     padding-left: 30px;
@@ -244,17 +246,15 @@ form .feedbackNaoApostado{
     left: 0;
     z-index: 100;
 }
-.wallet-alert:after{ /*Triangulo*/
+.wallet-alert:after{
     content: "";
     width: 0;
     height: 0;
     position: absolute;
     border-left: 20px solid transparent;
     border-right: 20px solid transparent;
-    /*Faz seta "apontar para baixo. Definir o valor como 'top' fará ela "apontar para cima" */
-    /*Aqui entra a cor da "aba" do balão */
     border-bottom: 20px solid #7e57c2;
-    top: -20px; /*localização. Experimente alterar para 'bottom'*/
+    top: -20px;
     left: 20%;
 }
 .container-btn-apostar{
@@ -275,12 +275,10 @@ form .feedbackNaoApostado{
     transform: scale(0.97);
 }
 
-/* Esconde os inputs de rádio */
 .aposta .btnRadio {
     display: none;
 }
 
-/* Estilo base para os labels como botões */
 .aposta .btn-label {
     display: inline-block;
     padding: 15px 40px;
@@ -293,27 +291,23 @@ form .feedbackNaoApostado{
     margin: 5px;
 }
 
-/* Estilo para o botão "Não" */
 .aposta .btn-label.nao {
     border-color: red;
     color: red;
     background-color: transparent;
 }
 
-/* Estilo para o botão "Sim" */
 .aposta .btn-label.sim {
     border-color: green;
     color: green;
     background-color: transparent;
 }
 
-/* Estilo quando o input "Não" estiver selecionado */
 .aposta .btnRadio:checked + .btn-label.nao {
     background-color: red;
     color: white;
 }
 
-/* Estilo quando o input "Sim" estiver selecionado */
 .aposta .btnRadio:checked + .btn-label.sim {
     background-color: green;
     color: white;
