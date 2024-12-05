@@ -1,7 +1,7 @@
 <img width=100% src="https://capsule-render.vercel.app/api?type=waving&color=2480D3&height=120&section=header"/>
 
 <div align="center">
-    <img src="src/view/assets/logoREADME.png" alt="Logo da Wager" width="350"/>
+    <img src="src/view/assets/logoREADME.png" alt="Logo da Wager" width="300"/>
 </div>
 
 <div align="center">
@@ -61,7 +61,7 @@ Execute o arquivo `Script Banco de Dados` em seu software de SQL para gerar a es
 <p> Encontre-o em: <p>
 
 ```yaml
-ProjetoIntegradorII/
+ProjetoIntegradorII.../
 └── Banco de Dados/
     ├── ...
     └── Script Banco de Dados (Oracle-SQLdeveloper)
@@ -84,6 +84,14 @@ EMAIL_USERNAME={YOUR_EMAIL}                 # Substitua pelo seu endereço de em
 EMAIL_PASSWORD={YOUR_EMAIL_PASSWORD_APP}    # Substitua pela senha do seu aplicativo de email
 ```
 
+Assegure-se de organizar o arquivo no diretório correto, como no exemplo abaixo:
+
+```yaml
+ProjetoIntegradorII.../
+└── Projeto/
+    ├── ...
+    └── .env
+```
 
 <h2 id="started">🚀 Executando o Projeto</h2>
 
