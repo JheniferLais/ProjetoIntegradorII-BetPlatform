@@ -265,9 +265,14 @@ Um agradecimento especial a todas as pessoas que contribuíram para este projeto
       </a>
     </td>
     <td>
-      <h3>....</h3>
+      <h3>Frontend, Backend, UI/UX, Prototipação, Integração e Depuração</h3>
         <p>
-            ....
+            João foi responsável por grande parte do planejamento de disposição de elementos e lógica de navegação
+            entre as páginas web. Significante quanto a parte da programação em Frontend (html, css e javaScript),
+            e organização da linha de trabalho. Além de contribuir com a integração "Back to Front", conectando parte da
+            lógica bruta do backend com os elementos distintos do frontend, João também foi notório quanto a identidade
+            visual do projeto, e grande habilidade na aplicação de técnicas de depuração, contribuindo para a identificação 
+            e resolução eficiente de problemas durante o desenvolvimento.
         </p>
     </td>
   </tr>
